@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand colours */
+  --color-brand-dark:   #15212c;
+  --color-brand-dark2:  #29353f;
+  --color-brand-teal:   #315c5a;
+  --color-brand-gold:   #ddb837;
+  --color-brand-pink:   #fd4682;
+  --color-brand-blue:   #54b9fd;
+  --color-brand-text:   #737a80;
+  --color-brand-head:   #1a181d;
+
+  /* Admin dark theme */
+  --color-admin-bg:      #0d0f18;
+  --color-admin-sidebar: #111320;
+  --color-admin-card:    #181b2e;
+  --color-admin-card2:   #1e2138;
+  --color-admin-border:  #252840;
+  --color-admin-text:    #c4c8e0;
+  --color-admin-muted:   #5a5f7e;
+  --color-admin-head:    #e8eaf5;
+
+  /* shadcn compatibility tokens */
+  --color-background: #ffffff;
+  --color-foreground: #1a181d;
+  --color-primary:    #ddb837;
+  --color-primary-foreground: #1a181d;
+  --color-secondary:  #f7f8fa;
+  --color-secondary-foreground: #1a181d;
+  --color-muted:      #f7f8fa;
+  --color-muted-foreground: #737a80;
+  --color-border:     #e5e7eb;
+  --color-ring:       #ddb837;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fff;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a181d;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a181d;
+  --color-accent: #f7f8fa;
+  --color-accent-foreground: #1a181d;
+
+  --font-sans: 'Poppins', sans-serif;
+  --radius: 8px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+  color: #737a80;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+a   { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+ul  { list-style: none; }
+
+/* ── Shared button primitives ── */
+.btn {
+  display: inline-block;
+  padding: 13px 30px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: filter 0.2s ease, transform 0.15s ease;
+  line-height: 1;
+}
+.btn:hover  { filter: brightness(1.08); transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn-gold    { background: #ddb837; color: #1a181d; }
+.btn-pink    { background: #fd4682; color: #fff; }
+.btn-blue    { background: #54b9fd; color: #fff; }
+.btn-dark    { background: #15212c; color: #fff; }
+.btn-outline { background: none; border: 1.5px solid #ddb837; color: #ddb837; transition: background 0.2s, color 0.2s, transform 0.15s; }
+.btn-outline:hover { background: #ddb837; color: #1a181d; }
+
+/* ── Section tag chip ── */
+.section-tag {
+  display: inline-block;
+  background: #ddb837;
+  color: #1a181d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+}
+
+/* ── Card shadow system ── */
+.card-shadow {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card-shadow:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+  transform: translateY(-3px);
+}
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
