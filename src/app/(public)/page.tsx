@@ -1,11 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import HeroSlider from '@/components/home/HeroSlider'
-import StatsBar from '@/components/home/StatsBar'
 import ServicesGrid from '@/components/home/ServicesGrid'
 import WhyChooseUs from '@/components/home/WhyChooseUs'
 import PortfolioStrip from '@/components/home/PortfolioStrip'
 import BlogPreview from '@/components/home/BlogPreview'
-import Testimonials from '@/components/home/Testimonials'
 import FaqAccordion from '@/components/home/FaqAccordion'
 
 export default async function HomePage() {
@@ -20,12 +18,10 @@ export default async function HomePage() {
   return (
     <>
       <HeroSlider slides={slides ?? []} />
-      <StatsBar />
       <ServicesGrid services={services ?? []} />
       <WhyChooseUs />
       <PortfolioStrip />
       <BlogPreview posts={posts ?? []} />
-      <Testimonials />
       <FaqAccordion />
     </>
   )
