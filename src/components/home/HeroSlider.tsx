@@ -61,7 +61,8 @@ function safeSlide(s: Slide): Slide {
 }
 
 export default function HeroSlider({ slides }: { slides: Slide[] }) {
-  const data = (slides.length ? slides : FALLBACK_SLIDES).map(safeSlide)
+  // Use DB slides if ≥2 exist, otherwise fall back to the built-in set so there's always something to cycle
+  const data = (slides.length >= 2 ? slides : FALLBACK_SLIDES).map(safeSlide)
   const [cur, setCur] = useState(0)
   const [paused, setPaused] = useState(false)
   const touchStartX = useRef<number | null>(null)
@@ -145,19 +146,20 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
 
       {/* Prev / Next */}
       {[
-        { dir: 'prev', action: prev, left: 22, path: 'M15 18l-6-6 6-6' },
-        { dir: 'next', action: next, right: 22, path: 'M9 18l6-6-6-6' },
+        { dir: 'prev', action: prev, left: 16, path: 'M15 18l-6-6 6-6' },
+        { dir: 'next', action: next, right: 16, path: 'M9 18l6-6-6-6' },
       ].map(({ dir, action, path, ...pos }) => (
-        <button key={dir} onClick={action} aria-label={dir} style={{
+        <button type="button" key={dir} onClick={action} aria-label={dir} style={{
           position: 'absolute', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
-          width: 46, height: 46, background: 'rgba(255,255,255,.12)', border: 'none',
+          width: 52, height: 52, background: 'rgba(255,255,255,.15)', border: 'none',
           cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'background .2s', ...pos,
+          transition: 'background .2s', touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent', ...pos,
         }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(221,184,55,.75)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,.12)')}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,32,32,.75)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,.15)')}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d={path} />
           </svg>
         </button>
@@ -166,11 +168,12 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
       {/* Dots */}
       <div style={{ position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 9, zIndex: 10 }}>
         {data.map((_, i) => (
-          <button key={i} onClick={() => setCur(i)} aria-label={`Slide ${i + 1}`} style={{
-            width: i === cur ? 28 : 9, height: 9,
+          <button type="button" key={i} onClick={() => setCur(i)} aria-label={`Slide ${i + 1}`} style={{
+            width: i === cur ? 28 : 12, height: 12,
             background: i === cur ? '#d42020' : 'rgba(255,255,255,.4)',
             border: 'none', cursor: 'pointer', padding: 0,
             transition: 'width .3s, background .3s',
+            touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
           }} />
         ))}
       </div>

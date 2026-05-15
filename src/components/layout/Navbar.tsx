@@ -148,50 +148,52 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile full-screen menu — use explicit top/left/right/bottom (inset shorthand unsupported on iOS <14.5) */}
-      {open && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 998,
-          background: '#15212c',
-          paddingTop: 68,
-          display: 'flex', flexDirection: 'column',
-          overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          animation: 'fadeIn 0.2s ease',
-        }}>
-          {[
-            ['Home',      '/'],
-            ['About',     '/about'],
-            ['Services',  '/services'],
-            ['Products',  '/products'],
-            ['Our Works', '/works'],
-            ['Gallery',   '/gallery'],
-            ['Blog',      '/blog'],
-            ['Contacts',  '/contacts'],
-          ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              style={{
-                color: 'rgba(255,255,255,.85)', fontSize: 17, fontWeight: 600,
-                padding: '20px 28px', borderBottom: '1px solid rgba(255,255,255,.07)',
-                letterSpacing: '0.02em', display: 'block',
-              }}
-            >{label}</Link>
-          ))}
-          <div style={{ padding: '28px 28px', marginTop: 4 }}>
-            <Link
-              href="/quote"
-              onClick={() => setOpen(false)}
-              className="btn btn-gold"
-              style={{ display: 'block', textAlign: 'center', width: '100%' }}
-            >
-              Get a Quote
-            </Link>
-          </div>
+      {/* Mobile full-screen menu — always in DOM, shown via visibility so iOS never has timing gaps */}
+      <div style={{
+        position: 'fixed',
+        top: 68, left: 0, right: 0, bottom: 0,
+        zIndex: 997,
+        background: '#15212c',
+        display: 'flex', flexDirection: 'column',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        visibility: open ? 'visible' : 'hidden',
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        transition: 'opacity 0.18s ease, visibility 0.18s',
+      }}>
+        {[
+          ['Home',      '/'],
+          ['About',     '/about'],
+          ['Services',  '/services'],
+          ['Products',  '/products'],
+          ['Our Works', '/works'],
+          ['Gallery',   '/gallery'],
+          ['Blog',      '/blog'],
+          ['Contacts',  '/contacts'],
+        ].map(([label, href]) => (
+          <Link
+            key={href}
+            href={href}
+            onClick={() => setOpen(false)}
+            style={{
+              color: 'rgba(255,255,255,.85)', fontSize: 17, fontWeight: 600,
+              padding: '20px 28px', borderBottom: '1px solid rgba(255,255,255,.07)',
+              letterSpacing: '0.02em', display: 'block',
+            }}
+          >{label}</Link>
+        ))}
+        <div style={{ padding: '28px 28px', marginTop: 4 }}>
+          <Link
+            href="/quote"
+            onClick={() => setOpen(false)}
+            className="btn btn-gold"
+            style={{ display: 'block', textAlign: 'center', width: '100%' }}
+          >
+            Get a Quote
+          </Link>
         </div>
-      )}
+      </div>
 
       <style>{`
         .group:hover .drop-menu {

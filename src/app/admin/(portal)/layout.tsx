@@ -56,7 +56,7 @@ export default async function AdminLayout({
       <AdminSidebar role={role} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'auto' }}>
         <AdminTopbar title="Admin" role={role} email={email} />
-        <main style={{ flex: 1, padding: '28px' }}>
+        <main className="admin-main-padding" style={{ flex: 1, padding: '28px' }}>
           {children}
         </main>
       </div>

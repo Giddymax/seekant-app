@@ -26,13 +26,13 @@ export default function AdminSidebar({ role }: { role: string }) {
   const nav = role === 'admin' ? ADMIN_NAV : ADMIN_NAV.filter(n => !n.adminOnly)
 
   return (
-    <aside style={{ width: 220, minHeight: '100vh', background: '#111320', display: 'flex', flexDirection: 'column', flexShrink: 0, position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+    <aside className="admin-sidebar" style={{ width: 220, minHeight: '100vh', background: '#111320', display: 'flex', flexDirection: 'column', flexShrink: 0, position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
       {/* Logo */}
-      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+      <div style={{ padding: '24px 14px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Seekant" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
-          <div>
+          <div className="admin-sidebar-logotext">
             <div style={{ fontSize: 12, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>SEEKANT</div>
             <div style={{ fontSize: 8, color: 'rgba(255,255,255,.35)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Admin</div>
           </div>
@@ -47,34 +47,35 @@ export default function AdminSidebar({ role }: { role: string }) {
             <Link
               key={href}
               href={href}
+              title={label}
               style={{
-                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px',
+                display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px',
                 fontSize: 12, fontWeight: active ? 700 : 500,
                 color: active ? '#d42020' : 'rgba(255,255,255,.5)',
-                background: active ? 'rgba(221,184,55,.08)' : 'transparent',
+                background: active ? 'rgba(212,32,32,.08)' : 'transparent',
                 borderLeft: active ? '2px solid #d42020' : '2px solid transparent',
                 textDecoration: 'none', transition: 'all .15s',
               }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <path d={icon} />
               </svg>
-              {label}
+              <span className="admin-sidebar-label">{label}</span>
             </Link>
           )
         })}
       </nav>
 
       {/* Footer */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,.06)' }}>
+      <div style={{ padding: '16px 14px', borderTop: '1px solid rgba(255,255,255,.06)' }}>
         <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'rgba(255,255,255,.35)', textDecoration: 'none', marginBottom: 12 }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-          View Site
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          <span className="admin-sidebar-footer-label">View Site</span>
         </Link>
         <form action={signOut}>
           <button type="submit" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'rgba(255,255,255,.35)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'Poppins,sans-serif', transition: 'color .15s' }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-            Sign Out
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <span className="admin-sidebar-footer-label">Sign Out</span>
           </button>
         </form>
       </div>

@@ -287,7 +287,20 @@ html { overflow-x: hidden; }
   from { height: var(--radix-accordion-content-height); }
   to   { height: 0; }
 }
-@theme inline {
+
+/* Separate @theme block — Tailwind v4 merges multiple blocks */
+@theme {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up:   accordion-up   0.2s ease-out;
+}
+
+/* ── Admin portal mobile layout ── */
+.admin-sidebar-label    { display: inline; }
+.admin-sidebar-logotext { display: block; }
+@media (max-width: 768px) {
+  .admin-sidebar           { width: 52px !important; min-width: 52px !important; }
+  .admin-sidebar-label     { display: none !important; }
+  .admin-sidebar-logotext  { display: none !important; }
+  .admin-sidebar-footer-label { display: none !important; }
+  .admin-main-padding      { padding: 16px !important; }
 }
