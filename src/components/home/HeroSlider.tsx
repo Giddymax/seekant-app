@@ -38,7 +38,7 @@ const FALLBACK_SLIDES: Slide[] = [
   {
     id: 3,
     tag: 'Professional · Fast · Reliable',
-    heading: 'Quality Printing\nServices In Accra',
+    heading: 'Quality Printing\nServices In Asuom',
     subtext: 'Walk-in or order online. Seekant Multimedia delivers top-quality prints, apparel, and branding solutions.',
     btn1_label: 'View Products', btn1_href: '/products',
     btn2_label: 'Contact Us', btn2_href: '/contacts',

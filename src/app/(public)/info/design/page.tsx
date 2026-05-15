@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'Graphic Design Services – Seekant Multimedia',
-  description: 'Professional branding, logo design, and visual identity services from Seekant Multimedia in Accra, Ghana.',
+  description: 'Professional branding, logo design, and visual identity services from Seekant Multimedia in Asuom, Eastern Region, Ghana.',
 }
 
 const SERVICES = [

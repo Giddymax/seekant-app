@@ -60,7 +60,7 @@ export default function QuoteConfirmation({ data }: { data: QuoteFormData }) {
 
         <Container style={{ padding: '20px 40px', maxWidth: 560 }}>
           <Text style={{ fontSize: 11, color: '#aaa', lineHeight: 1.8, margin: 0 }}>
-            Seekant Multimedia · Main Street, City Centre, Accra, Ghana<br />
+            Seekant Multimedia · Asuom, Kwaebibirim Municipal, Eastern Region, Ghana<br />
             +233 XX XXX XXXX · info@seekantmultimedia.com
           </Text>
         </Container>

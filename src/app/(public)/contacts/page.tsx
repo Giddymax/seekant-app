@@ -9,7 +9,7 @@ export default async function ContactsPage() {
   const c = Object.fromEntries((rows ?? []).map(r => [r.key, r.value]))
 
   const contactItems = [
-    { icon: 'M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Address', value: c.contact_address || 'Main Street, City Centre, Accra, Ghana' },
+    { icon: 'M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Address', value: c.contact_address || 'Asuom, Kwaebibirim Municipal, Eastern Region, Ghana' },
     { icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', label: 'Phone', value: c.contact_phone || '+233 XX XXX XXXX' },
     { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', label: 'Email', value: c.contact_email || 'info@seekantmultimedia.com' },
     { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Hours', value: c.contact_hours || 'Mon–Fri: 8am – 6pm  |  Sat: 9am – 4pm' },
@@ -56,7 +56,7 @@ export default async function ContactsPage() {
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddb837" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 12 }}>
                 <path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <p style={{ fontSize: 13, color: '#737a80' }}>Main Street, City Centre<br />Accra, Ghana</p>
+              <p style={{ fontSize: 13, color: '#737a80' }}>Asuom, Kwaebibirim Municipal<br />Eastern Region, Ghana</p>
             </div>
           </div>
         </div>

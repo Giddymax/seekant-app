@@ -70,7 +70,7 @@ function ThermalReceipt({ data }: { data: ReceiptData }) {
       <div style={{ textAlign: 'center', marginBottom: '6px' }}>
         <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
         <div>Design. Print. Brand.</div>
-        <div>Accra, Ghana</div>
+        <div>Asuom, Eastern Region, Ghana</div>
         <div>Tel: +233 XX XXX XXXX</div>
         <div>www.seekantmultimedia.com</div>
       </div>

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'Printing Services – Seekant Multimedia',
-  description: 'High-quality commercial printing — banners, flyers, business cards, signage, and more — from Seekant Multimedia in Accra, Ghana.',
+  description: 'High-quality commercial printing — banners, flyers, business cards, signage, and more — from Seekant Multimedia in Asuom, Eastern Region, Ghana.',
 }
 
 const PRODUCTS = [
@@ -22,7 +22,7 @@ const SPECS = [
   { label: 'Resolution', value: 'Minimum 300 dpi for all raster artwork' },
   { label: 'Bleed', value: '3 mm bleed on all sides, crop marks included' },
   { label: 'Turnaround', value: '24 – 72 hours depending on quantity and finishing' },
-  { label: 'Delivery', value: 'Pick-up from Accra or nationwide courier' },
+  { label: 'Delivery', value: 'Pick-up from Asuom or nationwide courier' },
 ]
 
 export default function PrintingInfoPage() {

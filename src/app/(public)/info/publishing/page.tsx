@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'Publishing Services – Seekant Multimedia',
-  description: 'Book design, layout, and publishing services — from manuscripts to print-ready files — by Seekant Multimedia in Accra, Ghana.',
+  description: 'Book design, layout, and publishing services — from manuscripts to print-ready files — by Seekant Multimedia in Asuom, Eastern Region, Ghana.',
 }
 
 const SERVICES = [

@@ -13,11 +13,11 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Seekant Multimedia – Design. Print. Brand.',
   description:
-    'Professional printing, branding, and design services in Accra, Ghana. Business cards, banners, jerseys, and more.',
-  keywords: 'printing, branding, design, Ghana, Accra, business cards, banners, jerseys',
+    'Professional printing, branding, and design services in Asuom, Eastern Region, Ghana. Business cards, banners, jerseys, and more.',
+  keywords: 'printing, branding, design, Ghana, Asuom, Kwaebibirim, Eastern Region, business cards, banners, jerseys',
   openGraph: {
     title: 'Seekant Multimedia – Design. Print. Brand.',
-    description: 'Your trusted printing and branding partner in Accra, Ghana.',
+    description: 'Your trusted printing and branding partner in Asuom, Eastern Region, Ghana.',
     type: 'website',
   },
 }
