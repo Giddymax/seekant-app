@@ -214,12 +214,15 @@ create table if not exists public.inventory (
   name      text not null,
   category  text not null default 'Other'
               check (category in ('Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other')),
+  image_url text,
   price     numeric(10,2) not null default 0,
   stock     integer not null default 0,
   threshold integer not null default 10,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+-- Migration for existing installs:
+-- alter table public.inventory add column if not exists image_url text;
 
 create trigger inventory_updated_at
   before update on public.inventory
@@ -514,6 +517,7 @@ values
   ('service-images', 'service-images', true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
   ('blog-covers',    'blog-covers',    true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
   ('gallery-images', 'gallery-images', true,  10485760, array['image/jpeg','image/png','image/webp','image/gif']),
+  ('product-images', 'product-images', true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
   ('uploads',        'uploads',        false, 10485760, null)
 on conflict (id) do nothing;
 
@@ -565,6 +569,18 @@ create policy "Public read gallery images"
 create policy "Auth users delete gallery images"
   on storage.objects for delete to authenticated
   using (bucket_id = 'gallery-images');
+
+create policy "Auth users upload product images"
+  on storage.objects for insert to authenticated
+  with check (bucket_id = 'product-images');
+
+create policy "Public read product images"
+  on storage.objects for select
+  using (bucket_id = 'product-images');
+
+create policy "Auth users delete product images"
+  on storage.objects for delete to authenticated
+  using (bucket_id = 'product-images');
 
 -- uploads bucket: public can insert (quote attachments); only staff can read
 create policy "Anyone can upload quote attachments"

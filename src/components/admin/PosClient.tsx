@@ -9,6 +9,7 @@ type Product = {
   id: number
   name: string
   category: string
+  image_url: string | null
   price: number
   stock: number
 }
@@ -85,16 +86,26 @@ function PosProductGrid({
             onClick={() => onAdd(p)}
             style={{
               background: '#181b2e', border: '1.5px solid rgba(255,255,255,.06)',
-              cursor: 'pointer', padding: '14px 12px', textAlign: 'left',
-              fontFamily: 'Poppins,sans-serif', transition: 'border-color .15s',
+              cursor: 'pointer', padding: 0, textAlign: 'left',
+              fontFamily: 'Poppins,sans-serif', transition: 'border-color .15s', overflow: 'hidden',
             }}
             onMouseEnter={e => (e.currentTarget.style.borderColor = '#ddb837')}
             onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,.06)')}
           >
-            <div style={{ fontSize: 9, fontWeight: 700, color: '#ddb837', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.category}</div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.3 }}>{p.name}</div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: '#ddb837' }}>{formatCurrency(p.price)}</div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 4 }}>Stock: {p.stock}</div>
+            {/* Product image or placeholder */}
+            {p.image_url
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={p.image_url} alt={p.name} style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }} />
+              : <div style={{ width: '100%', height: 80, background: 'rgba(255,255,255,.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.15)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                </div>
+            }
+            <div style={{ padding: '10px 12px' }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: '#ddb837', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>{p.category}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#ddb837' }}>{formatCurrency(p.price)}</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 4 }}>Stock: {p.stock}</div>
+            </div>
           </button>
         ))}
         {!filtered.length && (

@@ -143,6 +143,7 @@ export async function upsertInventory(fd: FormData) {
   const payload = {
     name: fd.get('name') as string,
     category: fd.get('category') as string,
+    image_url: (fd.get('image_url') as string) || null,
     price: Number(fd.get('price') ?? 0),
     stock: Number(fd.get('stock') ?? 0),
     threshold: Number(fd.get('threshold') ?? 10),

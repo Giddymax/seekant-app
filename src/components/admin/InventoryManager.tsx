@@ -4,17 +4,19 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { upsertInventory, deleteInventory } from '@/lib/actions/admin'
 import { formatCurrency } from '@/lib/utils'
+import ImageUploader from './ImageUploader'
 
 type Item = {
   id: string
   name: string
   category: string
+  image_url: string | null
   price: number
   stock: number
   threshold: number
 }
 
-const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', price: 0, stock: 0, threshold: 10 }
+const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, price: 0, stock: 0, threshold: 10 }
 const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
@@ -76,8 +78,8 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-              {['Name', 'Category', 'Price', 'Stock', ''].map(h => (
-                <th key={h} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px' }}>{h}</th>
+              {['', 'Name', 'Category', 'Price', 'Stock', ''].map((h, i) => (
+                <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -86,16 +88,25 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
               const lowStock = item.stock <= item.threshold
               return (
                 <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
-                  <td style={{ padding: '12px 20px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{item.name}</td>
-                  <td style={{ padding: '12px 20px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
-                  <td style={{ padding: '12px 20px', fontSize: 12, color: '#ddb837', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
-                  <td style={{ padding: '12px 20px' }}>
+                  <td style={{ padding: '8px 8px 8px 16px', width: 48 }}>
+                    {item.image_url
+                      // eslint-disable-next-line @next/next/no-img-element
+                      ? <img src={item.image_url} alt="" style={{ width: 40, height: 40, objectFit: 'cover' }} />
+                      : <div style={{ width: 40, height: 40, background: 'rgba(255,255,255,.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.2)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        </div>
+                    }
+                  </td>
+                  <td style={{ padding: '12px 16px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{item.name}</td>
+                  <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
+                  <td style={{ padding: '12px 16px', fontSize: 12, color: '#ddb837', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
+                  <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontSize: 12, color: lowStock ? '#fd4682' : '#fff', fontWeight: lowStock ? 700 : 400 }}>{item.stock}</span>
                       {lowStock && <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', background: 'rgba(253,70,130,.15)', color: '#fd4682' }}>LOW</span>}
                     </div>
                   </td>
-                  <td style={{ padding: '12px 20px' }}>
+                  <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button onClick={() => setEditing({ ...item })} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
                       <button onClick={() => handleDelete(item.id)} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
@@ -105,7 +116,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
               )
             })}
             {!filtered.length && (
-              <tr><td colSpan={5} style={{ padding: '32px 20px', fontSize: 12, color: 'rgba(255,255,255,.3)', textAlign: 'center' }}>No items found.</td></tr>
+              <tr><td colSpan={6} style={{ padding: '32px 20px', fontSize: 12, color: 'rgba(255,255,255,.3)', textAlign: 'center' }}>No items found.</td></tr>
             )}
           </tbody>
         </table>
@@ -127,6 +138,12 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
+              <ImageUploader
+                bucket="product-images"
+                value={editing.image_url}
+                onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
+                label="Product Image"
+              />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Price (GH₵)</label>
