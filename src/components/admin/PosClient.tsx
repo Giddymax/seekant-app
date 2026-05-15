@@ -12,6 +12,7 @@ type Product = {
   image_url: string | null
   price: number
   stock: number
+  is_service: boolean
 }
 
 type ReceiptSnapshot = {
@@ -26,7 +27,7 @@ type ReceiptSnapshot = {
   date: Date
 }
 
-const CATEGORIES = ['All', 'Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
+const CATEGORIES = ['All', 'Services', 'Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const PAYMENT_METHODS = ['Cash', 'Mobile Money', 'Bank Transfer', 'Card']
 
 const inp = (extra = {}) => ({
@@ -52,7 +53,8 @@ function PosProductGrid({
   onAdd: (p: Product) => void
 }) {
   const filtered = products.filter(p => {
-    const matchCat = cat === 'All' || p.category === cat
+    const matchCat = cat === 'All'
+      || (cat === 'Services' ? p.is_service : (!p.is_service && p.category === cat))
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase())
     return matchCat && matchSearch
   })
@@ -102,10 +104,15 @@ function PosProductGrid({
                 </div>
             }
             <div style={{ padding: '10px 12px' }}>
-              <div style={{ fontSize: 9, fontWeight: 700, color: '#ddb837', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>{p.category}</div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: p.is_service ? '#54b9fd' : '#ddb837', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
+                {p.is_service ? 'Service' : p.category}
+              </div>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#ddb837' }}>{formatCurrency(p.price)}</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 4 }}>Stock: {p.stock}</div>
+              {p.is_service
+                ? <div style={{ fontSize: 9, fontWeight: 700, color: '#54b9fd', marginTop: 4, letterSpacing: '0.06em' }}>UNLIMITED</div>
+                : <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 4 }}>Stock: {p.stock}</div>
+              }
             </div>
           </button>
         ))}
@@ -386,11 +393,11 @@ export default function PosClient({ products }: { products: Product[] }) {
     setCart(c => {
       const existing = c.find(x => x.product_id === p.id)
       if (existing) {
-        if (existing.quantity >= p.stock) { toast.error('Not enough stock'); return c }
+        if (!p.is_service && existing.quantity >= p.stock) { toast.error('Not enough stock'); return c }
         return c.map(x => x.product_id === p.id ? { ...x, quantity: x.quantity + 1 } : x)
       }
-      if (p.stock < 1) { toast.error('Out of stock'); return c }
-      return [...c, { product_id: p.id, name: p.name, quantity: 1, unit_price: p.price }]
+      if (!p.is_service && p.stock < 1) { toast.error('Out of stock'); return c }
+      return [...c, { product_id: p.id, name: p.name, quantity: 1, unit_price: p.price, is_service: p.is_service }]
     })
   }
 

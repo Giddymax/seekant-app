@@ -9,6 +9,7 @@ export type CartItem = {
   name: string
   quantity: number
   unit_price: number
+  is_service?: boolean
 }
 
 export async function createSale({
@@ -59,6 +60,8 @@ export async function createSale({
 
   const lineItems = items.map(i => ({
     sale_id:      sale.id,
+    product_id:   i.product_id || null,
+    is_service:   i.is_service ?? false,
     product_name: i.name,
     quantity:     i.quantity,
     unit_price:   i.unit_price,
@@ -69,6 +72,7 @@ export async function createSale({
   if (itemsErr) return { error: itemsErr.message }
 
   for (const item of items) {
+    if (item.is_service) continue
     await supabase.rpc('decrement_inventory_stock', { p_id: item.product_id, p_qty: item.quantity })
       .then(async ({ error }) => {
         if (error) {
@@ -137,9 +141,31 @@ export async function addPayment(sale_id: string, additional: number) {
 
 export async function deleteSale(id: string) {
   const supabase = await createClient()
+
+  // Restore inventory stock for physical product items
+  const { data: saleItems } = await supabase
+    .from('sale_items')
+    .select('product_id, quantity, is_service')
+    .eq('sale_id', id)
+
+  if (saleItems) {
+    for (const item of saleItems) {
+      if (!item.product_id || item.is_service) continue
+      const { data: inv } = await supabase
+        .from('inventory').select('stock').eq('id', item.product_id).single()
+      if (inv) {
+        await supabase
+          .from('inventory')
+          .update({ stock: inv.stock + item.quantity })
+          .eq('id', item.product_id)
+      }
+    }
+  }
+
   const { error } = await supabase.from('sales').delete().eq('id', id)
   if (error) return { error: error.message }
   revalidatePath('/admin/sales')
+  revalidatePath('/admin/inventory')
   return { success: true }
 }
 

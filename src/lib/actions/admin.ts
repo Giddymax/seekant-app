@@ -140,13 +140,15 @@ export async function deleteHeroSlide(id: string) {
 export async function upsertInventory(fd: FormData) {
   const supabase = await createClient()
   const id = fd.get('id') as string | null
+  const isService = fd.get('is_service') === 'true'
   const payload = {
     name: fd.get('name') as string,
     category: fd.get('category') as string,
     image_url: (fd.get('image_url') as string) || null,
     price: Number(fd.get('price') ?? 0),
-    stock: Number(fd.get('stock') ?? 0),
-    threshold: Number(fd.get('threshold') ?? 10),
+    stock: isService ? 0 : Number(fd.get('stock') ?? 0),
+    threshold: isService ? 0 : Number(fd.get('threshold') ?? 10),
+    is_service: isService,
   }
   const { error } = id
     ? await supabase.from('inventory').update(payload).eq('id', id)

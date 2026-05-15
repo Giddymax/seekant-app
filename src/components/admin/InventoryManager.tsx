@@ -14,9 +14,10 @@ type Item = {
   price: number
   stock: number
   threshold: number
+  is_service: boolean
 }
 
-const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, price: 0, stock: 0, threshold: 10 }
+const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, price: 0, stock: 0, threshold: 10, is_service: false }
 const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
@@ -27,7 +28,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
   const [isPending, startTransition] = useTransition()
 
   const filtered = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
-  const lowStockCount = items.filter(i => i.stock <= i.threshold).length
+  const lowStockCount = items.filter(i => !i.is_service && i.stock <= i.threshold).length
 
   const handleSave = () => {
     if (!editing?.name) { toast.error('Name required'); return }
@@ -78,14 +79,14 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-              {['', 'Name', 'Category', 'Price', 'Stock', ''].map((h, i) => (
+              {['', 'Name', 'Category', 'Price', 'Stock / Type', ''].map((h, i) => (
                 <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {filtered.map(item => {
-              const lowStock = item.stock <= item.threshold
+              const lowStock = !item.is_service && item.stock <= item.threshold
               return (
                 <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
                   <td style={{ padding: '8px 8px 8px 16px', width: 48 }}>
@@ -101,10 +102,13 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
                   <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
                   <td style={{ padding: '12px 16px', fontSize: 12, color: '#ddb837', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
                   <td style={{ padding: '12px 16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 12, color: lowStock ? '#fd4682' : '#fff', fontWeight: lowStock ? 700 : 400 }}>{item.stock}</span>
-                      {lowStock && <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', background: 'rgba(253,70,130,.15)', color: '#fd4682' }}>LOW</span>}
-                    </div>
+                    {item.is_service
+                      ? <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd' }}>SERVICE</span>
+                      : <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: 12, color: lowStock ? '#fd4682' : '#fff', fontWeight: lowStock ? 700 : 400 }}>{item.stock}</span>
+                          {lowStock && <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', background: 'rgba(253,70,130,.15)', color: '#fd4682' }}>LOW</span>}
+                        </div>
+                    }
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', gap: 8 }}>
@@ -128,13 +132,28 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
           <div style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Item' : 'New Item'}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {/* Service toggle */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: editing.is_service ? 'rgba(84,185,253,.08)' : 'rgba(255,255,255,.03)', border: `1px solid ${editing.is_service ? 'rgba(84,185,253,.25)' : 'rgba(255,255,255,.06)'}` }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Service Item</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginTop: 2 }}>Services have no stock — available in POS anytime</div>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Toggle service item"
+                  onClick={() => setEditing(p => ({ ...p, is_service: !p?.is_service }))}
+                  style={{ width: 42, height: 24, background: editing.is_service ? '#54b9fd' : 'rgba(255,255,255,.12)', border: 'none', cursor: 'pointer', position: 'relative', transition: 'background .2s', flexShrink: 0 }}
+                >
+                  <span style={{ position: 'absolute', top: 3, left: editing.is_service ? 20 : 3, width: 18, height: 18, background: '#fff', transition: 'left .2s' }} />
+                </button>
+              </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Name *</label>
-                <input value={editing.name ?? ''} onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                <input title="Item name" placeholder="e.g. Business Cards" value={editing.name ?? ''} onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Category</label>
-                <select value={editing.category ?? 'Print'} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                <select title="Category" value={editing.category ?? 'Print'} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
@@ -142,26 +161,30 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
                 bucket="product-images"
                 value={editing.image_url}
                 onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
-                label="Product Image"
+                label="Image (optional)"
               />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: editing.is_service ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Price (GH₵)</label>
-                  <input type="number" min="0" step="0.01" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <input title="Price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
+                {!editing.is_service && (
+                  <div>
+                    <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Stock</label>
+                    <input title="Stock quantity" type="number" min="0" placeholder="0" value={editing.stock ?? 0} onChange={e => setEditing(p => ({ ...p, stock: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  </div>
+                )}
+              </div>
+              {!editing.is_service && (
                 <div>
-                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Stock</label>
-                  <input type="number" min="0" value={editing.stock ?? 0} onChange={e => setEditing(p => ({ ...p, stock: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Low Stock Threshold</label>
+                  <input title="Low stock threshold" type="number" min="0" placeholder="10" value={editing.threshold ?? 10} onChange={e => setEditing(p => ({ ...p, threshold: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Low Stock Threshold</label>
-                <input type="number" min="0" value={editing.threshold ?? 10} onChange={e => setEditing(p => ({ ...p, threshold: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
-              </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 12, marginTop: 28 }}>
-              <button onClick={handleSave} disabled={isPending} className="btn btn-gold" style={{ fontSize: 11 }}>{isPending ? 'Saving…' : 'Save Item'}</button>
-              <button onClick={() => setEditing(null)} style={{ fontSize: 11, padding: '10px 20px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Cancel</button>
+              <button type="button" onClick={handleSave} disabled={isPending} className="btn btn-gold" style={{ fontSize: 11 }}>{isPending ? 'Saving…' : 'Save Item'}</button>
+              <button type="button" onClick={() => setEditing(null)} style={{ fontSize: 11, padding: '10px 20px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Cancel</button>
             </div>
           </div>
         </div>

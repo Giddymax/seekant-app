@@ -210,19 +210,21 @@ create index if not exists idx_products_active_sort
 -- Physical stock used by the POS terminal. Uses serial (integer) id
 -- because the POS client references it as a number.
 create table if not exists public.inventory (
-  id        serial primary key,
-  name      text not null,
-  category  text not null default 'Other'
-              check (category in ('Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other')),
-  image_url text,
-  price     numeric(10,2) not null default 0,
-  stock     integer not null default 0,
-  threshold integer not null default 10,
+  id         serial primary key,
+  name       text not null,
+  category   text not null default 'Other'
+               check (category in ('Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other')),
+  image_url  text,
+  price      numeric(10,2) not null default 0,
+  stock      integer not null default 0,
+  threshold  integer not null default 10,
+  is_service boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 -- Migration for existing installs:
 -- alter table public.inventory add column if not exists image_url text;
+-- alter table public.inventory add column if not exists is_service boolean not null default false;
 
 create trigger inventory_updated_at
   before update on public.inventory
@@ -274,12 +276,17 @@ create index if not exists idx_sales_staff
 create table if not exists public.sale_items (
   id           uuid primary key default uuid_generate_v4(),
   sale_id      uuid not null references public.sales(id) on delete cascade,
+  product_id   integer references public.inventory(id) on delete set null,
+  is_service   boolean not null default false,
   product_name text not null,
   quantity     numeric(10,2) not null,
   unit_price   numeric(10,2) not null,
   line_total   numeric(10,2) not null,
   created_at   timestamptz not null default now()
 );
+-- Migration for existing installs:
+-- alter table public.sale_items add column if not exists product_id integer references public.inventory(id) on delete set null;
+-- alter table public.sale_items add column if not exists is_service boolean not null default false;
 
 create index if not exists idx_sale_items_sale_id
   on public.sale_items(sale_id);
