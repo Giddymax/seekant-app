@@ -9,7 +9,9 @@ type Sale = {
   id: string
   sale_ref: string
   customer_name: string | null
+  customer_phone: string | null
   total: number
+  discount: number
   payment_method: string
   status: string
   notes: string | null
@@ -43,88 +45,83 @@ const inp = {
 }
 
 // ─── Thermal Receipt ──────────────────────────────────────────────────────────
-// Width is constrained to 80mm (302px) for thermal printers.
-// Everything outside .thermal-receipt is hidden during printing.
 function ThermalReceipt({ data }: { data: ReceiptData }) {
   const { sale, items } = data
-  const date = new Date(sale.created_at)
+  const date    = new Date(sale.created_at)
   const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const LINE    = '--------------------------------'
+  const DBL     = '================================'
+  const subtotal = items.reduce((s, i) => s + i.line_total, 0)
+  const discount = sale.discount ?? 0
 
-  const line = '--------------------------------'
-  const dbl  = '================================'
-
-  const padRight = (s: string, n: number) => s.slice(0, n).padEnd(n)
-  const padLeft  = (s: string, n: number) => s.slice(0, n).padStart(n)
+  const Row = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
+    <div style={{ display: 'flex', fontWeight: bold ? 'bold' : 'normal', fontSize: bold ? '13px' : '12px' }}>
+      <span style={{ flex: 1 }}>{label}</span>
+      <span style={{ width: '100px', textAlign: 'right' }}>{value}</span>
+    </div>
+  )
 
   return (
-    <div className="thermal-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.4' }}>
+    <div className="thermal-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '4px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '14px' }}>SEEKANT MULTIMEDIA</div>
+      <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+        <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
         <div>Design. Print. Brand.</div>
         <div>Accra, Ghana</div>
         <div>Tel: +233 XX XXX XXXX</div>
+        <div>www.seekantmultimedia.com</div>
       </div>
 
-      <div>{dbl}</div>
+      <div>{DBL}</div>
 
       {/* Sale meta */}
-      <div>Date: {dateStr}  {timeStr}</div>
+      <div>Date: {dateStr} {timeStr}</div>
       <div>Ref:  {sale.sale_ref}</div>
       <div>Cust: {sale.customer_name || 'Walk-in'}</div>
+      {sale.customer_phone && <div>Tel:  {sale.customer_phone}</div>}
       <div>Pay:  {sale.payment_method}</div>
       {sale.notes && <div>Note: {sale.notes}</div>}
 
-      <div>{line}</div>
+      <div>{LINE}</div>
 
       {/* Column headers */}
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', fontWeight: 'bold' }}>
         <span style={{ flex: 1 }}>ITEM</span>
         <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
         <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
       </div>
 
-      <div>{line}</div>
+      <div>{LINE}</div>
 
       {/* Line items */}
-      {items.map((item, i) => {
-        const name = padRight(item.product_name, 18)
-        const qty  = String(item.quantity).padStart(3)
-        const amt  = formatCurrency(item.line_total).padStart(10)
-        return (
-          <div key={i} style={{ display: 'flex' }}>
-            <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.product_name}</span>
-            <span style={{ width: '28px', textAlign: 'right' }}>{item.quantity}</span>
-            <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
-          </div>
-        )
-        // suppress unused var warnings
-        void name; void qty; void amt;
-      })}
-
+      {items.map((item, i) => (
+        <div key={i} style={{ display: 'flex' }}>
+          <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.product_name}</span>
+          <span style={{ width: '28px', textAlign: 'right' }}>{item.quantity}</span>
+          <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
+        </div>
+      ))}
       {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
 
-      <div>{line}</div>
+      <div>{LINE}</div>
 
-      {/* Total */}
-      <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
-        <span style={{ flex: 1 }}>TOTAL</span>
-        <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(sale.total)}</span>
-      </div>
+      {/* Totals */}
+      <Row label="SUBTOTAL" value={formatCurrency(subtotal)} />
+      {discount > 0
+        ? <Row label="DISCOUNT" value={`-${formatCurrency(discount)}`} />
+        : <Row label="DISCOUNT" value="None" />
+      }
+      <Row label="TAX" value="None" />
+      <div>{LINE}</div>
+      <Row label="TOTAL" value={formatCurrency(sale.total)} bold />
+      <Row label="STATUS" value={sale.status.toUpperCase()} />
 
-      {/* Status */}
-      <div style={{ display: 'flex' }}>
-        <span style={{ flex: 1 }}>STATUS</span>
-        <span style={{ width: '100px', textAlign: 'right' }}>{sale.status.toUpperCase()}</span>
-      </div>
-
-      <div>{dbl}</div>
+      <div>{DBL}</div>
 
       {/* Footer */}
-      <div style={{ textAlign: 'center', marginTop: '4px' }}>
+      <div style={{ textAlign: 'center', marginTop: '6px' }}>
         <div>Thank you for your patronage!</div>
-        <div>seekantmultimedia.com</div>
         <div style={{ marginTop: '8px', fontSize: '10px' }}>*** CUSTOMER COPY ***</div>
       </div>
     </div>
@@ -141,10 +138,13 @@ function EditModal({
   onClose: () => void
   onSaved: (updated: Partial<Sale>) => void
 }) {
+  const lbl = { display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,.4)', marginBottom: 6 }
   const [form, setForm] = useState({
     customer_name:  sale.customer_name ?? '',
+    customer_phone: sale.customer_phone ?? '',
     payment_method: sale.payment_method,
     status:         sale.status,
+    discount:       sale.discount ?? 0,
     notes:          sale.notes ?? '',
   })
   const [isPending, startTransition] = useTransition()
@@ -161,32 +161,46 @@ function EditModal({
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24 }}>
-      <div style={{ background: '#181b2e', width: '100%', maxWidth: 440, padding: '32px 32px' }}>
+      <div style={{ background: '#181b2e', width: '100%', maxWidth: 460, padding: '32px 32px', maxHeight: '90vh', overflowY: 'auto' }}>
         <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Edit Sale</h2>
         <p style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', marginBottom: 24 }}>{sale.sale_ref}</p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Customer Name</label>
+              <input title="Customer Name" value={form.customer_name} onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+            <div>
+              <label style={lbl}>Customer Phone</label>
+              <input title="Customer Phone" value={form.customer_phone} onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Payment Method</label>
+              <select title="Payment Method" value={form.payment_method} onChange={e => setForm(f => ({ ...f, payment_method: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
+                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={lbl}>Status</label>
+              <select title="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
+                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
           <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 6 }}>Customer Name</label>
-            <input title="Customer Name" value={form.customer_name} onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))} style={inp}
+            <label style={lbl}>Discount (GH₵)</label>
+            <input title="Discount" type="number" min="0" step="0.01" value={form.discount} onChange={e => setForm(f => ({ ...f, discount: Number(e.target.value) }))} style={inp}
               onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 6 }}>Payment Method</label>
-            <select title="Payment Method" value={form.payment_method} onChange={e => setForm(f => ({ ...f, payment_method: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
-              onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
-              {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 6 }}>Status</label>
-            <select title="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
-              onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
-              {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 6 }}>Notes</label>
+            <label style={lbl}>Notes</label>
             <textarea title="Notes" rows={3} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} style={{ ...inp, resize: 'vertical' }}
               onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
           </div>
@@ -274,21 +288,26 @@ export default function SalesClient({
 
   return (
     <>
-      {/* ── Print styles: hide everything except receipt ── */}
+      {/* ── Print styles ── */}
       <style>{`
         @media print {
-          body > * { display: none !important; }
-          .thermal-receipt-wrapper { display: block !important; position: fixed; inset: 0; }
+          body * { visibility: hidden !important; }
+          .thermal-receipt-wrapper,
+          .thermal-receipt-wrapper * { visibility: visible !important; }
+          .thermal-receipt-wrapper {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important;
+            width: 80mm !important;
+            background: #fff !important;
+          }
           .thermal-receipt {
             font-family: 'Courier New', Courier, monospace !important;
             font-size: 12px !important;
             width: 80mm !important;
-            max-width: 80mm !important;
-            margin: 0 auto !important;
-            padding: 6px 2px !important;
+            padding: 6px 4px !important;
             color: #000 !important;
             background: #fff !important;
-            line-height: 1.45 !important;
+            line-height: 1.5 !important;
           }
           @page { margin: 4mm; size: 80mm auto; }
         }

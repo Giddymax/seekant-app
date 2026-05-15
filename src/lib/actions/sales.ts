@@ -13,20 +13,25 @@ export type CartItem = {
 
 export async function createSale({
   customer_name,
+  customer_phone,
   payment_method,
   items,
   notes,
+  discount = 0,
 }: {
   customer_name?: string
+  customer_phone?: string
   payment_method: string
   items: CartItem[]
   notes?: string
+  discount?: number
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  const total = items.reduce((sum, i) => sum + i.quantity * i.unit_price, 0)
+  const subtotal = items.reduce((sum, i) => sum + i.quantity * i.unit_price, 0)
+  const total = Math.max(0, subtotal - discount)
   const sale_ref = generateSaleRef()
 
   const { data: sale, error: saleErr } = await supabase
@@ -34,7 +39,9 @@ export async function createSale({
     .insert({
       sale_ref,
       customer_name: customer_name || 'Walk-in',
+      customer_phone: customer_phone || null,
       total,
+      discount,
       payment_method,
       staff_id: user.id,
       notes: notes || null,
@@ -90,9 +97,11 @@ export async function updateSaleStatus(id: string, status: string) {
 
 export async function updateSale(id: string, updates: {
   customer_name?: string
+  customer_phone?: string
   payment_method?: string
   status?: string
   notes?: string
+  discount?: number
 }) {
   const supabase = await createClient()
   const { error } = await supabase.from('sales').update(updates).eq('id', id)

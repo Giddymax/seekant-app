@@ -10,7 +10,7 @@ export default async function SalesPage() {
     supabase.auth.getUser(),
     supabase
       .from('sales')
-      .select('id, sale_ref, customer_name, total, payment_method, status, notes, created_at')
+      .select('id, sale_ref, customer_name, customer_phone, total, discount, payment_method, status, notes, created_at')
       .order('created_at', { ascending: false })
       .limit(200),
   ])

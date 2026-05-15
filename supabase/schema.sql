@@ -234,7 +234,9 @@ create table if not exists public.sales (
   id             uuid primary key default uuid_generate_v4(),
   sale_ref       text not null unique,
   customer_name  text not null default 'Walk-in',
+  customer_phone text,
   total          numeric(10,2) not null,
+  discount       numeric(10,2) not null default 0,
   payment_method text not null
                    check (payment_method in ('Cash', 'Mobile Money', 'Bank Transfer', 'Card')),
   staff_id       uuid references public.profiles(id) on delete set null,
@@ -244,6 +246,10 @@ create table if not exists public.sales (
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
+
+-- Migration for existing installs (safe to run multiple times):
+-- alter table public.sales add column if not exists customer_phone text;
+-- alter table public.sales add column if not exists discount numeric(10,2) not null default 0;
 
 create trigger sales_updated_at
   before update on public.sales
