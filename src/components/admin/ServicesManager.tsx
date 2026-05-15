@@ -16,7 +16,7 @@ type Service = {
 }
 
 const BLANK: Omit<Service, 'id'> = { name: '', category: 'Print', description: '', image_url: '', sort_order: 0, active: true }
-const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Publishing', 'Other']
+const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Publishing', 'Embroidery', 'Gifts', 'Other']
 const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
 export default function ServicesManager({ initialServices }: { initialServices: Service[] }) {
