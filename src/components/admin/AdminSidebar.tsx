@@ -30,7 +30,8 @@ export default function AdminSidebar({ role }: { role: string }) {
       {/* Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, background: '#ddb837', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 12, color: '#1a181d', flexShrink: 0 }}>SM</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Seekant" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
           <div>
             <div style={{ fontSize: 12, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>SEEKANT</div>
             <div style={{ fontSize: 8, color: 'rgba(255,255,255,.35)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Admin</div>

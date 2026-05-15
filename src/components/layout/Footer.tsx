@@ -28,7 +28,8 @@ export default function Footer() {
         {/* Brand column */}
         <div>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 18, textDecoration: 'none' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#ddb837', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900, color: '#1a181d', flexShrink: 0 }}>SM</div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Seekant Multimedia" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
               <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#ddb837', letterSpacing: '0.12em' }}>Design. Print. Brand.</small>

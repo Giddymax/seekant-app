@@ -56,12 +56,10 @@ export default function Navbar() {
         >
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: '50%', background: '#ddb837',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, fontWeight: 900, color: '#1a181d', letterSpacing: '-0.03em',
-              flexShrink: 0,
-            }}>SM</div>
+            <div style={{ width: 42, height: 42, borderRadius: '50%', overflow: 'hidden', background: '#fff', flexShrink: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
               <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#ddb837', letterSpacing: '0.12em' }}>
@@ -138,7 +136,6 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(o => !o)}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open ? 'true' : 'false'}
             className="hamburger"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
