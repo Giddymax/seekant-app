@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import FaqList from './FaqList'
 
 const DEFAULTS = [
   { q: 'What types of printing services do you offer?', a: 'We offer a full range of printing services including business cards, letterheads, flyers, brochures, banners, vehicle branding, book printing, ID cards, and much more — over 36 services in total.' },
@@ -29,18 +29,7 @@ export default async function FaqAccordion() {
             Frequently Asked Questions
           </h2>
         </div>
-        <Accordion type="single" collapsible className="space-y-3">
-          {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 0, padding: '0 8px' }}>
-              <AccordionTrigger style={{ fontSize: 14, fontWeight: 600, color: '#1a181d', textAlign: 'left', padding: '20px 16px' }}>
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent style={{ fontSize: 13, color: '#737a80', lineHeight: 1.8, padding: '0 16px 20px' }}>
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <FaqList faqs={faqs} />
       </div>
     </section>
   )

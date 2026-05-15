@@ -28,10 +28,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Prevent body scroll when mobile menu is open (use html element — more reliable on iOS)
+  // Toggle CSS class on <html> — most reliable way to show/hide on iOS Safari
   useEffect(() => {
-    document.documentElement.style.overflow = open ? 'hidden' : ''
-    return () => { document.documentElement.style.overflow = '' }
+    document.documentElement.classList.toggle('menu-open', open)
+    return () => document.documentElement.classList.remove('menu-open')
   }, [open])
 
   return (
@@ -55,7 +55,7 @@ export default function Navbar() {
           }}
         >
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
+          <Link href="/" onClick={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
             <div style={{ width: 42, height: 42, borderRadius: '50%', overflow: 'hidden', background: '#fff', flexShrink: 0 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -131,14 +131,14 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Hamburger — visibility controlled entirely by CSS (.hamburger in globals.css) */}
+          {/* Hamburger */}
           <button
             type="button"
             onClick={() => setOpen(o => !o)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             className="hamburger"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               {open
                 ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
                 : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
@@ -148,20 +148,8 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile full-screen menu — always in DOM, shown via visibility so iOS never has timing gaps */}
-      <div style={{
-        position: 'fixed',
-        top: 68, left: 0, right: 0, bottom: 0,
-        zIndex: 997,
-        background: '#15212c',
-        display: 'flex', flexDirection: 'column',
-        overflowY: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        visibility: open ? 'visible' : 'hidden',
-        opacity: open ? 1 : 0,
-        pointerEvents: open ? 'auto' : 'none',
-        transition: 'opacity 0.18s ease, visibility 0.18s',
-      }}>
+      {/* Mobile menu — visibility is 100% CSS-controlled via html.menu-open class */}
+      <div className="mobile-nav-overlay">
         {[
           ['Home',      '/'],
           ['About',     '/about'],
@@ -177,18 +165,18 @@ export default function Navbar() {
             href={href}
             onClick={() => setOpen(false)}
             style={{
-              color: 'rgba(255,255,255,.85)', fontSize: 17, fontWeight: 600,
-              padding: '20px 28px', borderBottom: '1px solid rgba(255,255,255,.07)',
+              color: 'rgba(255,255,255,.9)', fontSize: 18, fontWeight: 600,
+              padding: '22px 28px', borderBottom: '1px solid rgba(255,255,255,.07)',
               letterSpacing: '0.02em', display: 'block',
             }}
           >{label}</Link>
         ))}
-        <div style={{ padding: '28px 28px', marginTop: 4 }}>
+        <div style={{ padding: '28px' }}>
           <Link
             href="/quote"
             onClick={() => setOpen(false)}
             className="btn btn-gold"
-            style={{ display: 'block', textAlign: 'center', width: '100%' }}
+            style={{ display: 'block', textAlign: 'center', width: '100%', fontSize: 13, padding: '16px' }}
           >
             Get a Quote
           </Link>

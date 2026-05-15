@@ -96,7 +96,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
     >
       {data.map((slide, i) => (
         <div key={slide.id} style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
           opacity: i === cur ? 1 : 0,
           transition: 'opacity 1s ease',
           pointerEvents: i === cur ? 'auto' : 'none',
@@ -111,11 +111,11 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           />
           {/* Overlay */}
           <div style={{
-            position: 'absolute', inset: 0,
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
             background: 'linear-gradient(105deg,rgba(21,33,44,.94) 0%,rgba(21,33,44,.82) 40%,rgba(21,33,44,.28) 68%,rgba(21,33,44,.04) 100%)',
           }} />
           {/* Text */}
-          <div className="hero-text-wrap" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
+          <div className="hero-text-wrap" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center' }}>
             <div style={{ maxWidth: 620 }}>
               {i === cur && (
                 <>
