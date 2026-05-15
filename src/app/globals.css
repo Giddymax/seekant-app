@@ -239,3 +239,55 @@ html { overflow-x: hidden; }
   /* 2-col grids → 1-col */
   div[style*="repeat(2,1fr)"] { grid-template-columns: 1fr !important; }
 }
+
+/* ── Hero slider — mobile text padding ── */
+.hero-text-wrap { padding: 0 90px; }
+@media (max-width: 768px) { .hero-text-wrap { padding: 0 24px; } }
+@media (max-width: 480px) { .hero-text-wrap { padding: 0 16px; } }
+
+/* ── Newsletter bar ── */
+.newsletter-wrap {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 32px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.newsletter-form {
+  display: flex;
+  gap: 0;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .newsletter-wrap { padding: 28px 32px; }
+  .newsletter-form { width: 100%; }
+}
+@media (max-width: 480px) {
+  .newsletter-wrap { padding: 24px 16px; }
+  .newsletter-form { flex-wrap: wrap; gap: 10px; }
+  .newsletter-form input { width: 100% !important; flex: 1 1 auto !important; min-width: 0 !important; }
+  .newsletter-form button { width: 100% !important; }
+}
+
+/* ── Admin login card ── */
+.login-card { padding: 40px; }
+@media (max-width: 480px) { .login-card { padding: 28px 20px; } }
+
+/* ── Accordion animations (Radix UI / shadcn) ── */
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up:   accordion-up   0.2s ease-out;
+}

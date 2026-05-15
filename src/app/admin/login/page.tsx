@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0d0f18', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: 'Poppins,sans-serif' }}>
+    <div style={{ minHeight: '100dvh', background: '#0d0f18', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px 60px', fontFamily: 'Poppins,sans-serif' }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
 
         {/* Logo */}
@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div style={{ background: '#181b2e', padding: '40px 40px', borderTop: '3px solid #d42020' }}>
+        <div className="login-card" style={{ background: '#181b2e', borderTop: '3px solid #d42020' }}>
           <h1 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Sign In</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', marginBottom: 32 }}>Access the management dashboard</p>
 

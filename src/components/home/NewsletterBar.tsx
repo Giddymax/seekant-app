@@ -18,17 +18,7 @@ export default function NewsletterBar() {
   }
 
   return (
-    <div style={{
-      borderTop: '1px solid rgba(255,255,255,.08)',
-      padding: '32px 48px',
-      maxWidth: 1280,
-      margin: '0 auto',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-      gap: 20,
-    }}>
+    <div className="newsletter-wrap">
       <div>
         <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Stay <em style={{ color: '#d42020' }}>in the Loop</em>
@@ -37,7 +27,7 @@ export default function NewsletterBar() {
           Get printing tips, exclusive offers, and news from Seekant Multimedia.
         </p>
       </div>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 0 }}>
+      <form onSubmit={handleSubmit} className="newsletter-form">
         <input
           type="email"
           value={email}
@@ -45,7 +35,7 @@ export default function NewsletterBar() {
           placeholder="Your email address"
           style={{
             padding: '12px 18px', fontSize: 13, border: 'none', outline: 'none',
-            background: 'rgba(255,255,255,.08)', color: '#fff', width: 260,
+            background: 'rgba(255,255,255,.08)', color: '#fff', flex: 1, minWidth: 180,
             fontFamily: 'Poppins,sans-serif',
           }}
         />
@@ -53,7 +43,7 @@ export default function NewsletterBar() {
           type="submit"
           className="btn btn-gold"
           disabled={loading}
-          style={{ fontSize: 11, padding: '12px 22px', borderRadius: 0, opacity: loading ? 0.7 : 1 }}
+          style={{ fontSize: 11, padding: '12px 22px', borderRadius: 0, opacity: loading ? 0.7 : 1, flexShrink: 0 }}
         >
           {loading ? '…' : 'Subscribe'}
         </button>

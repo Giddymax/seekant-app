@@ -28,10 +28,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Prevent body scroll when mobile menu is open
+  // Prevent body scroll when mobile menu is open (use html element — more reliable on iOS)
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    document.documentElement.style.overflow = open ? 'hidden' : ''
+    return () => { document.documentElement.style.overflow = '' }
   }, [open])
 
   return (
@@ -148,14 +148,15 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile full-screen menu */}
+      {/* Mobile full-screen menu — use explicit top/left/right/bottom (inset shorthand unsupported on iOS <14.5) */}
       {open && (
         <div style={{
-          position: 'fixed', inset: 0, zIndex: 998,
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 998,
           background: '#15212c',
           paddingTop: 68,
           display: 'flex', flexDirection: 'column',
           overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
           animation: 'fadeIn 0.2s ease',
         }}>
           {[

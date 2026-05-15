@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -64,6 +64,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
   const data = (slides.length ? slides : FALLBACK_SLIDES).map(safeSlide)
   const [cur, setCur] = useState(0)
   const [paused, setPaused] = useState(false)
+  const touchStartX = useRef<number | null>(null)
 
   const next = useCallback(() => setCur(c => (c + 1) % data.length), [data.length])
   const prev = useCallback(() => setCur(c => (c - 1 + data.length) % data.length), [data.length])
@@ -74,11 +75,23 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
     return () => clearInterval(t)
   }, [paused, next])
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const diff = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev()
+    touchStartX.current = null
+  }
+
   return (
     <section
       style={{ position: 'relative', height: 'calc(100vh - 68px)', minHeight: 580, overflow: 'hidden', marginTop: 68 }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       {data.map((slide, i) => (
         <div key={slide.id} style={{
@@ -101,7 +114,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
             background: 'linear-gradient(105deg,rgba(21,33,44,.94) 0%,rgba(21,33,44,.82) 40%,rgba(21,33,44,.28) 68%,rgba(21,33,44,.04) 100%)',
           }} />
           {/* Text */}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', padding: '0 90px' }}>
+          <div className="hero-text-wrap" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
             <div style={{ maxWidth: 620 }}>
               {i === cur && (
                 <>
