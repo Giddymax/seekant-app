@@ -46,8 +46,22 @@ const FALLBACK_SLIDES: Slide[] = [
   },
 ]
 
+function safeSlide(s: Slide): Slide {
+  return {
+    ...s,
+    tag:        s.tag        || '',
+    heading:    s.heading    || '',
+    subtext:    s.subtext    || '',
+    btn1_label: s.btn1_label || 'Learn More',
+    btn1_href:  s.btn1_href  || '/',
+    btn2_label: s.btn2_label || 'Contact Us',
+    btn2_href:  s.btn2_href  || '/contacts',
+    image_url:  s.image_url  || FALLBACK_SLIDES[0].image_url,
+  }
+}
+
 export default function HeroSlider({ slides }: { slides: Slide[] }) {
-  const data = slides.length ? slides : FALLBACK_SLIDES
+  const data = (slides.length ? slides : FALLBACK_SLIDES).map(safeSlide)
   const [cur, setCur] = useState(0)
   const [paused, setPaused] = useState(false)
 
