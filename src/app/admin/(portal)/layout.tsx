@@ -26,18 +26,30 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    redirect('/admin/login')
+  }
 
   if (!user) redirect('/admin/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, email')
-    .eq('id', user.id)
-    .single()
-
-  const role = profile?.role ?? 'staff'
-  const email = profile?.email ?? user.email ?? ''
+  let role = 'staff'
+  let email = user.email ?? ''
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, email')
+      .eq('id', user.id)
+      .single()
+    role = profile?.role ?? 'staff'
+    email = profile?.email ?? user.email ?? ''
+  } catch {
+    // profile fetch failed — continue with defaults
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#0d0f18', fontFamily: 'Poppins,sans-serif' }}>

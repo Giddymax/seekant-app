@@ -240,12 +240,13 @@ create table if not exists public.sales (
   customer_phone text,
   total          numeric(10,2) not null,
   discount       numeric(10,2) not null default 0,
+  amount_paid    numeric(10,2) not null default 0,
   payment_method text not null
                    check (payment_method in ('Cash', 'Mobile Money', 'Bank Transfer', 'Card')),
   staff_id       uuid references public.profiles(id) on delete set null,
   notes          text,
   status         text not null default 'Completed'
-                   check (status in ('Completed', 'Pending', 'Cancelled')),
+                   check (status in ('Completed', 'Pending', 'Part-Payment', 'Cancelled')),
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
@@ -253,6 +254,10 @@ create table if not exists public.sales (
 -- Migration for existing installs (safe to run multiple times):
 -- alter table public.sales add column if not exists customer_phone text;
 -- alter table public.sales add column if not exists discount numeric(10,2) not null default 0;
+-- alter table public.sales add column if not exists amount_paid numeric(10,2) not null default 0;
+-- alter table public.sales drop constraint if exists sales_status_check;
+-- alter table public.sales add constraint sales_status_check check (status in ('Completed','Pending','Part-Payment','Cancelled'));
+-- update public.sales set amount_paid = total where status in ('Completed','Cancelled') and amount_paid = 0;
 
 create trigger sales_updated_at
   before update on public.sales

@@ -18,6 +18,7 @@ export async function createSale({
   items,
   notes,
   discount = 0,
+  amount_paid,
 }: {
   customer_name?: string
   customer_phone?: string
@@ -25,6 +26,7 @@ export async function createSale({
   items: CartItem[]
   notes?: string
   discount?: number
+  amount_paid?: number
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -32,6 +34,8 @@ export async function createSale({
 
   const subtotal = items.reduce((sum, i) => sum + i.quantity * i.unit_price, 0)
   const total = Math.max(0, subtotal - discount)
+  const paid = amount_paid ?? total
+  const status = paid >= total ? 'Completed' : paid > 0 ? 'Part-Payment' : 'Pending'
   const sale_ref = generateSaleRef()
 
   const { data: sale, error: saleErr } = await supabase
@@ -42,10 +46,11 @@ export async function createSale({
       customer_phone: customer_phone || null,
       total,
       discount,
+      amount_paid: paid,
       payment_method,
       staff_id: user.id,
       notes: notes || null,
-      status: 'Completed',
+      status,
     })
     .select('id')
     .single()
@@ -63,12 +68,10 @@ export async function createSale({
   const { error: itemsErr } = await supabase.from('sale_items').insert(lineItems)
   if (itemsErr) return { error: itemsErr.message }
 
-  // Decrement inventory stock (direct update)
   for (const item of items) {
     await supabase.rpc('decrement_inventory_stock', { p_id: item.product_id, p_qty: item.quantity })
       .then(async ({ error }) => {
         if (error) {
-          // Fallback: manual update if RPC doesn't exist
           const { data: inv } = await supabase.from('inventory').select('stock').eq('id', item.product_id).single()
           if (inv) {
             await supabase.from('inventory').update({ stock: Math.max(0, inv.stock - item.quantity) }).eq('id', item.product_id)
@@ -77,7 +80,7 @@ export async function createSale({
       })
   }
 
-  return { success: true, sale_ref }
+  return { success: true, sale_ref, status }
 }
 
 export async function getSales() {
@@ -102,9 +105,39 @@ export async function updateSale(id: string, updates: {
   status?: string
   notes?: string
   discount?: number
+  amount_paid?: number
 }) {
   const supabase = await createClient()
   const { error } = await supabase.from('sales').update(updates).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/sales')
+  return { success: true }
+}
+
+export async function addPayment(sale_id: string, additional: number) {
+  const supabase = await createClient()
+  const { data: sale, error: fetchErr } = await supabase
+    .from('sales')
+    .select('total, amount_paid')
+    .eq('id', sale_id)
+    .single()
+  if (fetchErr || !sale) return { error: fetchErr?.message ?? 'Sale not found' }
+
+  const new_amount_paid = Math.min(Number(sale.amount_paid) + additional, Number(sale.total))
+  const new_status = new_amount_paid >= Number(sale.total) ? 'Completed' : 'Part-Payment'
+
+  const { error } = await supabase
+    .from('sales')
+    .update({ amount_paid: new_amount_paid, status: new_status })
+    .eq('id', sale_id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/sales')
+  return { success: true, new_amount_paid, new_status }
+}
+
+export async function deleteSale(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('sales').delete().eq('id', id)
   if (error) return { error: error.message }
   revalidatePath('/admin/sales')
   return { success: true }

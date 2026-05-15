@@ -21,6 +21,7 @@ type ReceiptSnapshot = {
   payment: string
   cart: CartItem[]
   discount: number
+  amountPaid: number
   total: number
   date: Date
 }
@@ -118,15 +119,16 @@ function PosProductGrid({
 
 // ─── Cart Panel ───────────────────────────────────────────────────────────────
 function PosCartPanel({
-  cart, customerName, customerPhone, payment, discount,
+  cart, customerName, customerPhone, payment, discount, amountPaid,
   isPending, lastRef,
-  onUpdateQty, onRemove, onCustomerName, onCustomerPhone, onPayment, onDiscount, onCheckout,
+  onUpdateQty, onRemove, onCustomerName, onCustomerPhone, onPayment, onDiscount, onAmountPaid, onCheckout,
 }: {
   cart: CartItem[]
   customerName: string
   customerPhone: string
   payment: string
   discount: number
+  amountPaid: number
   isPending: boolean
   lastRef: string | null
   onUpdateQty: (id: number, qty: number) => void
@@ -135,10 +137,13 @@ function PosCartPanel({
   onCustomerPhone: (v: string) => void
   onPayment: (v: string) => void
   onDiscount: (v: number) => void
+  onAmountPaid: (v: number) => void
   onCheckout: () => void
 }) {
-  const subtotal = cart.reduce((sum, x) => sum + x.unit_price * x.quantity, 0)
-  const total    = Math.max(0, subtotal - discount)
+  const subtotal   = cart.reduce((sum, x) => sum + x.unit_price * x.quantity, 0)
+  const total      = Math.max(0, subtotal - discount)
+  const changeDue  = amountPaid > total ? amountPaid - total : 0
+  const balanceDue = amountPaid > 0 && amountPaid < total ? total - amountPaid : 0
 
   return (
     <div style={{ background: '#181b2e', display: 'flex', flexDirection: 'column', width: 320, flexShrink: 0, overflow: 'hidden' }}>
@@ -211,6 +216,20 @@ function PosCartPanel({
           />
         </div>
 
+        {/* Amount Paid field */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <label style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', whiteSpace: 'nowrap' }}>AMOUNT PAID GH₵</label>
+          <input
+            type="number" min="0" step="0.01"
+            value={amountPaid || ''}
+            onChange={e => onAmountPaid(Number(e.target.value) || 0)}
+            placeholder="Full payment"
+            style={{ ...inp({ flex: 1 }) }}
+            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
+          />
+        </div>
+
         {/* Totals */}
         {discount > 0 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -224,10 +243,22 @@ function PosCartPanel({
             <span style={{ fontSize: 11, color: '#22c55e' }}>-{formatCurrency(discount)}</span>
           </div>
         )}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: changeDue || balanceDue ? 6 : 14 }}>
           <span style={{ fontSize: 11, color: 'rgba(255,255,255,.5)' }}>TOTAL</span>
           <span style={{ fontSize: 22, fontWeight: 900, color: '#ddb837' }}>{formatCurrency(total)}</span>
         </div>
+        {changeDue > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14, padding: '6px 10px', background: 'rgba(34,197,94,.08)', border: '1px solid rgba(34,197,94,.2)' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#22c55e' }}>CHANGE DUE</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: '#22c55e' }}>{formatCurrency(changeDue)}</span>
+          </div>
+        )}
+        {balanceDue > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14, padding: '6px 10px', background: 'rgba(249,115,22,.08)', border: '1px solid rgba(249,115,22,.3)' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#f97316' }}>BALANCE DUE</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: '#f97316' }}>{formatCurrency(balanceDue)}</span>
+          </div>
+        )}
 
         <button
           type="button"
@@ -310,6 +341,24 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         <span style={{ flex: 1 }}>TOTAL</span>
         <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.total)}</span>
       </div>
+      {snap.amountPaid > 0 && (
+        <div style={{ display: 'flex' }}>
+          <span style={{ flex: 1 }}>PAID</span>
+          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid)}</span>
+        </div>
+      )}
+      {snap.amountPaid > snap.total && (
+        <div style={{ display: 'flex', fontWeight: 'bold' }}>
+          <span style={{ flex: 1 }}>CHANGE</span>
+          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid - snap.total)}</span>
+        </div>
+      )}
+      {snap.amountPaid > 0 && snap.amountPaid < snap.total && (
+        <div style={{ display: 'flex', fontWeight: 'bold' }}>
+          <span style={{ flex: 1 }}>BALANCE DUE</span>
+          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.total - snap.amountPaid)}</span>
+        </div>
+      )}
       <div>{DBL}</div>
 
       <div style={{ textAlign: 'center', marginTop: '6px' }}>
@@ -329,6 +378,7 @@ export default function PosClient({ products }: { products: Product[] }) {
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [discount, setDiscount]       = useState(0)
+  const [amountPaid, setAmountPaid]   = useState(0)
   const [isPending, startTransition]  = useTransition()
   const [receiptSnap, setReceiptSnap] = useState<ReceiptSnapshot | null>(null)
 
@@ -353,15 +403,17 @@ export default function PosClient({ products }: { products: Product[] }) {
 
   const handleCheckout = () => {
     if (!cart.length) { toast.error('Cart is empty'); return }
+    const snapTotal = Math.max(0, cart.reduce((s, i) => s + i.unit_price * i.quantity, 0) - discount)
     const snap: ReceiptSnapshot = {
-      ref:      '',
-      customer: customerName || 'Walk-in',
-      phone:    customerPhone,
+      ref:        '',
+      customer:   customerName || 'Walk-in',
+      phone:      customerPhone,
       payment,
-      cart:     [...cart],
+      cart:       [...cart],
       discount,
-      total:    Math.max(0, cart.reduce((s, i) => s + i.unit_price * i.quantity, 0) - discount),
-      date:     new Date(),
+      amountPaid: amountPaid > 0 ? amountPaid : snapTotal,
+      total:      snapTotal,
+      date:       new Date(),
     }
     startTransition(async () => {
       const result = await createSale({
@@ -370,6 +422,7 @@ export default function PosClient({ products }: { products: Product[] }) {
         customer_name:   snap.customer,
         customer_phone:  snap.phone || undefined,
         discount:        snap.discount,
+        amount_paid:     amountPaid > 0 ? Math.min(amountPaid, snapTotal) : undefined,
       })
       if (result?.error) { toast.error(result.error); return }
       snap.ref = result.sale_ref ?? ''
@@ -378,6 +431,7 @@ export default function PosClient({ products }: { products: Product[] }) {
       setCustomerName('')
       setCustomerPhone('')
       setDiscount(0)
+      setAmountPaid(0)
       toast.success(`Sale recorded! Ref: ${result.sale_ref}`)
       setTimeout(() => window.print(), 200)
     })
@@ -430,6 +484,7 @@ export default function PosClient({ products }: { products: Product[] }) {
           customerPhone={customerPhone}
           payment={payment}
           discount={discount}
+          amountPaid={amountPaid}
           isPending={isPending}
           lastRef={receiptSnap?.ref ?? null}
           onUpdateQty={updateQty}
@@ -438,6 +493,7 @@ export default function PosClient({ products }: { products: Product[] }) {
           onCustomerPhone={setCustomerPhone}
           onPayment={setPayment}
           onDiscount={setDiscount}
+          onAmountPaid={setAmountPaid}
           onCheckout={handleCheckout}
         />
       </div>
