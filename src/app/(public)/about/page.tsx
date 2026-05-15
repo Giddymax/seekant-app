@@ -12,7 +12,7 @@ export default async function AboutPage() {
   return (
     <>
       {/* Page hero */}
-      <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+      <div className="page-hero" style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
@@ -32,8 +32,8 @@ export default async function AboutPage() {
 
       {/* Story section */}
       <section style={{ padding: '88px 0', background: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
-          <div style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
+        <div className="about-story" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+          <div className="about-story-img" style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
             <Image
               src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&h=500&fit=crop&auto=format&q=80"
               alt="Seekant Multimedia office" fill style={{ objectFit: 'cover' }} sizes="50vw"
@@ -62,7 +62,7 @@ export default async function AboutPage() {
 
       {/* Mission / Vision */}
       <section style={{ padding: '88px 0', background: '#f7f8fa' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 32 }}>
+        <div className="about-mv about-mv-outer" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 32 }}>
           {[
             { tag: 'Our Mission', title: 'Delivering Excellence in Every Print', body: 'To provide businesses and individuals with high-quality, affordable printing and branding solutions that help them communicate effectively and stand out in their market.', color: '#ddb837' },
             { tag: 'Our Vision',  title: 'Ghana\'s Leading Creative Print House', body: 'To become West Africa\'s most innovative and reliable full-service printing and branding company, known for quality, speed, and creative excellence.', color: '#fd4682' },

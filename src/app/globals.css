@@ -114,3 +114,128 @@ ul  { list-style: none; }
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE SYSTEM
+   ═══════════════════════════════════════════════ */
+
+/* Prevent horizontal overflow globally */
+html { overflow-x: hidden; }
+
+/* ── Navbar ── */
+.hamburger {
+  display: none;                 /* hidden on desktop via CSS (no inline needed) */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  padding: 8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  align-items: center;
+  justify-content: center;
+}
+.nav-cta { display: flex; align-items: center; gap: 12px; }
+
+@media (max-width: 900px) {
+  .nav-menu { display: none !important; }
+  .hamburger { display: flex !important; }
+  .nav-cta   { display: none !important; }  /* mobile menu has its own "Get a Quote" */
+}
+
+/* Shrink navbar inner padding on small phones */
+@media (max-width: 480px) {
+  .nav-inner { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* ── Footer grid ── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding: 64px 48px 40px;
+}
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; padding: 48px 32px 36px; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; padding: 36px 16px 28px; }
+}
+
+.footer-btm {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 16px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media (max-width: 768px) { .footer-btm { padding: 14px 32px; } }
+@media (max-width: 480px) {
+  .footer-btm {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* ── Section inner containers — reduce horizontal padding on mobile ── */
+/* Covers Works, Gallery, Blog, Contacts, Services, Products pages */
+@media (max-width: 768px) {
+  section > div {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+@media (max-width: 480px) {
+  section > div {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* ── Page hero banners ── */
+@media (max-width: 768px) {
+  .page-hero { padding-top: 56px !important; padding-bottom: 44px !important; }
+  .page-hero > div { padding-left: 24px !important; padding-right: 24px !important; }
+}
+@media (max-width: 480px) {
+  .page-hero { padding-top: 40px !important; padding-bottom: 32px !important; }
+  .page-hero > div { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* ── About page ── */
+@media (max-width: 768px) {
+  .about-story {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  .about-story-img { height: 260px !important; }
+  .about-mv { grid-template-columns: 1fr !important; }
+  .about-mv-outer { padding-left: 24px !important; padding-right: 24px !important; }
+}
+@media (max-width: 480px) {
+  .about-story  { padding-left: 16px !important; padding-right: 16px !important; }
+  .about-mv-outer { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* ── Sticky filter bars (Services / Products pages) ── */
+@media (max-width: 768px) {
+  .filter-bar { padding-left: 16px !important; padding-right: 8px !important; }
+}
+
+/* ── Responsive grid helpers ── */
+@media (max-width: 640px) {
+  /* Works page (3-col) */
+  div[style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+  /* Products page (4-col) */
+  div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr 1fr !important; }
+  /* 2-col grids → 1-col */
+  div[style*="repeat(2,1fr)"] { grid-template-columns: 1fr !important; }
+}

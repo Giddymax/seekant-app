@@ -28,6 +28,12 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   return (
     <>
       <nav
@@ -40,17 +46,21 @@ export default function Navbar() {
           transition: 'box-shadow 0.3s',
         }}
       >
-        <div style={{
-          maxWidth: 1280, margin: '0 auto', padding: '0 28px',
-          width: '100%', display: 'flex', alignItems: 'center',
-          justifyContent: 'space-between', gap: 16,
-        }}>
+        <div
+          className="nav-inner"
+          style={{
+            maxWidth: 1280, margin: '0 auto', padding: '0 28px',
+            width: '100%', display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between', gap: 16,
+          }}
+        >
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
             <div style={{
               width: 40, height: 40, borderRadius: '50%', background: '#ddb837',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 14, fontWeight: 900, color: '#1a181d', letterSpacing: '-0.03em',
+              flexShrink: 0,
             }}>SM</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
@@ -60,7 +70,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop menu */}
+          {/* Desktop nav links */}
           <div className="nav-menu" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {[
               ['Home',      '/'],
@@ -86,19 +96,22 @@ export default function Navbar() {
               <Link href="/services" style={{
                 color: 'rgba(255,255,255,.72)', fontSize: '12.5px', fontWeight: 600,
                 padding: '8px 10px', letterSpacing: '0.03em',
-                transition: 'color .18s', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4,
+                transition: 'color .18s', whiteSpace: 'nowrap',
+                display: 'inline-flex', alignItems: 'center', gap: 4,
               }}>
                 Services <span style={{ fontSize: 8, verticalAlign: '1px' }}>▾</span>
               </Link>
-              <div style={{
-                position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-                transform: 'translateX(-50%)', background: '#29353f',
-                width: 520, padding: 16, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2,
-                borderTop: '2px solid #ddb837', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
-                opacity: 0, pointerEvents: 'none', transition: 'opacity .22s, transform .22s',
-                zIndex: 2000,
-              }}
+              <div
                 className="drop-menu"
+                style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
+                  transform: 'translateX(-50%)', background: '#29353f',
+                  width: 520, padding: 16,
+                  display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2,
+                  borderTop: '2px solid #ddb837', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
+                  opacity: 0, pointerEvents: 'none', transition: 'opacity .22s',
+                  zIndex: 2000,
+                }}
               >
                 {SERVICE_LINKS.map(([name]) => (
                   <Link key={name} href="/services" style={{
@@ -113,37 +126,39 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {/* Right side: CTA + hamburger */}
+          <div className="nav-cta">
             <Link href="/quote" className="btn btn-gold" style={{ fontSize: 11, padding: '10px 20px' }}>
               Get Quote
             </Link>
-            {/* Hamburger */}
-            <button
-              onClick={() => setOpen(o => !o)}
-              aria-label="Toggle menu"
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                color: '#fff', display: 'none', padding: 4,
-              }}
-              className="hamburger"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                {open
-                  ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
-                  : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
-                }
-              </svg>
-            </button>
           </div>
+
+          {/* Hamburger — visibility controlled entirely by CSS (.hamburger in globals.css) */}
+          <button
+            type="button"
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open ? 'true' : 'false'}
+            className="hamburger"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {open
+                ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+                : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
+              }
+            </svg>
+          </button>
         </div>
       </nav>
 
-      {/* Mobile slide-in menu */}
+      {/* Mobile full-screen menu */}
       {open && (
         <div style={{
-          position: 'fixed', inset: 0, zIndex: 998, background: '#15212c',
-          paddingTop: 68, display: 'flex', flexDirection: 'column',
+          position: 'fixed', inset: 0, zIndex: 998,
+          background: '#15212c',
+          paddingTop: 68,
+          display: 'flex', flexDirection: 'column',
+          overflowY: 'auto',
           animation: 'fadeIn 0.2s ease',
         }}>
           {[
@@ -156,14 +171,24 @@ export default function Navbar() {
             ['Blog',      '/blog'],
             ['Contacts',  '/contacts'],
           ].map(([label, href]) => (
-            <Link key={href} href={href} onClick={() => setOpen(false)} style={{
-              color: 'rgba(255,255,255,.8)', fontSize: 16, fontWeight: 600,
-              padding: '18px 32px', borderBottom: '1px solid rgba(255,255,255,.08)',
-              letterSpacing: '0.03em',
-            }}>{label}</Link>
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setOpen(false)}
+              style={{
+                color: 'rgba(255,255,255,.85)', fontSize: 17, fontWeight: 600,
+                padding: '20px 28px', borderBottom: '1px solid rgba(255,255,255,.07)',
+                letterSpacing: '0.02em', display: 'block',
+              }}
+            >{label}</Link>
           ))}
-          <div style={{ padding: '24px 32px' }}>
-            <Link href="/quote" onClick={() => setOpen(false)} className="btn btn-gold" style={{ width: '100%', textAlign: 'center' }}>
+          <div style={{ padding: '28px 28px', marginTop: 4 }}>
+            <Link
+              href="/quote"
+              onClick={() => setOpen(false)}
+              className="btn btn-gold"
+              style={{ display: 'block', textAlign: 'center', width: '100%' }}
+            >
               Get a Quote
             </Link>
           </div>
@@ -171,10 +196,6 @@ export default function Navbar() {
       )}
 
       <style>{`
-        @media (max-width: 900px) {
-          .nav-menu { display: none !important; }
-          .hamburger { display: block !important; }
-        }
         .group:hover .drop-menu {
           opacity: 1 !important;
           pointer-events: auto !important;
