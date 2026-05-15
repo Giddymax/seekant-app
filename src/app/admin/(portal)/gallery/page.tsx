@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import GalleryManager from '@/components/admin/GalleryManager'
 
-export const metadata = { title: 'Gallery – Seekant Admin' }
+export const metadata = { title: 'Works & Gallery – Seekant Admin' }
 
 export default async function GalleryAdminPage() {
   const supabase = await createClient()

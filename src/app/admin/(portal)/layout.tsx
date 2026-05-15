@@ -11,7 +11,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/analytics': 'Analytics',
   '/admin/content': 'Site Content',
   '/admin/hero': 'Hero Slides',
-  '/admin/gallery': 'Gallery',
+  '/admin/gallery': 'Works & Gallery',
   '/admin/services': 'Services',
   '/admin/blog': 'Blog',
   '/admin/quotes': 'Quote Requests',

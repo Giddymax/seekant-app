@@ -57,8 +57,8 @@ export default function GalleryManager({ initialItems }: { initialItems: Gallery
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Gallery</h1>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Manage photos shown on the Gallery and Works pages.</p>
+          <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Works &amp; Gallery</h1>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Photos uploaded here appear on both the Our Works and Gallery pages.</p>
         </div>
         <button type="button" onClick={() => setEditing({ ...BLANK })} className="btn btn-gold" style={{ fontSize: 11 }}>+ Add Photo</button>
       </div>

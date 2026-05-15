@@ -25,7 +25,7 @@ export default async function AboutPage() {
             About Seekant Multimedia
           </h1>
           <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>
-            Ghana&apos;s trusted printing, branding, and design partner since 2014.
+            We are a full-service printing and branding company based in Akyem Asuom, Ghana.
           </p>
         </div>
       </div>
@@ -42,10 +42,10 @@ export default async function AboutPage() {
           <div>
             <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Who We Are</span>
             <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 20 }}>
-              {c.about_heading || 'Your Trusted Partner in Design, Print & Branding'}
+              {c.about_heading || 'About Seekant Multimedia'}
             </h2>
             <p style={{ fontSize: 14, color: '#737a80', lineHeight: 1.9, marginBottom: 28 }}>
-              {c.about_body || 'Seekant Multimedia is a full-service printing and branding agency based in Accra, Ghana.'}
+              {c.about_body || 'We are a full-service printing and branding company based in Akyem Asuom, Ghana. From a single business card to a complete brand identity, we deliver quality across every medium with speed and care.'}
             </p>
             <div style={{ display: 'flex', gap: 32, marginBottom: 36 }}>
               {[['500+', 'Projects'], ['10+', 'Years'], ['200+', 'Clients']].map(([v, l]) => (
