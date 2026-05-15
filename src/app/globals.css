@@ -5,7 +5,7 @@
   --color-brand-dark:   #15212c;
   --color-brand-dark2:  #29353f;
   --color-brand-teal:   #315c5a;
-  --color-brand-gold:   #ddb837;
+  --color-brand-gold:   #d42020;
   --color-brand-pink:   #fd4682;
   --color-brand-blue:   #54b9fd;
   --color-brand-text:   #737a80;
@@ -24,14 +24,14 @@
   /* shadcn compatibility tokens */
   --color-background: #ffffff;
   --color-foreground: #1a181d;
-  --color-primary:    #ddb837;
-  --color-primary-foreground: #1a181d;
+  --color-primary:    #d42020;
+  --color-primary-foreground: #ffffff;
   --color-secondary:  #f7f8fa;
   --color-secondary-foreground: #1a181d;
   --color-muted:      #f7f8fa;
   --color-muted-foreground: #737a80;
   --color-border:     #e5e7eb;
-  --color-ring:       #ddb837;
+  --color-ring:       #d42020;
   --color-destructive: #ef4444;
   --color-destructive-foreground: #fff;
   --color-card: #ffffff;
@@ -76,18 +76,18 @@ ul  { list-style: none; }
 }
 .btn:hover  { filter: brightness(1.08); transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
-.btn-gold    { background: #ddb837; color: #1a181d; }
+.btn-gold    { background: #d42020; color: #fff; }
 .btn-pink    { background: #fd4682; color: #fff; }
 .btn-blue    { background: #54b9fd; color: #fff; }
-.btn-dark    { background: #15212c; color: #fff; }
-.btn-outline { background: none; border: 1.5px solid #ddb837; color: #ddb837; transition: background 0.2s, color 0.2s, transform 0.15s; }
-.btn-outline:hover { background: #ddb837; color: #1a181d; }
+.btn-dark    { background: #111111; color: #fff; }
+.btn-outline { background: none; border: 1.5px solid #d42020; color: #d42020; transition: background 0.2s, color 0.2s, transform 0.15s; }
+.btn-outline:hover { background: #d42020; color: #fff; }
 
 /* ── Section tag chip ── */
 .section-tag {
   display: inline-block;
-  background: #ddb837;
-  color: #1a181d;
+  background: #d42020;
+  color: #fff;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.16em;

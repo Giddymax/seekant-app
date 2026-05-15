@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <div style={{ width: 44, height: 44, background: '#ddb837', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 16, color: '#1a181d', letterSpacing: '-0.02em' }}>SM</div>
+            <div style={{ width: 44, height: 44, background: '#d42020', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 16, color: '#1a181d', letterSpacing: '-0.02em' }}>SM</div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.2 }}>SEEKANT</div>
               <div style={{ fontSize: 9, color: 'rgba(255,255,255,.4)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Admin Portal</div>
@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div style={{ background: '#181b2e', padding: '40px 40px', borderTop: '3px solid #ddb837' }}>
+        <div style={{ background: '#181b2e', padding: '40px 40px', borderTop: '3px solid #d42020' }}>
           <h1 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Sign In</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', marginBottom: 32 }}>Access the management dashboard</p>
 
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
                 placeholder="admin@seekantmultimedia.com"
                 autoComplete="email"
                 style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                onFocus={e => (e.target.style.borderColor = '#d42020')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
               />
               {errors.email && <p style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{errors.email.message}</p>}
@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
                 autoComplete="current-password"
                 style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                onFocus={e => (e.target.style.borderColor = '#d42020')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
               />
               {errors.password && <p style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{errors.password.message}</p>}
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: '100%', padding: '14px', background: '#ddb837', color: '#1a181d', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, fontFamily: 'Poppins,sans-serif', transition: 'opacity .2s' }}
+              style={{ width: '100%', padding: '14px', background: '#d42020', color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, fontFamily: 'Poppins,sans-serif', transition: 'opacity .2s' }}
             >
               {loading ? 'Signing in…' : 'Sign In'}
             </button>
@@ -96,7 +96,7 @@ export default function AdminLoginPage() {
             {showHint && (
               <div style={{ marginTop: 12, background: '#111320', padding: '14px 16px', borderLeft: '2px solid rgba(221,184,55,.4)', fontSize: 11, color: 'rgba(255,255,255,.5)', lineHeight: 1.7 }}>
                 Create your admin account via the Supabase Dashboard → Authentication → Users → Add User, then run:<br />
-                <code style={{ color: '#ddb837', fontSize: 10 }}>INSERT INTO profiles (id, email, role) VALUES ('&lt;uid&gt;', 'admin@example.com', 'admin');</code>
+                <code style={{ color: '#d42020', fontSize: 10 }}>INSERT INTO profiles (id, email, role) VALUES ('&lt;uid&gt;', 'admin@example.com', 'admin');</code>
               </div>
             )}
           </div>

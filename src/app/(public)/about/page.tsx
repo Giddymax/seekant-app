@@ -18,7 +18,7 @@ export default async function AboutPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/" style={{ color: 'rgba(255,255,255,.4)', transition: 'color .18s' }}>Home</Link>
             <span>/</span>
-            <span style={{ color: '#ddb837' }}>About Us</span>
+            <span style={{ color: '#d42020' }}>About Us</span>
           </div>
           <span className="section-tag" style={{ marginBottom: 20 }}>Our Story</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>
@@ -50,7 +50,7 @@ export default async function AboutPage() {
             <div style={{ display: 'flex', gap: 32, marginBottom: 36 }}>
               {[['500+', 'Projects'], ['10+', 'Years'], ['200+', 'Clients']].map(([v, l]) => (
                 <div key={l}>
-                  <div style={{ fontSize: 28, fontWeight: 900, color: '#ddb837' }}>{v}</div>
+                  <div style={{ fontSize: 28, fontWeight: 900, color: '#d42020' }}>{v}</div>
                   <div style={{ fontSize: 11, color: '#737a80', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{l}</div>
                 </div>
               ))}
@@ -64,7 +64,7 @@ export default async function AboutPage() {
       <section style={{ padding: '88px 0', background: '#f7f8fa' }}>
         <div className="about-mv about-mv-outer" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 32 }}>
           {[
-            { tag: 'Our Mission', title: 'Delivering Excellence in Every Print', body: 'To provide businesses and individuals with high-quality, affordable printing and branding solutions that help them communicate effectively and stand out in their market.', color: '#ddb837' },
+            { tag: 'Our Mission', title: 'Delivering Excellence in Every Print', body: 'To provide businesses and individuals with high-quality, affordable printing and branding solutions that help them communicate effectively and stand out in their market.', color: '#d42020' },
             { tag: 'Our Vision',  title: 'Ghana\'s Leading Creative Print House', body: 'To become West Africa\'s most innovative and reliable full-service printing and branding company, known for quality, speed, and creative excellence.', color: '#fd4682' },
           ].map(({ tag, title, body, color }) => (
             <div key={tag} style={{ background: '#fff', padding: '48px 40px', borderTop: `4px solid ${color}` }} className="card-shadow">

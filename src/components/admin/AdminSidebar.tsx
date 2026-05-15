@@ -50,9 +50,9 @@ export default function AdminSidebar({ role }: { role: string }) {
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px',
                 fontSize: 12, fontWeight: active ? 700 : 500,
-                color: active ? '#ddb837' : 'rgba(255,255,255,.5)',
+                color: active ? '#d42020' : 'rgba(255,255,255,.5)',
                 background: active ? 'rgba(221,184,55,.08)' : 'transparent',
-                borderLeft: active ? '2px solid #ddb837' : '2px solid transparent',
+                borderLeft: active ? '2px solid #d42020' : '2px solid transparent',
                 textDecoration: 'none', transition: 'all .15s',
               }}
             >

@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, fontSize: 12, color: '#aaa' }}>
             <Link href="/">Home</Link><span>/</span>
             <Link href="/blog">Blog</Link><span>/</span>
-            <span style={{ color: '#ddb837' }}>{post.title}</span>
+            <span style={{ color: '#d42020' }}>{post.title}</span>
           </div>
 
           <div style={{ fontSize: 15, color: '#737a80', lineHeight: 1.9 }}>

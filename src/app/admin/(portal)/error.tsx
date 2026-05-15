@@ -51,7 +51,7 @@ export default function AdminError({
             type="button"
             onClick={reset}
             style={{
-              padding: '10px 22px', background: '#ddb837', color: '#1a181d',
+              padding: '10px 22px', background: '#d42020', color: '#fff',
               border: 'none', fontWeight: 800, fontSize: 11, cursor: 'pointer',
               letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif',
             }}

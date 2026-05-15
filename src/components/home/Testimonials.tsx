@@ -37,7 +37,7 @@ export default function Testimonials() {
               {/* Stars */}
               <div style={{ display: 'flex', gap: 3, marginBottom: 20 }}>
                 {STARS.map((d, i) => (
-                  <svg key={i} width="15" height="15" viewBox="0 0 24 24" fill="#ddb837">
+                  <svg key={i} width="15" height="15" viewBox="0 0 24 24" fill="#d42020">
                     <path d={d} />
                   </svg>
                 ))}
@@ -46,7 +46,7 @@ export default function Testimonials() {
                 &ldquo;{quote}&rdquo;
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#ddb837', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#1a181d', flexShrink: 0 }}>
+                <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#d42020', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
                   {initials}
                 </div>
                 <div>

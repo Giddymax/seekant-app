@@ -29,7 +29,7 @@ export default async function GalleryPage() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
-            <Link href="/">Home</Link><span>/</span><span style={{ color: '#ddb837' }}>Gallery</span>
+            <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Gallery</span>
           </div>
           <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Our Work</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Gallery</h1>

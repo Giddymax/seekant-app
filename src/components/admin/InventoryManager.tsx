@@ -70,7 +70,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
           onChange={e => setSearch(e.target.value)}
           placeholder="Search items…"
           style={{ ...inp, maxWidth: 320 }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         />
       </div>
@@ -100,7 +100,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
                   </td>
                   <td style={{ padding: '12px 16px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{item.name}</td>
                   <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
-                  <td style={{ padding: '12px 16px', fontSize: 12, color: '#ddb837', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
+                  <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
                   <td style={{ padding: '12px 16px' }}>
                     {item.is_service
                       ? <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd' }}>SERVICE</span>
@@ -149,11 +149,11 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Name *</label>
-                <input title="Item name" placeholder="e.g. Business Cards" value={editing.name ?? ''} onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                <input title="Item name" placeholder="e.g. Business Cards" value={editing.name ?? ''} onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Category</label>
-                <select title="Category" value={editing.category ?? 'Print'} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                <select title="Category" value={editing.category ?? 'Print'} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
@@ -166,19 +166,19 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
               <div style={{ display: 'grid', gridTemplateColumns: editing.is_service ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Price (GH₵)</label>
-                  <input title="Price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <input title="Price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
                 {!editing.is_service && (
                   <div>
                     <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Stock</label>
-                    <input title="Stock quantity" type="number" min="0" placeholder="0" value={editing.stock ?? 0} onChange={e => setEditing(p => ({ ...p, stock: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                    <input title="Stock quantity" type="number" min="0" placeholder="0" value={editing.stock ?? 0} onChange={e => setEditing(p => ({ ...p, stock: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                   </div>
                 )}
               </div>
               {!editing.is_service && (
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Low Stock Threshold</label>
-                  <input title="Low stock threshold" type="number" min="0" placeholder="10" value={editing.threshold ?? 10} onChange={e => setEditing(p => ({ ...p, threshold: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <input title="Low stock threshold" type="number" min="0" placeholder="10" value={editing.threshold ?? 10} onChange={e => setEditing(p => ({ ...p, threshold: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
               )}
             </div>

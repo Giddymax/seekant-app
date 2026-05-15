@@ -32,7 +32,7 @@ export default function Footer() {
             <img src="/logo.png" alt="Seekant Multimedia" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
-              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#ddb837', letterSpacing: '0.12em' }}>Design. Print. Brand.</small>
+              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#d42020', letterSpacing: '0.12em' }}>Design. Print. Brand.</small>
             </div>
           </Link>
           <p style={{ fontSize: 13, lineHeight: 1.8, marginBottom: 24, color: 'rgba(255,255,255,.5)' }}>
@@ -60,10 +60,10 @@ export default function Footer() {
         {/* Quick links */}
         <div>
           <h4 style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>Quick Links</h4>
-          <div style={{ width: 32, height: 2, background: '#ddb837', marginBottom: 18 }} />
+          <div style={{ width: 32, height: 2, background: '#d42020', marginBottom: 18 }} />
           {QUICK_LINKS.map(([label, href]) => (
             <Link key={label} href={href} style={{ display: 'block', color: 'rgba(255,255,255,.5)', fontSize: 13, marginBottom: 10, transition: 'color .18s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#ddb837')}
+              onMouseEnter={e => (e.currentTarget.style.color = '#d42020')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.5)')}
             >{label}</Link>
           ))}
@@ -72,20 +72,20 @@ export default function Footer() {
         {/* Services */}
         <div>
           <h4 style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>Our Services</h4>
-          <div style={{ width: 32, height: 2, background: '#ddb837', marginBottom: 18 }} />
+          <div style={{ width: 32, height: 2, background: '#d42020', marginBottom: 18 }} />
           {SERVICES.map(s => (
             <Link key={s} href="/services" style={{ display: 'block', color: 'rgba(255,255,255,.5)', fontSize: 13, marginBottom: 10, transition: 'color .18s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#ddb837')}
+              onMouseEnter={e => (e.currentTarget.style.color = '#d42020')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.5)')}
             >{s}</Link>
           ))}
-          <Link href="/services" style={{ color: '#ddb837', fontSize: 12, fontWeight: 700 }}>All 36 Services →</Link>
+          <Link href="/services" style={{ color: '#d42020', fontSize: 12, fontWeight: 700 }}>All 36 Services →</Link>
         </div>
 
         {/* Contact */}
         <div>
           <h4 style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>Contact Us</h4>
-          <div style={{ width: 32, height: 2, background: '#ddb837', marginBottom: 18 }} />
+          <div style={{ width: 32, height: 2, background: '#d42020', marginBottom: 18 }} />
           {[
             { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', text: 'Asuom, Kwaebibirim Municipal, Eastern Region, Ghana' },
             { icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', text: '+233 XX XXX XXXX' },
@@ -93,7 +93,7 @@ export default function Footer() {
             { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', text: 'Mon–Fri: 8am – 6pm  |  Sat: 9am – 4pm' },
           ].map(({ icon, text }) => (
             <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddb837" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d42020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }}>
                 <path d={icon} />
               </svg>
               <span style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.6 }}>{text}</span>

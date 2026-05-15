@@ -14,7 +14,7 @@ export default function StatsBar() {
             textAlign: 'center', padding: '20px 16px',
             borderRight: i < STATS.length - 1 ? '1px solid rgba(255,255,255,.1)' : 'none',
           }}>
-            <div style={{ fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: '#ddb837', letterSpacing: '-0.03em', lineHeight: 1 }}>
+            <div style={{ fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: '#d42020', letterSpacing: '-0.03em', lineHeight: 1 }}>
               {value}
             </div>
             <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 8 }}>

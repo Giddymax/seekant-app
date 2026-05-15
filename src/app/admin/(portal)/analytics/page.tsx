@@ -78,7 +78,7 @@ export default async function AnalyticsPage() {
       {/* KPI row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 24 }}>
         {[
-          { label: 'Total Revenue', value: formatCurrency(totalRevenue), color: '#ddb837' },
+          { label: 'Total Revenue', value: formatCurrency(totalRevenue), color: '#d42020' },
           { label: 'Completed Sales', value: String(completed.length), color: '#22c55e' },
           { label: 'Avg. Order Value', value: formatCurrency(avgOrderValue), color: '#54b9fd' },
           { label: 'Total Quotes', value: String(quoteData?.length ?? 0), color: '#fd4682' },
@@ -116,7 +116,7 @@ export default async function AnalyticsPage() {
                 <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{count}</span>
               </div>
               <div style={{ background: 'rgba(255,255,255,.06)', height: 4 }}>
-                <div style={{ background: '#ddb837', height: '100%', width: `${(count / completed.length) * 100}%` }} />
+                <div style={{ background: '#d42020', height: '100%', width: `${(count / completed.length) * 100}%` }} />
               </div>
             </div>
           ))}
@@ -127,7 +127,7 @@ export default async function AnalyticsPage() {
         <div style={card}>
           <h2 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 20 }}>Quote Requests</h2>
           {Object.entries(quoteStatusMap).map(([status, count]) => {
-            const colors: Record<string, string> = { new: '#ddb837', contacted: '#54b9fd', converted: '#22c55e', closed: '#aaa' }
+            const colors: Record<string, string> = { new: '#d42020', contacted: '#54b9fd', converted: '#22c55e', closed: '#aaa' }
             const total = quoteData?.length ?? 1
             return (
               <div key={status} style={{ marginBottom: 12 }}>
@@ -172,7 +172,7 @@ export default async function AnalyticsPage() {
                 <div style={{ fontSize: 12, color: '#fff', fontWeight: 600 }}>{name}</div>
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)' }}>Qty sold: {qty}</div>
               </div>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#ddb837' }}>{formatCurrency(revenue)}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#d42020' }}>{formatCurrency(revenue)}</span>
             </div>
           ))}
           {!topProductsList.length && <p style={{ fontSize: 12, color: 'rgba(255,255,255,.3)' }}>No sales data yet.</p>}

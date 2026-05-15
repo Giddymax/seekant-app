@@ -7,7 +7,7 @@ export default function AdminTopbar({ title, role, email }: { title: string; rol
           fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
           padding: '3px 10px',
           background: role === 'admin' ? 'rgba(221,184,55,.15)' : 'rgba(84,185,253,.15)',
-          color: role === 'admin' ? '#ddb837' : '#54b9fd',
+          color: role === 'admin' ? '#d42020' : '#54b9fd',
         }}>
           {role}
         </span>

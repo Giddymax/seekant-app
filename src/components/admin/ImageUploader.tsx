@@ -67,10 +67,10 @@ export default function ImageUploader({ bucket, value, onUpload, label = 'Image'
           background: 'rgba(255,255,255,.02)', marginBottom: 8,
           transition: 'border-color .15s',
         }}
-        onMouseEnter={e => { if (!uploading) (e.currentTarget as HTMLDivElement).style.borderColor = '#ddb837' }}
+        onMouseEnter={e => { if (!uploading) (e.currentTarget as HTMLDivElement).style.borderColor = '#d42020' }}
         onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,.15)' }}
       >
-        <p style={{ fontSize: 11, color: uploading ? '#ddb837' : 'rgba(255,255,255,.4)', margin: 0 }}>
+        <p style={{ fontSize: 11, color: uploading ? '#d42020' : 'rgba(255,255,255,.4)', margin: 0 }}>
           {uploading ? 'Uploading…' : value ? 'Click to replace image' : 'Click to upload image (max 5 MB)'}
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function ImageUploader({ bucket, value, onUpload, label = 'Image'
         onChange={e => onUpload(e.target.value)}
         placeholder="or paste URL directly"
         style={inp}
-        onFocus={e => (e.target.style.borderColor = '#ddb837')}
+        onFocus={e => (e.target.style.borderColor = '#d42020')}
         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
       />
     </div>

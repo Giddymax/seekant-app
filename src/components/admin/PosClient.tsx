@@ -67,7 +67,7 @@ function PosProductGrid({
           onChange={e => onSearch(e.target.value)}
           placeholder="Search products…"
           style={{ ...inp(), flex: 1 }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         />
         <select
@@ -75,7 +75,7 @@ function PosProductGrid({
           onChange={e => onCat(e.target.value)}
           aria-label="Filter by category"
           style={{ ...inp({ appearance: 'none', cursor: 'pointer', paddingRight: 24 }) }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         >
           {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -92,7 +92,7 @@ function PosProductGrid({
               cursor: 'pointer', padding: 0, textAlign: 'left',
               fontFamily: 'Poppins,sans-serif', transition: 'border-color .15s', overflow: 'hidden',
             }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = '#ddb837')}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = '#d42020')}
             onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,.06)')}
           >
             {/* Product image or placeholder */}
@@ -104,11 +104,11 @@ function PosProductGrid({
                 </div>
             }
             <div style={{ padding: '10px 12px' }}>
-              <div style={{ fontSize: 9, fontWeight: 700, color: p.is_service ? '#54b9fd' : '#ddb837', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: p.is_service ? '#54b9fd' : '#d42020', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
                 {p.is_service ? 'Service' : p.category}
               </div>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
-              <div style={{ fontSize: 14, fontWeight: 800, color: '#ddb837' }}>{formatCurrency(p.price)}</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#d42020' }}>{formatCurrency(p.price)}</div>
               {p.is_service
                 ? <div style={{ fontSize: 9, fontWeight: 700, color: '#54b9fd', marginTop: 4, letterSpacing: '0.06em' }}>UNLIMITED</div>
                 : <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 4 }}>Stock: {p.stock}</div>
@@ -175,7 +175,7 @@ function PosCartPanel({
               <button onClick={() => onUpdateQty(item.product_id, item.quantity + 1)}
                 style={{ width: 20, height: 20, background: 'rgba(255,255,255,.08)', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 14, lineHeight: 1, fontFamily: 'Poppins,sans-serif' }}>+</button>
             </div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#ddb837', minWidth: 52, textAlign: 'right' }}>{formatCurrency(item.unit_price * item.quantity)}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#d42020', minWidth: 52, textAlign: 'right' }}>{formatCurrency(item.unit_price * item.quantity)}</div>
             <button onClick={() => onRemove(item.product_id)} style={{ background: 'none', border: 'none', color: 'rgba(253,70,130,.7)', cursor: 'pointer', fontSize: 16, padding: '0 2px', lineHeight: 1 }}>×</button>
           </div>
         ))}
@@ -187,7 +187,7 @@ function PosCartPanel({
           onChange={e => onCustomerName(e.target.value)}
           placeholder="Customer name (Walk-in)"
           style={{ ...inp({ width: '100%', marginBottom: 8 }) }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         />
         <input
@@ -195,7 +195,7 @@ function PosCartPanel({
           onChange={e => onCustomerPhone(e.target.value)}
           placeholder="Customer phone (optional)"
           style={{ ...inp({ width: '100%', marginBottom: 8 }) }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         />
         <select
@@ -203,7 +203,7 @@ function PosCartPanel({
           onChange={e => onPayment(e.target.value)}
           aria-label="Payment method"
           style={{ ...inp({ width: '100%', appearance: 'none', marginBottom: 8, cursor: 'pointer' }) }}
-          onFocus={e => (e.target.style.borderColor = '#ddb837')}
+          onFocus={e => (e.target.style.borderColor = '#d42020')}
           onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
         >
           {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
@@ -218,7 +218,7 @@ function PosCartPanel({
             onChange={e => onDiscount(Number(e.target.value) || 0)}
             placeholder="0.00"
             style={{ ...inp({ flex: 1 }) }}
-            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onFocus={e => (e.target.style.borderColor = '#d42020')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
           />
         </div>
@@ -232,7 +232,7 @@ function PosCartPanel({
             onChange={e => onAmountPaid(Number(e.target.value) || 0)}
             placeholder="Full payment"
             style={{ ...inp({ flex: 1 }) }}
-            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onFocus={e => (e.target.style.borderColor = '#d42020')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
           />
         </div>
@@ -252,7 +252,7 @@ function PosCartPanel({
         )}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: changeDue || balanceDue ? 6 : 14 }}>
           <span style={{ fontSize: 11, color: 'rgba(255,255,255,.5)' }}>TOTAL</span>
-          <span style={{ fontSize: 22, fontWeight: 900, color: '#ddb837' }}>{formatCurrency(total)}</span>
+          <span style={{ fontSize: 22, fontWeight: 900, color: '#d42020' }}>{formatCurrency(total)}</span>
         </div>
         {changeDue > 0 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14, padding: '6px 10px', background: 'rgba(34,197,94,.08)', border: '1px solid rgba(34,197,94,.2)' }}>
@@ -273,7 +273,7 @@ function PosCartPanel({
           disabled={isPending || !cart.length}
           style={{
             width: '100%', padding: '13px',
-            background: cart.length ? '#ddb837' : 'rgba(255,255,255,.06)',
+            background: cart.length ? '#d42020' : 'rgba(255,255,255,.06)',
             color: cart.length ? '#1a181d' : 'rgba(255,255,255,.25)',
             fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase',
             border: 'none', cursor: cart.length ? 'pointer' : 'not-allowed',

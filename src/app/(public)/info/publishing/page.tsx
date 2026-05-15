@@ -36,17 +36,17 @@ export default function PublishingInfoPage() {
     <main style={{ background: '#0d0f18', minHeight: '100vh', fontFamily: 'Poppins,sans-serif', color: '#fff' }}>
       {/* Hero */}
       <section style={{ padding: '100px 40px 80px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#ddb837', borderBottom: '1px solid #ddb837', paddingBottom: 4, marginBottom: 24 }}>
+        <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#d42020', borderBottom: '1px solid #d42020', paddingBottom: 4, marginBottom: 24 }}>
           Publishing Services
         </div>
         <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: 24, maxWidth: 700 }}>
-          Your words deserve<br /><span style={{ color: '#ddb837' }}>a professional stage.</span>
+          Your words deserve<br /><span style={{ color: '#d42020' }}>a professional stage.</span>
         </h1>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,.55)', lineHeight: 1.8, maxWidth: 540, marginBottom: 40 }}>
           We turn manuscripts, reports, and ideas into beautifully typeset publications ready for print, digital distribution, or both.
         </p>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/quote" style={{ display: 'inline-block', padding: '14px 32px', background: '#ddb837', color: '#1a181d', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
+          <Link href="/quote" style={{ display: 'inline-block', padding: '14px 32px', background: '#d42020', color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
             Get a Publishing Quote
           </Link>
           <Link href="/services" style={{ display: 'inline-block', padding: '14px 32px', background: 'transparent', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', border: '1.5px solid rgba(255,255,255,.15)' }}>
@@ -60,7 +60,7 @@ export default function PublishingInfoPage() {
         <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 32 }}>What We Offer</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 2 }}>
           {SERVICES.map(({ title, desc }) => (
-            <div key={title} style={{ background: '#111320', padding: '32px 28px', borderRight: '2px solid #ddb837' }}>
+            <div key={title} style={{ background: '#111320', padding: '32px 28px', borderRight: '2px solid #d42020' }}>
               <h3 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 10 }}>{title}</h3>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', lineHeight: 1.7 }}>{desc}</p>
             </div>
@@ -75,7 +75,7 @@ export default function PublishingInfoPage() {
           {STEPS.map(({ step, label, desc }, i) => (
             <div key={step} style={{ flex: 1, paddingRight: i < STEPS.length - 1 ? 24 : 0, borderRight: i < STEPS.length - 1 ? '1px solid rgba(255,255,255,.06)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
               <div style={{ fontSize: 36, fontWeight: 900, color: 'rgba(221,184,55,.15)', lineHeight: 1, marginBottom: 10 }}>{step}</div>
-              <div style={{ fontSize: 13, fontWeight: 800, color: '#ddb837', marginBottom: 8 }}>{label}</div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: '#d42020', marginBottom: 8 }}>{label}</div>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', lineHeight: 1.7 }}>{desc}</p>
             </div>
           ))}
@@ -96,10 +96,10 @@ export default function PublishingInfoPage() {
       </section>
 
       {/* CTA bar */}
-      <section style={{ background: '#ddb837', padding: '60px 40px', textAlign: 'center' }}>
+      <section style={{ background: '#d42020', padding: '60px 40px', textAlign: 'center' }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, color: '#1a181d', marginBottom: 12 }}>Ready to publish?</h2>
         <p style={{ fontSize: 14, color: 'rgba(26,24,29,.65)', marginBottom: 32 }}>Share your manuscript or brief and we'll give you a timeline and quote today.</p>
-        <Link href="/quote" style={{ display: 'inline-block', padding: '14px 40px', background: '#1a181d', color: '#ddb837', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
+        <Link href="/quote" style={{ display: 'inline-block', padding: '14px 40px', background: '#1a181d', color: '#d42020', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
           Start Your Publication
         </Link>
       </section>

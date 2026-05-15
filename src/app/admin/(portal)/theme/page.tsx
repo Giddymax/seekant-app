@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 
 const COLORS = [
   { key: 'theme_dark', label: 'Dark Background', defaultVal: '#15212c', description: 'Main dark background used in hero sections and navbar.' },
-  { key: 'theme_gold', label: 'Gold / Primary', defaultVal: '#ddb837', description: 'Primary brand accent — buttons, highlights, icons.' },
+  { key: 'theme_gold', label: 'Gold / Primary', defaultVal: '#d42020', description: 'Primary brand accent — buttons, highlights, icons.' },
   { key: 'theme_pink', label: 'Pink / Accent', defaultVal: '#fd4682', description: 'Secondary accent — required fields, badges.' },
   { key: 'theme_blue', label: 'Blue / Accent', defaultVal: '#54b9fd', description: 'Used in gradient overlays and info elements.' },
   { key: 'theme_teal', label: 'Teal / Accent', defaultVal: '#315c5a', description: 'Supporting accent for stat cards and miscellaneous.' },
@@ -62,7 +62,7 @@ export default function ThemePage() {
                   value={val}
                   onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))}
                   style={{ width: 120, padding: '6px 10px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 11, fontFamily: 'Poppins,sans-serif', outline: 'none' }}
-                  onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                  onFocus={e => (e.target.style.borderColor = '#d42020')}
                   onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                 />
               </div>
@@ -73,7 +73,7 @@ export default function ThemePage() {
       </div>
 
       <div style={{ marginTop: 20, padding: '16px 20px', background: '#181b2e', borderLeft: '2px solid rgba(221,184,55,.3)', fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.6 }}>
-        Note: These values are stored in the database. To apply them to CSS, update the <code style={{ color: '#ddb837', fontSize: 11 }}>globals.css</code> @theme block with these values and redeploy.
+        Note: These values are stored in the database. To apply them to CSS, update the <code style={{ color: '#d42020', fontSize: 11 }}>globals.css</code> @theme block with these values and redeploy.
       </div>
     </div>
   )

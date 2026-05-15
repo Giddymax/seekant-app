@@ -92,7 +92,7 @@ export default function QuotesPage() {
               >
                 <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 9px', background: STATUS_COLORS[status] ?? 'rgba(255,255,255,.08)', color: STATUS_TEXT[status] ?? '#aaa', textTransform: 'capitalize', flexShrink: 0 }}>{status}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{q.name} — <span style={{ color: '#ddb837' }}>{q.service_type}</span></div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{q.name} — <span style={{ color: '#d42020' }}>{q.service_type}</span></div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,.4)', marginTop: 2 }}>{q.email}{q.phone ? ` · ${q.phone}` : ''}</div>
                 </div>
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', flexShrink: 0 }}>{new Date(q.created_at).toLocaleDateString()}</div>
@@ -120,7 +120,7 @@ export default function QuotesPage() {
                     >
                       {STATUSES.map(s => <option key={s} value={s} style={{ textTransform: 'capitalize' }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                     </select>
-                    <a href={`mailto:${q.email}`} style={{ fontSize: 11, padding: '4px 14px', background: 'rgba(221,184,55,.12)', color: '#ddb837', textDecoration: 'none', fontFamily: 'Poppins,sans-serif' }}>Reply by Email</a>
+                    <a href={`mailto:${q.email}`} style={{ fontSize: 11, padding: '4px 14px', background: 'rgba(221,184,55,.12)', color: '#d42020', textDecoration: 'none', fontFamily: 'Poppins,sans-serif' }}>Reply by Email</a>
                   </div>
                 </div>
               )}

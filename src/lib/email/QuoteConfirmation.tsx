@@ -9,7 +9,7 @@ export default function QuoteConfirmation({ data }: { data: QuoteFormData }) {
       <Head />
       <Body style={{ fontFamily: 'Arial, sans-serif', background: '#f7f8fa', margin: 0, padding: 0 }}>
         {/* Header */}
-        <Section style={{ background: '#ddb837', padding: '20px 40px' }}>
+        <Section style={{ background: '#d42020', padding: '20px 40px' }}>
           <Text style={{ fontSize: 20, fontWeight: 900, color: '#1a181d', margin: 0 }}>
             SM &nbsp;|&nbsp; Seekant Multimedia
           </Text>

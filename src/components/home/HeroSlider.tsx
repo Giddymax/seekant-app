@@ -155,7 +155,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
         {data.map((_, i) => (
           <button key={i} onClick={() => setCur(i)} aria-label={`Slide ${i + 1}`} style={{
             width: i === cur ? 28 : 9, height: 9,
-            background: i === cur ? '#ddb837' : 'rgba(255,255,255,.4)',
+            background: i === cur ? '#d42020' : 'rgba(255,255,255,.4)',
             border: 'none', cursor: 'pointer', padding: 0,
             transition: 'width .3s, background .3s',
           }} />

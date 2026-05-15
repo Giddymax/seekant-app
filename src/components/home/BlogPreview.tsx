@@ -40,7 +40,7 @@ export default function BlogPreview({ posts }: { posts: Post[] }) {
                 {post.category && (
                   <span style={{
                     position: 'absolute', top: 14, left: 14,
-                    background: '#ddb837', color: '#1a181d',
+                    background: '#d42020', color: '#fff',
                     fontSize: 9, fontWeight: 700, letterSpacing: '0.1em',
                     textTransform: 'uppercase', padding: '3px 10px',
                   }}>{post.category}</span>
@@ -58,7 +58,7 @@ export default function BlogPreview({ posts }: { posts: Post[] }) {
                     {post.excerpt.slice(0, 110)}…
                   </p>
                 )}
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#ddb837', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#d42020', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   Read More →
                 </span>
               </div>

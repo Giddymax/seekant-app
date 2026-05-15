@@ -19,7 +19,7 @@ export default function QuoteNotification({ data }: { data: QuoteFormData }) {
       <Head />
       <Body style={{ fontFamily: 'Arial, sans-serif', background: '#f7f8fa', margin: 0 }}>
         <Section style={{ background: '#15212c', padding: '20px 40px' }}>
-          <Text style={{ fontSize: 14, fontWeight: 900, color: '#ddb837', margin: 0 }}>
+          <Text style={{ fontSize: 14, fontWeight: 900, color: '#d42020', margin: 0 }}>
             NEW QUOTE REQUEST
           </Text>
           <Text style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', margin: 0 }}>

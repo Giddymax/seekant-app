@@ -33,7 +33,7 @@ type ReceiptData = {
 
 const STATUS_COLOR: Record<string, string> = {
   Completed:    '#22c55e',
-  Pending:      '#ddb837',
+  Pending:      '#d42020',
   'Part-Payment': '#f97316',
   Cancelled:    '#fd4682',
 }
@@ -184,7 +184,7 @@ function SettleModal({
             value={amount}
             onChange={e => setAmount(Math.min(Number(e.target.value), balance))}
             style={inp}
-            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onFocus={e => (e.target.style.borderColor = '#d42020')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
           />
         </div>
@@ -253,26 +253,26 @@ function EditModal({
             <div>
               <label style={lbl}>Customer Name</label>
               <input title="Customer Name" value={form.customer_name} onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))} style={inp}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
             </div>
             <div>
               <label style={lbl}>Customer Phone</label>
               <input title="Customer Phone" value={form.customer_phone} onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))} style={inp}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={lbl}>Payment Method</label>
               <select title="Payment Method" value={form.payment_method} onChange={e => setForm(f => ({ ...f, payment_method: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                 {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
             <div>
               <label style={lbl}>Status</label>
               <select title="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
@@ -281,18 +281,18 @@ function EditModal({
             <div>
               <label style={lbl}>Discount (GH₵)</label>
               <input title="Discount" type="number" min="0" step="0.01" value={form.discount} onChange={e => setForm(f => ({ ...f, discount: Number(e.target.value) }))} style={inp}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
             </div>
             <div>
               <label style={lbl}>Amount Paid (GH₵)</label>
               <input title="Amount Paid" type="number" min="0" step="0.01" value={form.amount_paid} onChange={e => setForm(f => ({ ...f, amount_paid: Number(e.target.value) }))} style={inp}
-                onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
             </div>
           </div>
           <div>
             <label style={lbl}>Notes</label>
             <textarea title="Notes" rows={3} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} style={{ ...inp, resize: 'vertical' }}
-              onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+              onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
           </div>
         </div>
 
@@ -424,7 +424,7 @@ export default function SalesClient({
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Sales</h1>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
-              {filtered.length} records · Revenue: <span style={{ color: '#ddb837', fontWeight: 700 }}>{formatCurrency(totalRevenue)}</span>
+              {filtered.length} records · Revenue: <span style={{ color: '#d42020', fontWeight: 700 }}>{formatCurrency(totalRevenue)}</span>
             </p>
           </div>
           <button type="button" onClick={exportCSV} style={{ fontSize: 11, padding: '10px 18px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
@@ -457,7 +457,7 @@ export default function SalesClient({
                     const balance = Math.max(0, s.total - s.amount_paid)
                     return (
                       <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
-                        <td style={{ padding: '12px 16px', fontSize: 12, color: '#ddb837', fontWeight: 700 }}>{s.sale_ref}</td>
+                        <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700 }}>{s.sale_ref}</td>
                         <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
                           <div>{s.customer_name || 'Walk-in'}</div>
                           {s.customer_phone && <div style={{ fontSize: 10, color: 'rgba(255,255,255,.35)' }}>{s.customer_phone}</div>}
@@ -494,12 +494,12 @@ export default function SalesClient({
             onChange={e => setSearch(e.target.value)}
             placeholder="Search ref, customer or phone…"
             style={{ ...inp12, flex: 1 }}
-            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onFocus={e => (e.target.style.borderColor = '#d42020')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
           />
           <select title="Filter by status" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
             style={{ ...inp12, appearance: 'none', cursor: 'pointer', paddingRight: 28 }}
-            onFocus={e => (e.target.style.borderColor = '#ddb837')}
+            onFocus={e => (e.target.style.borderColor = '#d42020')}
             onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
             <option value="all">All Statuses</option>
             {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -522,7 +522,7 @@ export default function SalesClient({
                 const isPartPay = s.status === 'Part-Payment'
                 return (
                   <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)', background: isPartPay ? 'rgba(249,115,22,.03)' : 'transparent' }}>
-                    <td style={{ padding: '12px 16px', fontSize: 12, color: '#ddb837', fontWeight: 700, whiteSpace: 'nowrap' }}>{s.sale_ref}</td>
+                    <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700, whiteSpace: 'nowrap' }}>{s.sale_ref}</td>
                     <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
                       <div>{s.customer_name || '—'}</div>
                       {s.customer_phone && <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)' }}>{s.customer_phone}</div>}
@@ -574,7 +574,7 @@ export default function SalesClient({
                         </button>
                         {isAdmin && (
                           <button type="button" onClick={() => setEditing(s)}
-                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(221,184,55,.12)', color: '#ddb837', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(221,184,55,.12)', color: '#d42020', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
                             Edit
                           </button>
                         )}

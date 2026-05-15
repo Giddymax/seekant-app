@@ -21,7 +21,7 @@ const BLANK: Omit<EditPost, 'id'> = { title: '', slug: '', category: '', status:
 const CATEGORIES = ['Design Tips', 'Printing Guides', 'Branding Advice', 'News', 'Other']
 const inp: React.CSSProperties = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
-const statusColor: Record<string, string> = { Published: '#22c55e', Draft: '#ddb837', Archived: '#aaa' }
+const statusColor: Record<string, string> = { Published: '#22c55e', Draft: '#d42020', Archived: '#aaa' }
 
 export default function BlogManager({ initialPosts }: { initialPosts: Post[] }) {
   const [posts, setPosts] = useState(initialPosts)
@@ -108,25 +108,25 @@ export default function BlogManager({ initialPosts }: { initialPosts: Post[] }) 
                     setEditing(p => ({ ...p, title: t, slug: p?.id ? p.slug : slugify(t) }))
                   }}
                   style={inp}
-                  onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                  onFocus={e => (e.target.style.borderColor = '#d42020')}
                   onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                 />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Slug</label>
-                <input title="Slug" value={editing.slug ?? ''} onChange={e => setEditing(p => ({ ...p, slug: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                <input title="Slug" value={editing.slug ?? ''} onChange={e => setEditing(p => ({ ...p, slug: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Category</label>
-                  <select title="Category" value={editing.category ?? ''} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                  <select title="Category" value={editing.category ?? ''} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                     <option value="">None</option>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Status</label>
-                  <select title="Status" value={editing.status ?? 'Draft'} onChange={e => setEditing(p => ({ ...p, status: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                  <select title="Status" value={editing.status ?? 'Draft'} onChange={e => setEditing(p => ({ ...p, status: e.target.value }))} style={{ ...inp, appearance: 'none' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                     {['Draft', 'Published', 'Archived'].map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
@@ -139,16 +139,16 @@ export default function BlogManager({ initialPosts }: { initialPosts: Post[] }) 
               />
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Excerpt</label>
-                <textarea title="Excerpt" rows={2} value={editing.excerpt ?? ''} onChange={e => setEditing(p => ({ ...p, excerpt: e.target.value }))} style={{ ...inp, resize: 'vertical' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                <textarea title="Excerpt" rows={2} value={editing.excerpt ?? ''} onChange={e => setEditing(p => ({ ...p, excerpt: e.target.value }))} style={{ ...inp, resize: 'vertical' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Content</label>
-                <textarea title="Content" rows={8} value={editing.content ?? ''} onChange={e => setEditing(p => ({ ...p, content: e.target.value }))} style={{ ...inp, resize: 'vertical' }} placeholder="Write article content here. Separate paragraphs with blank lines." onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                <textarea title="Content" rows={8} value={editing.content ?? ''} onChange={e => setEditing(p => ({ ...p, content: e.target.value }))} style={{ ...inp, resize: 'vertical' }} placeholder="Write article content here. Separate paragraphs with blank lines." onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
               </div>
               {editing.status === 'Published' && (
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Publish Date</label>
-                  <input title="Publish date" type="date" value={editing.published_at?.slice(0, 10) ?? new Date().toISOString().slice(0, 10)} onChange={e => setEditing(p => ({ ...p, published_at: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <input title="Publish date" type="date" value={editing.published_at?.slice(0, 10) ?? new Date().toISOString().slice(0, 10)} onChange={e => setEditing(p => ({ ...p, published_at: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
               )}
             </div>

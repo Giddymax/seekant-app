@@ -39,9 +39,9 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
             <button key={cat} onClick={() => setActive(cat)} style={{
               padding: '8px 20px', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
               textTransform: 'uppercase', border: '1.5px solid',
-              borderColor: active === cat ? '#ddb837' : '#e0e0e0',
-              background: active === cat ? '#ddb837' : 'none',
-              color: active === cat ? '#1a181d' : '#737a80',
+              borderColor: active === cat ? '#d42020' : '#e0e0e0',
+              background: active === cat ? '#d42020' : 'none',
+              color: active === cat ? '#fff' : '#737a80',
               cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
               transition: 'all .2s',
             }}>
@@ -65,7 +65,7 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.4), transparent)' }} />
                 <span style={{
                   position: 'absolute', top: 12, left: 12,
-                  background: '#ddb837', color: '#1a181d', fontSize: 9,
+                  background: '#d42020', color: '#fff', fontSize: 9,
                   fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
                   padding: '3px 10px',
                 }}>{svc.category}</span>
@@ -79,7 +79,7 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
                 </p>
                 <Link href="/quote" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 11, fontWeight: 700, color: '#ddb837',
+                  fontSize: 11, fontWeight: 700, color: '#d42020',
                   letterSpacing: '0.06em', textTransform: 'uppercase',
                   transition: 'gap .2s',
                 }}>

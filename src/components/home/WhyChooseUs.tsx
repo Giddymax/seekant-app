@@ -50,7 +50,7 @@ export default async function WhyChooseUs() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 24px',
               }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ddb837" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d42020" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d={icon} />
                 </svg>
               </div>

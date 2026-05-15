@@ -58,7 +58,7 @@ export default function SocialPage() {
               placeholder={placeholder}
               onChange={e => setLinks(l => ({ ...l, [key]: e.target.value }))}
               style={inp}
-              onFocus={e => (e.target.style.borderColor = '#ddb837')}
+              onFocus={e => (e.target.style.borderColor = '#d42020')}
               onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
             />
           </div>

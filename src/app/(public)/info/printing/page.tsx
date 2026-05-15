@@ -30,17 +30,17 @@ export default function PrintingInfoPage() {
     <main style={{ background: '#0d0f18', minHeight: '100vh', fontFamily: 'Poppins,sans-serif', color: '#fff' }}>
       {/* Hero */}
       <section style={{ padding: '100px 40px 80px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#ddb837', borderBottom: '1px solid #ddb837', paddingBottom: 4, marginBottom: 24 }}>
+        <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#d42020', borderBottom: '1px solid #d42020', paddingBottom: 4, marginBottom: 24 }}>
           Printing Services
         </div>
         <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: 24, maxWidth: 700 }}>
-          Print that commands<br /><span style={{ color: '#ddb837' }}>attention in the real world.</span>
+          Print that commands<br /><span style={{ color: '#d42020' }}>attention in the real world.</span>
         </h1>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,.55)', lineHeight: 1.8, maxWidth: 540, marginBottom: 40 }}>
           From a single business card to a full event fit-out, we deliver sharp, colour-accurate print on premium materials — on time, every time.
         </p>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/quote" style={{ display: 'inline-block', padding: '14px 32px', background: '#ddb837', color: '#1a181d', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
+          <Link href="/quote" style={{ display: 'inline-block', padding: '14px 32px', background: '#d42020', color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
             Get a Print Quote
           </Link>
           <Link href="/services" style={{ display: 'inline-block', padding: '14px 32px', background: 'transparent', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', border: '1.5px solid rgba(255,255,255,.15)' }}>
@@ -54,7 +54,7 @@ export default function PrintingInfoPage() {
         <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 32 }}>Print Products</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 2 }}>
           {PRODUCTS.map(({ title, desc }) => (
-            <div key={title} style={{ background: '#111320', padding: '28px 24px', borderTop: '2px solid #ddb837' }}>
+            <div key={title} style={{ background: '#111320', padding: '28px 24px', borderTop: '2px solid #d42020' }}>
               <h3 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{title}</h3>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', lineHeight: 1.7 }}>{desc}</p>
             </div>
@@ -76,10 +76,10 @@ export default function PrintingInfoPage() {
       </section>
 
       {/* CTA bar */}
-      <section style={{ background: '#ddb837', padding: '60px 40px', textAlign: 'center' }}>
+      <section style={{ background: '#d42020', padding: '60px 40px', textAlign: 'center' }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, color: '#1a181d', marginBottom: 12 }}>Send us your artwork today</h2>
         <p style={{ fontSize: 14, color: 'rgba(26,24,29,.65)', marginBottom: 32 }}>We'll review your files and send a quote within 2 hours.</p>
-        <Link href="/quote" style={{ display: 'inline-block', padding: '14px 40px', background: '#1a181d', color: '#ddb837', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
+        <Link href="/quote" style={{ display: 'inline-block', padding: '14px 40px', background: '#1a181d', color: '#d42020', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
           Upload & Quote
         </Link>
       </section>

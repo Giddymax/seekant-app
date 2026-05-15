@@ -16,7 +16,7 @@ type Service = {
 const CATS = ['All', 'Print', 'Signage', 'Apparel', 'Design', 'Publishing', 'Embroidery', 'Gifts']
 
 const CAT_COLOR: Record<string, string> = {
-  Print:      '#ddb837',
+  Print:      '#d42020',
   Signage:    '#54b9fd',
   Apparel:    '#4ade80',
   Design:     '#c084fc',
@@ -28,7 +28,7 @@ const CAT_COLOR: Record<string, string> = {
 export default function ServicesClientPage({ services }: { services: Service[] }) {
   const [active, setActive] = useState('All')
   const filtered = active === 'All' ? services : services.filter(s => s.category === active)
-  const accent = (cat: string) => CAT_COLOR[cat] ?? '#ddb837'
+  const accent = (cat: string) => CAT_COLOR[cat] ?? '#d42020'
 
   return (
     <>
@@ -38,7 +38,7 @@ export default function ServicesClientPage({ services }: { services: Service[] }
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span>
-            <span style={{ color: '#ddb837' }}>Services</span>
+            <span style={{ color: '#d42020' }}>Services</span>
           </div>
           <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>What We Offer</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>
@@ -57,9 +57,9 @@ export default function ServicesClientPage({ services }: { services: Service[] }
             <button key={cat} type="button" onClick={() => setActive(cat)} style={{
               padding: '7px 20px', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em',
               textTransform: 'uppercase', border: '1.5px solid',
-              borderColor: active === cat ? '#ddb837' : '#e0e0e0',
-              background: active === cat ? '#ddb837' : 'none',
-              color: active === cat ? '#1a181d' : '#737a80',
+              borderColor: active === cat ? '#d42020' : '#e0e0e0',
+              background: active === cat ? '#d42020' : 'none',
+              color: active === cat ? '#fff' : '#737a80',
               cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
               whiteSpace: 'nowrap', flexShrink: 0, transition: 'all .2s',
             }}>{cat}</button>
@@ -81,7 +81,7 @@ export default function ServicesClientPage({ services }: { services: Service[] }
                     <Image src={svc.image_url} alt={svc.name} fill style={{ objectFit: 'cover' }} sizes="33vw" />
                     <span style={{
                       position: 'absolute', top: 12, left: 12,
-                      background: accent(svc.category), color: '#1a181d',
+                      background: accent(svc.category), color: '#fff',
                       fontSize: 9, fontWeight: 700, letterSpacing: '0.1em',
                       textTransform: 'uppercase', padding: '3px 10px',
                     }}>{svc.category}</span>
@@ -101,7 +101,7 @@ export default function ServicesClientPage({ services }: { services: Service[] }
                     <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.7, marginBottom: 16, flex: 1 }}>{svc.description}</p>
                   )}
                   <Link href="/quote" style={{
-                    fontSize: 11, fontWeight: 700, color: '#ddb837',
+                    fontSize: 11, fontWeight: 700, color: '#d42020',
                     letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: 'auto',
                   }}>
                     Get a Quote →

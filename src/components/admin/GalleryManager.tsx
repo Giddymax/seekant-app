@@ -70,7 +70,7 @@ export default function GalleryManager({ initialItems }: { initialItems: Gallery
             <img src={item.image_url} alt={item.label ?? ''} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} />
             <div style={{ padding: '10px 12px' }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label || '—'}</div>
-              {item.category && <div style={{ fontSize: 10, color: '#ddb837', marginBottom: 8 }}>{item.category}</div>}
+              {item.category && <div style={{ fontSize: 10, color: '#d42020', marginBottom: 8 }}>{item.category}</div>}
               <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', background: item.active ? 'rgba(34,197,94,.15)' : 'rgba(255,255,255,.08)', color: item.active ? '#22c55e' : '#aaa' }}>{item.active ? 'Active' : 'Hidden'}</span>
             </div>
             <div style={{ display: 'flex', borderTop: '1px solid rgba(255,255,255,.06)' }}>
@@ -94,16 +94,16 @@ export default function GalleryManager({ initialItems }: { initialItems: Gallery
                 onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
                 label="Photo"
               />
-              <div>{lbl('Label / Caption')}<input value={editing.label ?? ''} onChange={e => setEditing(p => ({ ...p, label: e.target.value }))} placeholder="e.g. Business Cards for Asante Co." style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+              <div>{lbl('Label / Caption')}<input value={editing.label ?? ''} onChange={e => setEditing(p => ({ ...p, label: e.target.value }))} placeholder="e.g. Business Cards for Asante Co." style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
               <div>
                 {lbl('Category')}
-                <select title="Category" value={editing.category ?? ''} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
+                <select title="Category" value={editing.category ?? ''} onChange={e => setEditing(p => ({ ...p, category: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}>
                   <option value="">— None —</option>
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>{lbl('Sort Order')}<input title="Sort Order" type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p, sort_order: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Sort Order')}<input title="Sort Order" type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p, sort_order: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: '#fff' }}>
                     <input type="checkbox" checked={editing.active ?? true} onChange={e => setEditing(p => ({ ...p, active: e.target.checked }))} />

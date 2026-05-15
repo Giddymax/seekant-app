@@ -87,7 +87,7 @@ export default function ContentPage() {
         {SECTIONS.map(section => (
           <div key={section.title}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <h2 style={{ fontSize: 11, fontWeight: 800, color: '#ddb837', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0, flexShrink: 0 }}>{section.title}</h2>
+              <h2 style={{ fontSize: 11, fontWeight: 800, color: '#d42020', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0, flexShrink: 0 }}>{section.title}</h2>
               <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.06)' }} />
             </div>
             <div style={{ background: '#181b2e', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -101,7 +101,7 @@ export default function ContentPage() {
                       value={values[key] ?? ''}
                       onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))}
                       style={{ ...inp, resize: 'vertical' }}
-                      onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                      onFocus={e => (e.target.style.borderColor = '#d42020')}
                       onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                     />
                   ) : (
@@ -110,7 +110,7 @@ export default function ContentPage() {
                       value={values[key] ?? ''}
                       onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))}
                       style={inp}
-                      onFocus={e => (e.target.style.borderColor = '#ddb837')}
+                      onFocus={e => (e.target.style.borderColor = '#d42020')}
                       onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                     />
                   )}

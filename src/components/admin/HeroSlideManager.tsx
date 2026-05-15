@@ -76,7 +76,7 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
               <img src={s.image_url} alt="" style={{ width: 80, height: 52, objectFit: 'cover', flexShrink: 0 }} />
             )}
             <div style={{ flex: 1 }}>
-              {s.tag && <div style={{ fontSize: 9, fontWeight: 700, color: '#ddb837', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{s.tag}</div>}
+              {s.tag && <div style={{ fontSize: 9, fontWeight: 700, color: '#d42020', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{s.tag}</div>}
               <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{s.heading}</div>
               {s.subtext && <div style={{ fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{s.subtext.slice(0, 80)}…</div>}
             </div>
@@ -96,16 +96,16 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Slide' : 'New Slide'}</h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div>{lbl('Tag / Label')}<input value={editing.tag ?? ''} onChange={e => setEditing(p => ({ ...p, tag: e.target.value }))} placeholder="e.g. New Arrivals" style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
-              <div>{lbl('Heading')}<input title="Heading" value={editing.heading ?? ''} onChange={e => setEditing(p => ({ ...p, heading: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
-              <div>{lbl('Subtext')}<textarea title="Subtext" rows={2} value={editing.subtext ?? ''} onChange={e => setEditing(p => ({ ...p, subtext: e.target.value }))} style={{ ...inp, resize: 'vertical' }} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+              <div>{lbl('Tag / Label')}<input value={editing.tag ?? ''} onChange={e => setEditing(p => ({ ...p, tag: e.target.value }))} placeholder="e.g. New Arrivals" style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+              <div>{lbl('Heading')}<input title="Heading" value={editing.heading ?? ''} onChange={e => setEditing(p => ({ ...p, heading: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+              <div>{lbl('Subtext')}<textarea title="Subtext" rows={2} value={editing.subtext ?? ''} onChange={e => setEditing(p => ({ ...p, subtext: e.target.value }))} style={{ ...inp, resize: 'vertical' }} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>{lbl('Button 1 Label')}<input title="Button 1 Label" value={editing.btn1_label ?? ''} onChange={e => setEditing(p => ({ ...p, btn1_label: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
-                <div>{lbl('Button 1 Link')}<input title="Button 1 Link" value={editing.btn1_href ?? ''} onChange={e => setEditing(p => ({ ...p, btn1_href: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Button 1 Label')}<input title="Button 1 Label" value={editing.btn1_label ?? ''} onChange={e => setEditing(p => ({ ...p, btn1_label: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Button 1 Link')}<input title="Button 1 Link" value={editing.btn1_href ?? ''} onChange={e => setEditing(p => ({ ...p, btn1_href: e.target.value }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>{lbl('Button 2 Label')}<input title="Button 2 Label" value={editing.btn2_label ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_label: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
-                <div>{lbl('Button 2 Link')}<input title="Button 2 Link" value={editing.btn2_href ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_href: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Button 2 Label')}<input title="Button 2 Label" value={editing.btn2_label ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_label: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Button 2 Link')}<input title="Button 2 Link" value={editing.btn2_href ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_href: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
               </div>
               <ImageUploader
                 bucket="hero-images"
@@ -114,7 +114,7 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
                 label="Slide Image"
               />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>{lbl('Sort Order')}<input title="Sort Order" type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p, sort_order: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#ddb837')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
+                <div>{lbl('Sort Order')}<input title="Sort Order" type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p, sort_order: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: '#fff' }}>
                     <input type="checkbox" checked={editing.active ?? true} onChange={e => setEditing(p => ({ ...p, active: e.target.checked }))} />

@@ -19,7 +19,7 @@ export default async function BlogPage() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
-            <Link href="/">Home</Link><span>/</span><span style={{ color: '#ddb837' }}>Blog</span>
+            <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Blog</span>
           </div>
           <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Tips & Insights</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Our Blog</h1>
@@ -38,14 +38,14 @@ export default async function BlogPage() {
                 <div style={{ position: 'relative', height: 220, overflow: 'hidden' }}>
                   <Image src={post.cover_url || 'https://placehold.co/800x400'} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="33vw" />
                   {post.category && (
-                    <span style={{ position: 'absolute', top: 14, left: 14, background: '#ddb837', color: '#1a181d', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px' }}>{post.category}</span>
+                    <span style={{ position: 'absolute', top: 14, left: 14, background: '#d42020', color: '#fff', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px' }}>{post.category}</span>
                   )}
                 </div>
                 <div style={{ padding: '24px 26px 28px' }}>
                   <p style={{ fontSize: 11, color: '#aaa', marginBottom: 10, letterSpacing: '0.04em' }}>{post.published_at ? formatDate(post.published_at) : ''}</p>
                   <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1a181d', lineHeight: 1.4, marginBottom: 10 }}>{post.title}</h2>
                   {post.excerpt && <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.7, marginBottom: 18 }}>{post.excerpt.slice(0, 120)}…</p>}
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#ddb837', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Read More →</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#d42020', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Read More →</span>
                 </div>
               </Link>
             ))}

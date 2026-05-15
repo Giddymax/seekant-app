@@ -62,7 +62,7 @@ export default function Navbar() {
             </div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
-              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#ddb837', letterSpacing: '0.12em' }}>
+              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#d42020', letterSpacing: '0.12em' }}>
                 Printing &amp; Branding
               </small>
             </div>
@@ -84,7 +84,7 @@ export default function Navbar() {
                 padding: '8px 10px', letterSpacing: '0.03em',
                 transition: 'color .18s', whiteSpace: 'nowrap',
               }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#ddb837')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#d42020')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.72)')}
               >{label}</Link>
             ))}
@@ -106,7 +106,7 @@ export default function Navbar() {
                   transform: 'translateX(-50%)', background: '#29353f',
                   width: 520, padding: 16,
                   display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2,
-                  borderTop: '2px solid #ddb837', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
+                  borderTop: '2px solid #d42020', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
                   opacity: 0, pointerEvents: 'none', transition: 'opacity .22s',
                   zIndex: 2000,
                 }}
@@ -116,7 +116,7 @@ export default function Navbar() {
                     color: 'rgba(255,255,255,.68)', fontSize: 12, fontWeight: 500,
                     padding: '8px 12px', transition: 'color .15s, background .15s',
                   }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#ddb837'; e.currentTarget.style.background = 'rgba(255,255,255,.06)' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#d42020'; e.currentTarget.style.background = 'rgba(255,255,255,.06)' }}
                     onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,.68)'; e.currentTarget.style.background = 'none' }}
                   >{name}</Link>
                 ))}

@@ -31,7 +31,7 @@ export default function NewsletterBar() {
     }}>
       <div>
         <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
-          Stay <em style={{ color: '#ddb837' }}>in the Loop</em>
+          Stay <em style={{ color: '#d42020' }}>in the Loop</em>
         </p>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
           Get printing tips, exclusive offers, and news from Seekant Multimedia.

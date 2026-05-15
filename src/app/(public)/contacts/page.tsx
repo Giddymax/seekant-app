@@ -21,7 +21,7 @@ export default async function ContactsPage() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
-            <Link href="/">Home</Link><span>/</span><span style={{ color: '#ddb837' }}>Contacts</span>
+            <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Contacts</span>
           </div>
           <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Get In Touch</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Contact Us</h1>
@@ -37,10 +37,10 @@ export default async function ContactsPage() {
             {contactItems.map(({ icon, label, value }) => (
               <div key={label} style={{ display: 'flex', gap: 18, marginBottom: 28 }}>
                 <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(221,184,55,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ddb837" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={icon} /></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d42020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={icon} /></svg>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#ddb837', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#d42020', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
                   <div style={{ fontSize: 14, color: '#737a80', lineHeight: 1.6 }}>{value}</div>
                 </div>
               </div>
@@ -53,7 +53,7 @@ export default async function ContactsPage() {
           {/* Map placeholder */}
           <div style={{ background: '#dde0e4', height: 460, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             <div style={{ textAlign: 'center' }}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddb837" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 12 }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d42020" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 12 }}>
                 <path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <p style={{ fontSize: 13, color: '#737a80' }}>Asuom, Kwaebibirim Municipal<br />Eastern Region, Ghana</p>
