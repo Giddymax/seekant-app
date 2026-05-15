@@ -164,6 +164,48 @@ export async function deleteInventory(id: string) {
   return { success: true }
 }
 
+// ── GALLERY ───────────────────────────────────────────────
+export async function upsertGalleryItem(fd: FormData) {
+  const supabase = await createClient()
+  const id = fd.get('id') as string | null
+  const payload = {
+    image_url: fd.get('image_url') as string,
+    label: fd.get('label') as string || null,
+    category: fd.get('category') as string || null,
+    sort_order: Number(fd.get('sort_order') ?? 0),
+    active: fd.get('active') === 'true',
+  }
+  const { error } = id
+    ? await supabase.from('gallery_items').update(payload).eq('id', id)
+    : await supabase.from('gallery_items').insert(payload)
+  if (error) return { error: error.message }
+  revalidatePath('/gallery')
+  revalidatePath('/works')
+  revalidatePath('/')
+  revalidatePath('/admin/gallery')
+  return { success: true }
+}
+
+export async function deleteGalleryItem(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('gallery_items').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/gallery')
+  revalidatePath('/works')
+  revalidatePath('/')
+  revalidatePath('/admin/gallery')
+  return { success: true }
+}
+
+// ── QUOTES ────────────────────────────────────────────────
+export async function updateQuoteStatus(id: string, status: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('quote_requests').update({ status }).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/quotes')
+  return { success: true }
+}
+
 // ── STAFF ACCOUNTS ────────────────────────────────────────
 export async function createStaffAccount(fd: FormData) {
   const supabase = await createAdminClient()

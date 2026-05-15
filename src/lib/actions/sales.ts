@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { generateSaleRef } from '@/lib/utils'
 
@@ -85,4 +86,26 @@ export async function updateSaleStatus(id: string, status: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('sales').update({ status }).eq('id', id)
   return error ? { error: error.message } : { success: true }
+}
+
+export async function updateSale(id: string, updates: {
+  customer_name?: string
+  payment_method?: string
+  status?: string
+  notes?: string
+}) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('sales').update(updates).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/sales')
+  return { success: true }
+}
+
+export async function getSaleItems(sale_id: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('sale_items')
+    .select('product_name, quantity, unit_price, line_total')
+    .eq('sale_id', sale_id)
+  return data ?? []
 }

@@ -1,18 +1,30 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Our Works – Seekant Multimedia' }
 
-const WORKS = [
-  { title: 'Full Brand Identity — Asante Group',    cat: 'Branding',    img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&h=460&fit=crop&auto=format&q=80' },
-  { title: 'Custom Jerseys — FC Accra Stars',       cat: 'Apparel',     img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=700&h=460&fit=crop&auto=format&q=80' },
-  { title: 'Vehicle Branding — GreenTech Fleet',    cat: 'Signage',     img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=700&h=460&fit=crop&auto=format&q=80' },
-  { title: 'Wedding Stationery Suite',              cat: 'Print',       img: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=700&h=460&fit=crop&auto=format&q=80' },
-  { title: 'Annual Report — MidCorp Ltd.',          cat: 'Publishing',  img: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=700&h=460&fit=crop&auto=format&q=80' },
-  { title: 'Trade Fair Banners — Accra Expo',       cat: 'Signage',     img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=700&h=460&fit=crop&auto=format&q=80' },
+const FALLBACK = [
+  { id: '1', title: 'Full Brand Identity — Asante Group',  cat: 'Branding',   img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&h=460&fit=crop&auto=format&q=80' },
+  { id: '2', title: 'Custom Jerseys — FC Accra Stars',     cat: 'Apparel',    img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=700&h=460&fit=crop&auto=format&q=80' },
+  { id: '3', title: 'Vehicle Branding — GreenTech Fleet',  cat: 'Signage',    img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=700&h=460&fit=crop&auto=format&q=80' },
+  { id: '4', title: 'Wedding Stationery Suite',            cat: 'Print',      img: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=700&h=460&fit=crop&auto=format&q=80' },
+  { id: '5', title: 'Annual Report — MidCorp Ltd.',        cat: 'Publishing', img: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=700&h=460&fit=crop&auto=format&q=80' },
+  { id: '6', title: 'Trade Fair Banners — Accra Expo',     cat: 'Signage',    img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=700&h=460&fit=crop&auto=format&q=80' },
 ]
 
-export default function WorksPage() {
+export default async function WorksPage() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('gallery_items')
+    .select('id, image_url, label, category')
+    .eq('active', true)
+    .order('sort_order')
+
+  const works = data?.length
+    ? data.map(item => ({ id: item.id, title: item.label ?? '', cat: item.category ?? '', img: item.image_url }))
+    : FALLBACK
+
   return (
     <>
       <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
@@ -30,16 +42,18 @@ export default function WorksPage() {
       <section style={{ padding: '64px 0 88px', background: '#f7f8fa' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
-            {WORKS.map(w => (
-              <div key={w.title} className="card-shadow" style={{ background: '#fff', overflow: 'hidden' }}>
+            {works.map(w => (
+              <div key={w.id} className="card-shadow" style={{ background: '#fff', overflow: 'hidden' }}>
                 <div style={{ position: 'relative', height: 240, overflow: 'hidden' }}>
                   <Image src={w.img} alt={w.title} fill style={{ objectFit: 'cover', transition: 'transform .4s' }} sizes="33vw" />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(21,33,44,.6), transparent)' }} />
-                  <span style={{ position: 'absolute', top: 14, left: 14, background: '#ddb837', color: '#1a181d', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px' }}>{w.cat}</span>
+                  {w.cat && <span style={{ position: 'absolute', top: 14, left: 14, background: '#ddb837', color: '#1a181d', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px' }}>{w.cat}</span>}
                 </div>
-                <div style={{ padding: '20px 22px 24px' }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1a181d', lineHeight: 1.4 }}>{w.title}</h3>
-                </div>
+                {w.title && (
+                  <div style={{ padding: '20px 22px 24px' }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1a181d', lineHeight: 1.4 }}>{w.title}</h3>
+                  </div>
+                )}
               </div>
             ))}
           </div>

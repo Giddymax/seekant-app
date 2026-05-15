@@ -13,7 +13,7 @@ type Product = {
   stock: number
 }
 
-const CATEGORIES = ['All', 'Print', 'Signage', 'Apparel', 'Design', 'Other']
+const CATEGORIES = ['All', 'Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const PAYMENT_METHODS = ['Cash', 'Mobile Money', 'Bank Transfer', 'Card']
 
 const inp = (extra = {}) => ({
@@ -223,6 +223,9 @@ export default function PosClient({ products }: { products: Product[] }) {
   const [customerName, setCustomerName] = useState('')
   const [isPending, startTransition] = useTransition()
   const [lastRef, setLastRef] = useState<string | null>(null)
+  const [receiptCart, setReceiptCart] = useState<CartItem[]>([])
+  const [receiptPayment, setReceiptPayment] = useState('Cash')
+  const [receiptCustomer, setReceiptCustomer] = useState('Walk-in')
 
   const addToCart = (p: Product) => {
     setCart(c => {
@@ -247,14 +250,19 @@ export default function PosClient({ products }: { products: Product[] }) {
 
   const handleCheckout = () => {
     if (!cart.length) { toast.error('Cart is empty'); return }
+    const snapshotCart = [...cart]
+    const snapshotPayment = payment
+    const snapshotCustomer = customerName || 'Walk-in'
     startTransition(async () => {
-      const result = await createSale({ items: cart, payment_method: payment, customer_name: customerName || 'Walk-in' })
+      const result = await createSale({ items: snapshotCart, payment_method: snapshotPayment, customer_name: snapshotCustomer })
       if (result?.error) { toast.error(result.error); return }
+      setReceiptCart(snapshotCart)
+      setReceiptPayment(snapshotPayment)
+      setReceiptCustomer(snapshotCustomer)
       setLastRef(result.sale_ref ?? null)
       setCart([])
       setCustomerName('')
       toast.success(`Sale recorded! Ref: ${result.sale_ref}`)
-      // Trigger print receipt
       setTimeout(() => window.print(), 300)
     })
   }
@@ -306,11 +314,13 @@ export default function PosClient({ products }: { products: Product[] }) {
             Design. Print. Brand.<br />
             Accra, Ghana<br />
             {new Date().toLocaleString()}<br />
-            Ref: <strong>{lastRef}</strong>
+            <br />
+            Ref: <strong>{lastRef}</strong><br />
+            Customer: {receiptCustomer}
           </div>
           <hr />
-          {cart.map(i => (
-            <div key={i.product_id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {receiptCart.map(i => (
+            <div key={i.product_id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
               <span>{i.name} × {i.quantity}</span>
               <span>{formatCurrency(i.unit_price * i.quantity)}</span>
             </div>
@@ -318,10 +328,11 @@ export default function PosClient({ products }: { products: Product[] }) {
           <hr />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
             <span>TOTAL</span>
-            <span>{formatCurrency(cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
+            <span>{formatCurrency(receiptCart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
           </div>
           <div style={{ textAlign: 'center', marginTop: 12 }}>
-            Payment: {payment}<br />
+            Payment: {receiptPayment}<br />
+            <br />
             Thank you for choosing Seekant Multimedia!
           </div>
         </div>

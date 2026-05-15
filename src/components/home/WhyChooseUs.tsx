@@ -1,4 +1,6 @@
-const FEATURES = [
+import { createClient } from '@/lib/supabase/server'
+
+const DEFAULTS = [
   {
     icon: 'M13 10V3L4 14h7v7l9-11h-7z',
     title: 'Fast Turnaround',
@@ -16,7 +18,21 @@ const FEATURES = [
   },
 ]
 
-export default function WhyChooseUs() {
+export default async function WhyChooseUs() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('site_content')
+    .select('key,value')
+    .in('key', ['why_1_title', 'why_1_body', 'why_2_title', 'why_2_body', 'why_3_title', 'why_3_body'])
+
+  const map: Record<string, string> = Object.fromEntries((data ?? []).map(r => [r.key, r.value]))
+
+  const features = DEFAULTS.map((def, i) => ({
+    icon: def.icon,
+    title: map[`why_${i + 1}_title`] || def.title,
+    body:  map[`why_${i + 1}_body`]  || def.body,
+  }))
+
   return (
     <section style={{ background: '#f7f8fa', padding: '88px 0' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
@@ -27,7 +43,7 @@ export default function WhyChooseUs() {
           </h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 32 }}>
-          {FEATURES.map(({ icon, title, body }) => (
+          {features.map(({ icon, title, body }) => (
             <div key={title} style={{ background: '#fff', padding: '40px 36px', textAlign: 'center' }} className="card-shadow">
               <div style={{
                 width: 64, height: 64, borderRadius: '50%', background: 'rgba(221,184,55,.12)',

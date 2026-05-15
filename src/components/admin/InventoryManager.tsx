@@ -15,7 +15,7 @@ type Item = {
 }
 
 const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', price: 0, stock: 0, threshold: 10 }
-const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Other']
+const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
 export default function InventoryManager({ initialItems }: { initialItems: Item[] }) {

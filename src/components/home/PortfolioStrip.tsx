@@ -1,14 +1,25 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/server'
 
-const IMAGES = [
-  'https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=600&h=400&fit=crop&auto=format&q=80',
-  'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=400&fit=crop&auto=format&q=80',
-  'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=600&h=400&fit=crop&auto=format&q=80',
-  'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop&auto=format&q=80',
+const FALLBACK = [
+  { id: 1, image_url: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=600&h=400&fit=crop&auto=format&q=80', label: null },
+  { id: 2, image_url: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=400&fit=crop&auto=format&q=80', label: null },
+  { id: 3, image_url: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=600&h=400&fit=crop&auto=format&q=80', label: null },
+  { id: 4, image_url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop&auto=format&q=80', label: null },
 ]
 
-export default function PortfolioStrip() {
+export default async function PortfolioStrip() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('gallery_items')
+    .select('id, image_url, label')
+    .eq('active', true)
+    .order('sort_order')
+    .limit(4)
+
+  const items = data?.length ? data : FALLBACK
+
   return (
     <section style={{ padding: '88px 0', background: '#fff' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
@@ -22,10 +33,10 @@ export default function PortfolioStrip() {
           <Link href="/works" className="btn btn-outline">View All Projects</Link>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
-          {IMAGES.map((src, i) => (
-            <Link key={i} href="/works" style={{ position: 'relative', display: 'block', overflow: 'hidden', aspectRatio: '4/3' }}>
+          {items.map((item) => (
+            <Link key={item.id} href="/works" style={{ position: 'relative', display: 'block', overflow: 'hidden', aspectRatio: '4/3' }}>
               <Image
-                src={src} alt={`Portfolio ${i + 1}`} fill
+                src={item.image_url} alt={item.label ?? `Portfolio ${item.id}`} fill
                 style={{ objectFit: 'cover', transition: 'transform .4s' }}
                 sizes="25vw"
               />
