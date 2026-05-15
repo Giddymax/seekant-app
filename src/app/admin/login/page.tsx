@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
               <input
                 {...register('email')}
                 type="email"
-                placeholder="admin@seekantmultimedia.com"
+                placeholder=""
                 autoComplete="email"
                 style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
                 onFocus={e => (e.target.style.borderColor = '#d42020')}
@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
               <input
                 {...register('password')}
                 type="password"
-                placeholder="••••••••"
+                placeholder=""
                 autoComplete="current-password"
                 style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
                 onFocus={e => (e.target.style.borderColor = '#d42020')}
