@@ -34,8 +34,27 @@ export default function Navbar() {
     return () => document.documentElement.classList.remove('menu-open')
   }, [open])
 
+  useEffect(() => {
+    if (!open) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open])
+
   return (
     <>
+      <input
+        id="mobile-menu-toggle"
+        className="mobile-menu-toggle"
+        type="checkbox"
+        checked={open}
+        onChange={event => setOpen(event.currentTarget.checked)}
+        aria-hidden="true"
+      />
       <nav
         id="nav"
         style={{
@@ -132,11 +151,19 @@ export default function Navbar() {
           </div>
 
           {/* Hamburger */}
-          <button
-            type="button"
-            onClick={() => setOpen(o => !o)}
+          <label
+            htmlFor="mobile-menu-toggle"
             aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            role="button"
+            tabIndex={0}
             className="hamburger"
+            onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                setOpen(o => !o)
+              }
+            }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               {open
@@ -144,7 +171,7 @@ export default function Navbar() {
                 : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
               }
             </svg>
-          </button>
+          </label>
         </div>
       </nav>
 

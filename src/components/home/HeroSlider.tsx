@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -62,19 +62,25 @@ function safeSlide(s: Slide): Slide {
 
 export default function HeroSlider({ slides }: { slides: Slide[] }) {
   // Use DB slides if ≥2 exist, otherwise fall back to the built-in set so there's always something to cycle
-  const data = (slides.length >= 2 ? slides : FALLBACK_SLIDES).map(safeSlide)
+  const data = useMemo(() => (slides.length >= 2 ? slides : FALLBACK_SLIDES).map(safeSlide), [slides])
   const [cur, setCur] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
   const touchStartX = useRef<number | null>(null)
 
   const next = useCallback(() => setCur(c => (c + 1) % data.length), [data.length])
   const prev = useCallback(() => setCur(c => (c - 1 + data.length) % data.length), [data.length])
 
   useEffect(() => {
-    if (paused) return
+    const frame = requestAnimationFrame(() => setHydrated(true))
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  useEffect(() => {
+    if (data.length < 2 || paused) return
     const t = setInterval(next, 5000)
     return () => clearInterval(t)
-  }, [paused, next])
+  }, [data.length, paused, next])
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
@@ -82,25 +88,39 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return
     const diff = touchStartX.current - e.changedTouches[0].clientX
-    if (Math.abs(diff) > 50) diff > 0 ? next() : prev()
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) next()
+      else prev()
+    }
     touchStartX.current = null
   }
 
   return (
     <section
-      style={{ position: 'relative', height: 'calc(100vh - 68px)', minHeight: 580, overflow: 'hidden', marginTop: 68 }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      className={`hero-slider ${hydrated ? 'hero-slider-js' : 'hero-slider-fallback'}`}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        marginTop: 68,
+        '--slide-count': data.length,
+      } as React.CSSProperties}
+      onPointerEnter={event => {
+        if (event.pointerType === 'mouse') setPaused(true)
+      }}
+      onPointerLeave={event => {
+        if (event.pointerType === 'mouse') setPaused(false)
+      }}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
       {data.map((slide, i) => (
-        <div key={slide.id} style={{
+        <div key={slide.id} className="hero-slide" aria-hidden={i !== cur} style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
           opacity: i === cur ? 1 : 0,
           transition: 'opacity 1s ease',
           pointerEvents: i === cur ? 'auto' : 'none',
-        }}>
+          '--slide-index': i,
+        } as React.CSSProperties}>
           <Image
             src={slide.image_url}
             alt={slide.heading}
@@ -117,28 +137,24 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           {/* Text */}
           <div className="hero-text-wrap" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center' }}>
             <div style={{ maxWidth: 620 }}>
-              {i === cur && (
-                <>
-                  <div className="section-tag" style={{ marginBottom: 26, animation: 'fadeUp .55s .08s both' }}>
-                    {slide.tag}
-                  </div>
-                  <h1 style={{
-                    fontSize: 'clamp(30px,4.2vw,58px)', fontWeight: 900, color: '#fff',
-                    lineHeight: 1.13, letterSpacing: '-0.025em', marginBottom: 18,
-                    whiteSpace: 'pre-line',
-                    animation: 'fadeUp .65s .22s both',
-                  }}>{slide.heading}</h1>
-                  <p style={{
-                    color: 'rgba(255,255,255,.68)', fontSize: 15, lineHeight: 1.8,
-                    marginBottom: 34, maxWidth: 500,
-                    animation: 'fadeUp .65s .38s both',
-                  }}>{slide.subtext}</p>
-                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', animation: 'fadeUp .65s .5s both' }}>
-                    <Link href={slide.btn1_href} className="btn btn-gold">{slide.btn1_label}</Link>
-                    <Link href={slide.btn2_href} className="btn btn-outline">{slide.btn2_label}</Link>
-                  </div>
-                </>
-              )}
+              <div className="section-tag" style={{ marginBottom: 26, animation: i === cur ? 'fadeUp .55s .08s both' : undefined }}>
+                {slide.tag}
+              </div>
+              <h1 style={{
+                fontSize: 'clamp(30px,4.2vw,58px)', fontWeight: 900, color: '#fff',
+                lineHeight: 1.13, letterSpacing: 0, marginBottom: 18,
+                whiteSpace: 'pre-line',
+                animation: i === cur ? 'fadeUp .65s .22s both' : undefined,
+              }}>{slide.heading}</h1>
+              <p style={{
+                color: 'rgba(255,255,255,.68)', fontSize: 15, lineHeight: 1.8,
+                marginBottom: 34, maxWidth: 500,
+                animation: i === cur ? 'fadeUp .65s .38s both' : undefined,
+              }}>{slide.subtext}</p>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', animation: i === cur ? 'fadeUp .65s .5s both' : undefined }}>
+                <Link href={slide.btn1_href} className="btn btn-gold">{slide.btn1_label}</Link>
+                <Link href={slide.btn2_href} className="btn btn-outline">{slide.btn2_label}</Link>
+              </div>
             </div>
           </div>
         </div>

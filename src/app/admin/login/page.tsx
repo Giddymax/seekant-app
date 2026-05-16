@@ -1,26 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { loginSchema, type LoginFormData } from '@/lib/validations'
-import { signIn } from '@/lib/actions/auth'
+import { signInWithForm, type SignInFormState } from '@/lib/actions/auth'
+
+const INITIAL_STATE: SignInFormState = {}
 
 export default function AdminLoginPage() {
-  const [loading, setLoading] = useState(false)
+  const [state, formAction, isPending] = useActionState(signInWithForm, INITIAL_STATE)
   const [showHint, setShowHint] = useState(false)
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  })
-
-  const onSubmit = async (data: LoginFormData) => {
-    setLoading(true)
-    const result = await signIn(data)
-    setLoading(false)
-    if (result?.error) toast.error(result.error)
-  }
+  useEffect(() => {
+    if (state.error) toast.error(state.error)
+  }, [state.error])
 
   return (
     <div style={{ minHeight: '100dvh', background: '#0d0f18', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px 60px', fontFamily: 'Poppins,sans-serif' }}>
@@ -42,45 +34,56 @@ export default function AdminLoginPage() {
           <h1 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Sign In</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', marginBottom: 32 }}>Access the management dashboard</p>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form action={formAction}>
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 8 }}>
+              <label htmlFor="admin-email" style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 8 }}>
                 Email Address
               </label>
               <input
-                {...register('email')}
+                id="admin-email"
+                name="email"
                 type="email"
                 placeholder=""
                 autoComplete="email"
-                style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
+                inputMode="email"
+                required
+                defaultValue={state.email ?? ''}
+                aria-invalid={Boolean(state.fieldErrors?.email)}
+                aria-describedby={state.fieldErrors?.email ? 'admin-email-error' : undefined}
+                style={{ width: '100%', minHeight: 48, padding: '13px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 16, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
                 onFocus={e => (e.target.style.borderColor = '#d42020')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
               />
-              {errors.email && <p style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{errors.email.message}</p>}
+              {state.fieldErrors?.email && <p id="admin-email-error" style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{state.fieldErrors.email}</p>}
             </div>
 
             <div style={{ marginBottom: 28 }}>
-              <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 8 }}>
+              <label htmlFor="admin-password" style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 8 }}>
                 Password
               </label>
               <input
-                {...register('password')}
+                id="admin-password"
+                name="password"
                 type="password"
                 placeholder=""
                 autoComplete="current-password"
-                style={{ width: '100%', padding: '12px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 13, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
+                required
+                minLength={6}
+                aria-invalid={Boolean(state.fieldErrors?.password)}
+                aria-describedby={state.fieldErrors?.password ? 'admin-password-error' : undefined}
+                style={{ width: '100%', minHeight: 48, padding: '13px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 16, fontFamily: 'Poppins,sans-serif', outline: 'none', transition: 'border-color .2s' }}
                 onFocus={e => (e.target.style.borderColor = '#d42020')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
               />
-              {errors.password && <p style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{errors.password.message}</p>}
+              {state.fieldErrors?.password && <p id="admin-password-error" style={{ color: '#fd4682', fontSize: 11, marginTop: 4 }}>{state.fieldErrors.password}</p>}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              style={{ width: '100%', padding: '14px', background: '#d42020', color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, fontFamily: 'Poppins,sans-serif', transition: 'opacity .2s' }}
+              disabled={isPending}
+              style={{ width: '100%', minHeight: 48, padding: '14px', background: '#d42020', color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', border: 'none', cursor: isPending ? 'not-allowed' : 'pointer', opacity: isPending ? 0.7 : 1, fontFamily: 'Poppins,sans-serif', transition: 'opacity .2s', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
             >
-              {loading ? 'Signing in…' : 'Sign In'}
+              {isPending ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
@@ -96,7 +99,7 @@ export default function AdminLoginPage() {
             {showHint && (
               <div style={{ marginTop: 12, background: '#111320', padding: '14px 16px', borderLeft: '2px solid rgba(221,184,55,.4)', fontSize: 11, color: 'rgba(255,255,255,.5)', lineHeight: 1.7 }}>
                 Create your admin account via the Supabase Dashboard → Authentication → Users → Add User, then run:<br />
-                <code style={{ color: '#d42020', fontSize: 10 }}>INSERT INTO profiles (id, email, role) VALUES ('&lt;uid&gt;', 'admin@example.com', 'admin');</code>
+                <code style={{ color: '#d42020', fontSize: 10 }}>{"INSERT INTO profiles (id, email, role) VALUES ('<uid>', 'admin@example.com', 'admin');"}</code>
               </div>
             )}
           </div>
