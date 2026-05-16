@@ -85,6 +85,9 @@ export async function saveSiteContent(values: Record<string, string>) {
   revalidatePath('/admin/content')
   revalidatePath('/admin/theme')
   revalidatePath('/admin/pages')
+  revalidatePath('/admin/legal')
+  revalidatePath('/terms')
+  revalidatePath('/privacy')
   return { success: true }
 }
 

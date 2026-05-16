@@ -19,6 +19,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/social': 'Social Links',
   '/admin/theme': 'Theme',
   '/admin/staff': 'Staff Accounts',
+  '/admin/legal': 'Legal Pages',
 }
 
 export default async function AdminLayout({
