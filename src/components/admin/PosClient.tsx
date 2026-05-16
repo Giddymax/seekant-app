@@ -393,6 +393,7 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
   const [amountPaid, setAmountPaid]   = useState(0)
   const [isPending, startTransition]  = useTransition()
   const [receiptSnap, setReceiptSnap] = useState<ReceiptSnapshot | null>(null)
+  const [showReceiptModal, setShowReceiptModal] = useState(false)
 
   const addToCart = (p: Product) => {
     setCart(c => {
@@ -441,13 +442,13 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
       if (result?.error) { toast.error(result.error); return }
       snap.ref = result.sale_ref ?? ''
       setReceiptSnap({ ...snap })
+      setShowReceiptModal(true)
       setCart([])
       setCustomerName('')
       setCustomerPhone('')
       setDiscount(0)
       setAmountPaid(0)
       toast.success(`Sale recorded! Ref: ${result.sale_ref}`)
-      setTimeout(() => window.print(), 200)
     })
   }
 
@@ -479,9 +480,42 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
         @media screen { .pos-receipt-wrapper { display: none; } }
       `}</style>
 
+      {/* Hidden print source */}
       <div className="pos-receipt-wrapper">
         {receiptSnap && <PosReceipt snap={receiptSnap} />}
       </div>
+
+      {/* On-screen receipt preview modal */}
+      {showReceiptModal && receiptSnap && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24 }}
+          onClick={e => { if (e.target === e.currentTarget) setShowReceiptModal(false) }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, maxHeight: '90vh' }}>
+            {/* Action buttons */}
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                style={{ padding: '10px 24px', background: '#d42020', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif' }}
+              >
+                Print Receipt
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowReceiptModal(false)}
+                style={{ padding: '10px 24px', background: 'rgba(255,255,255,.1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, fontFamily: 'Poppins,sans-serif' }}
+              >
+                Close
+              </button>
+            </div>
+            {/* Receipt preview */}
+            <div style={{ overflowY: 'auto', boxShadow: '0 8px 40px rgba(0,0,0,.6)' }}>
+              <PosReceipt snap={receiptSnap} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 120px)', minHeight: 600 }}>
         <PosProductGrid
