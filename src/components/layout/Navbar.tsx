@@ -18,7 +18,17 @@ const SERVICE_LINKS = [
   ['Souvenir Printing', '/services'],
 ]
 
-export default function Navbar() {
+export default function Navbar({ navItems }: { navItems?: { label: string; href: string }[] }) {
+  const items = navItems ?? [
+    { label: 'Home',      href: '/' },
+    { label: 'About',     href: '/about' },
+    { label: 'Services',  href: '/services' },
+    { label: 'Products',  href: '/products' },
+    { label: 'Our Works', href: '/works' },
+    { label: 'Gallery',   href: '/gallery' },
+    { label: 'Blog',      href: '/blog' },
+    { label: 'Contacts',  href: '/contacts' },
+  ]
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -89,15 +99,7 @@ export default function Navbar() {
 
           {/* Desktop nav links */}
           <div className="nav-menu" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {[
-              ['Home',      '/'],
-              ['About',     '/about'],
-              ['Products',  '/products'],
-              ['Our Works', '/works'],
-              ['Gallery',   '/gallery'],
-              ['Blog',      '/blog'],
-              ['Contacts',  '/contacts'],
-            ].map(([label, href]) => (
+            {items.filter(item => item.href !== '/services').map(({ label, href }) => (
               <Link key={href} href={href} style={{
                 color: 'rgba(255,255,255,.72)', fontSize: '12.5px', fontWeight: 600,
                 padding: '8px 10px', letterSpacing: '0.03em',
@@ -177,16 +179,7 @@ export default function Navbar() {
 
       {/* Mobile menu — visibility is 100% CSS-controlled via html.menu-open class */}
       <div className="mobile-nav-overlay">
-        {[
-          ['Home',      '/'],
-          ['About',     '/about'],
-          ['Services',  '/services'],
-          ['Products',  '/products'],
-          ['Our Works', '/works'],
-          ['Gallery',   '/gallery'],
-          ['Blog',      '/blog'],
-          ['Contacts',  '/contacts'],
-        ].map(([label, href]) => (
+        {items.map(({ label, href }) => (
           <Link
             key={href}
             href={href}

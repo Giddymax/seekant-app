@@ -21,7 +21,7 @@ export default function BlogPreview({ posts }: { posts: Post[] }) {
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <span className="section-tag">Our Blog</span>
-            <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', marginTop: 16 }}>
+            <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: 'var(--brand-heading, #1a181d)', letterSpacing: '-0.025em', marginTop: 16 }}>
               Tips &amp; Insights
             </h2>
           </div>
@@ -50,11 +50,11 @@ export default function BlogPreview({ posts }: { posts: Post[] }) {
                 <p style={{ fontSize: 11, color: '#aaa', marginBottom: 10, letterSpacing: '0.04em' }}>
                   {post.published_at ? formatDate(post.published_at) : ''}
                 </p>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1a181d', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--brand-heading, #1a181d)', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>
                   {post.title}
                 </h3>
                 {post.excerpt && (
-                  <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.7, marginBottom: 18 }}>
+                  <p style={{ fontSize: 13, color: 'var(--brand-text, #737a80)', lineHeight: 1.7, marginBottom: 18 }}>
                     {post.excerpt.slice(0, 110)}…
                   </p>
                 )}

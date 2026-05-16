@@ -27,7 +27,7 @@ const SPECS = [
 
 export default function PrintingInfoPage() {
   return (
-    <main style={{ background: '#0d0f18', minHeight: '100vh', fontFamily: 'Poppins,sans-serif', color: '#fff' }}>
+    <main style={{ background: '#0d0f18', minHeight: '100vh', fontFamily: 'var(--brand-font, Poppins, sans-serif)', color: '#fff' }}>
       {/* Hero */}
       <section style={{ padding: '100px 40px 80px', maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#d42020', borderBottom: '1px solid #d42020', paddingBottom: 4, marginBottom: 24 }}>

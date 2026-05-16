@@ -36,7 +36,7 @@ export default function NewsletterBar() {
           style={{
             padding: '12px 18px', fontSize: 13, border: 'none', outline: 'none',
             background: 'rgba(255,255,255,.08)', color: '#fff', flex: 1, minWidth: 180,
-            fontFamily: 'Poppins,sans-serif',
+            fontFamily: 'var(--brand-font, Poppins, sans-serif)',
           }}
         />
         <button

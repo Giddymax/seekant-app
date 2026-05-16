@@ -15,11 +15,11 @@ const FALLBACK = [
 
 export default async function WorksPage() {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('gallery_items')
-    .select('id, image_url, label, category')
-    .eq('active', true)
-    .order('sort_order')
+  const [{ data }, { data: heroRow }] = await Promise.all([
+    supabase.from('gallery_items').select('id, image_url, label, category').eq('active', true).order('sort_order'),
+    supabase.from('site_content').select('value').eq('key', 'page_hero_works_image').single(),
+  ])
+  const heroImage = heroRow?.value || ''
 
   const works = data?.length
     ? data.map(item => ({ id: item.id, title: item.label ?? '', cat: item.category ?? '', img: item.image_url }))
@@ -27,8 +27,8 @@ export default async function WorksPage() {
 
   return (
     <>
-      <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
+      <div style={{ marginTop: 68, background: heroImage ? `url(${heroImage})` : '#15212c', backgroundSize: 'cover', backgroundPosition: 'center', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: heroImage ? 'rgba(0,0,0,.62)' : 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Our Works</span>
@@ -51,7 +51,7 @@ export default async function WorksPage() {
                 </div>
                 {w.title && (
                   <div style={{ padding: '20px 22px 24px' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1a181d', lineHeight: 1.4 }}>{w.title}</h3>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--brand-heading, #1a181d)', lineHeight: 1.4 }}>{w.title}</h3>
                   </div>
                 )}
               </div>

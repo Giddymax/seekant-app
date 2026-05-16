@@ -17,14 +17,14 @@ const SERVICES = [
 ]
 
 const field = (label: string, required = false) => (
-  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#737a80', marginBottom: 6 }}>
+  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--brand-text, #737a80)', marginBottom: 6 }}>
     {label}{required && <span style={{ color: '#fd4682' }}> *</span>}
   </label>
 )
 
 const inputStyle = {
   width: '100%', padding: '12px 16px', fontSize: 13, border: '1.5px solid #e5e7eb',
-  outline: 'none', fontFamily: 'Poppins,sans-serif', background: '#fff',
+  outline: 'none', fontFamily: 'var(--brand-font, Poppins, sans-serif)', background: '#fff',
   transition: 'border-color .2s',
 }
 
@@ -109,8 +109,8 @@ export default function QuotePage() {
               <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(221,184,55,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d42020" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
               </div>
-              <h2 style={{ fontSize: 24, fontWeight: 800, color: '#1a181d', marginBottom: 12 }}>Quote Request Sent!</h2>
-              <p style={{ fontSize: 14, color: '#737a80', lineHeight: 1.8, marginBottom: 32 }}>
+              <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--brand-heading, #1a181d)', marginBottom: 12 }}>Quote Request Sent!</h2>
+              <p style={{ fontSize: 14, color: 'var(--brand-text, #737a80)', lineHeight: 1.8, marginBottom: 32 }}>
                 Thank you! We&apos;ve received your request and will get back to you within 24 hours. A confirmation has been sent to your email.
               </p>
               <button onClick={() => setDone(false)} className="btn btn-dark">Submit Another</button>
@@ -193,15 +193,15 @@ export default function QuotePage() {
                   onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.borderColor = attachmentUrl ? '#d42020' : '#e5e7eb')}
                 >
                   {uploading ? (
-                    <p style={{ fontSize: 12, color: '#737a80' }}>Uploading…</p>
+                    <p style={{ fontSize: 12, color: 'var(--brand-text, #737a80)' }}>Uploading…</p>
                   ) : attachmentUrl ? (
                     <div>
                       <p style={{ fontSize: 12, color: '#22c55e', fontWeight: 600, marginBottom: 4 }}>✓ {attachmentName}</p>
-                      <p style={{ fontSize: 11, color: '#737a80' }}>Click to replace</p>
+                      <p style={{ fontSize: 11, color: 'var(--brand-text, #737a80)' }}>Click to replace</p>
                     </div>
                   ) : (
                     <div>
-                      <p style={{ fontSize: 12, color: '#737a80', marginBottom: 4 }}>Click to upload artwork or reference</p>
+                      <p style={{ fontSize: 12, color: 'var(--brand-text, #737a80)', marginBottom: 4 }}>Click to upload artwork or reference</p>
                       <p style={{ fontSize: 11, color: '#b0b7be' }}>PDF, AI, JPG, PNG, CDR — max 10 MB</p>
                     </div>
                   )}

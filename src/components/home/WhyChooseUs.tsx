@@ -38,7 +38,7 @@ export default async function WhyChooseUs() {
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <span className="section-tag">Why Us</span>
-          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', marginTop: 16 }}>
+          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: 'var(--brand-heading, #1a181d)', letterSpacing: '-0.025em', marginTop: 16 }}>
             Why Choose Seekant?
           </h2>
         </div>
@@ -54,8 +54,8 @@ export default async function WhyChooseUs() {
                   <path d={icon} />
                 </svg>
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#1a181d', marginBottom: 12 }}>{title}</h3>
-              <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.8 }}>{body}</p>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--brand-heading, #1a181d)', marginBottom: 12 }}>{title}</h3>
+              <p style={{ fontSize: 13, color: 'var(--brand-text, #737a80)', lineHeight: 1.8 }}>{body}</p>
             </div>
           ))}
         </div>

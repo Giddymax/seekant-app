@@ -25,10 +25,10 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
         {/* Heading */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <span className="section-tag">What We Do</span>
-          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', marginTop: 16, marginBottom: 12 }}>
+          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: 'var(--brand-heading, #1a181d)', letterSpacing: '-0.025em', marginTop: 16, marginBottom: 12 }}>
             Our Services
           </h2>
-          <p style={{ color: '#737a80', fontSize: 15, maxWidth: 520, margin: '0 auto', lineHeight: 1.8 }}>
+          <p style={{ color: 'var(--brand-text, #737a80)', fontSize: 15, maxWidth: 520, margin: '0 auto', lineHeight: 1.8 }}>
             From a single business card to a full branding campaign — we do it all with precision.
           </p>
         </div>
@@ -41,8 +41,8 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
               textTransform: 'uppercase', border: '1.5px solid',
               borderColor: active === cat ? '#d42020' : '#e0e0e0',
               background: active === cat ? '#d42020' : 'none',
-              color: active === cat ? '#fff' : '#737a80',
-              cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
+              color: active === cat ? '#fff' : 'var(--brand-text, #737a80)',
+              cursor: 'pointer', fontFamily: 'var(--brand-font, Poppins, sans-serif)',
               transition: 'all .2s',
             }}>
               {cat}
@@ -75,10 +75,10 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
                 }}>{svc.category}</span>
               </Link>
               <div style={{ padding: '20px 22px 22px' }}>
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1a181d', marginBottom: 8, letterSpacing: '-0.01em' }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--brand-heading, #1a181d)', marginBottom: 8, letterSpacing: '-0.01em' }}>
                   {svc.name}
                 </h3>
-                <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.7, marginBottom: 16 }}>
+                <p style={{ fontSize: 13, color: 'var(--brand-text, #737a80)', lineHeight: 1.7, marginBottom: 16 }}>
                   {svc.description}
                 </p>
                 <Link href="/quote" style={{

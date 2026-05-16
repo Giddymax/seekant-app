@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span style={{ color: '#d42020' }}>{post.title}</span>
           </div>
 
-          <div style={{ fontSize: 15, color: '#737a80', lineHeight: 1.9 }}>
+          <div style={{ fontSize: 15, color: 'var(--brand-text, #737a80)', lineHeight: 1.9 }}>
             {post.content
               ? post.content.split('\n').map((p: string, i: number) => <p key={i} style={{ marginBottom: 18 }}>{p}</p>)
               : <p style={{ color: '#aaa' }}>Content coming soon.</p>
@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       {related && related.length > 0 && (
         <section style={{ padding: '64px 0 88px', background: '#f7f8fa' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1a181d', marginBottom: 32 }}>More Articles</h2>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--brand-heading, #1a181d)', marginBottom: 32 }}>More Articles</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
               {related.map(r => (
                 <Link key={r.id} href={`/blog/${r.slug}`} style={{ display: 'block', background: '#fff', overflow: 'hidden' }} className="card-shadow">
@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   </div>
                   <div style={{ padding: '18px 20px 22px' }}>
                     <p style={{ fontSize: 10, color: '#aaa', marginBottom: 8 }}>{r.published_at ? formatDate(r.published_at) : ''}</p>
-                    <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a181d', lineHeight: 1.4 }}>{r.title}</h3>
+                    <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--brand-heading, #1a181d)', lineHeight: 1.4 }}>{r.title}</h3>
                   </div>
                 </Link>
               ))}

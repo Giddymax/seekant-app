@@ -8,12 +8,13 @@ export default async function AboutPage() {
   const supabase = await createClient()
   const { data: content } = await supabase.from('site_content').select('key,value')
   const c = Object.fromEntries((content ?? []).map(r => [r.key, r.value]))
+  const heroImage = c.page_hero_about_image || ''
 
   return (
     <>
       {/* Page hero */}
-      <div className="page-hero" style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
+      <div className="page-hero" style={{ marginTop: 68, background: heroImage ? `url(${heroImage})` : '#15212c', backgroundSize: 'cover', backgroundPosition: 'center', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: heroImage ? 'rgba(0,0,0,.62)' : 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/" style={{ color: 'rgba(255,255,255,.4)', transition: 'color .18s' }}>Home</Link>
@@ -41,17 +42,17 @@ export default async function AboutPage() {
           </div>
           <div>
             <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Who We Are</span>
-            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 20 }}>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 900, color: 'var(--brand-heading, #1a181d)', letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 20 }}>
               {c.about_heading || 'About Seekant Multimedia'}
             </h2>
-            <p style={{ fontSize: 14, color: '#737a80', lineHeight: 1.9, marginBottom: 28 }}>
+            <p style={{ fontSize: 14, color: 'var(--brand-text, #737a80)', lineHeight: 1.9, marginBottom: 28 }}>
               {c.about_body || 'We are a full-service printing and branding company based in Akyem Asuom, Ghana. From a single business card to a complete brand identity, we deliver quality across every medium with speed and care.'}
             </p>
             <div style={{ display: 'flex', gap: 32, marginBottom: 36 }}>
               {[['500+', 'Projects'], ['10+', 'Years'], ['200+', 'Clients']].map(([v, l]) => (
                 <div key={l}>
                   <div style={{ fontSize: 28, fontWeight: 900, color: '#d42020' }}>{v}</div>
-                  <div style={{ fontSize: 11, color: '#737a80', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{l}</div>
+                  <div style={{ fontSize: 11, color: 'var(--brand-text, #737a80)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{l}</div>
                 </div>
               ))}
             </div>
@@ -69,8 +70,8 @@ export default async function AboutPage() {
           ].map(({ tag, title, body, color }) => (
             <div key={tag} style={{ background: '#fff', padding: '48px 40px', borderTop: `4px solid ${color}` }} className="card-shadow">
               <span style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: '0.16em', textTransform: 'uppercase' }}>{tag}</span>
-              <h3 style={{ fontSize: 22, fontWeight: 800, color: '#1a181d', margin: '16px 0 16px', lineHeight: 1.3 }}>{title}</h3>
-              <p style={{ fontSize: 14, color: '#737a80', lineHeight: 1.9 }}>{body}</p>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--brand-heading, #1a181d)', margin: '16px 0 16px', lineHeight: 1.3 }}>{title}</h3>
+              <p style={{ fontSize: 14, color: 'var(--brand-text, #737a80)', lineHeight: 1.9 }}>{body}</p>
             </div>
           ))}
         </div>

@@ -6,11 +6,11 @@ export const metadata = { title: 'Gallery – Seekant Multimedia' }
 
 export default async function GalleryPage() {
   const supabase = await createClient()
-  const { data: items } = await supabase
-    .from('gallery_items')
-    .select('*')
-    .eq('active', true)
-    .order('sort_order')
+  const [{ data: items }, { data: heroRow }] = await Promise.all([
+    supabase.from('gallery_items').select('*').eq('active', true).order('sort_order'),
+    supabase.from('site_content').select('value').eq('key', 'page_hero_gallery_image').single(),
+  ])
+  const heroImage = heroRow?.value || ''
 
   const photos = items?.length ? items : [
     { id: 1, image_url: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=600&h=400&fit=crop', label: 'Business Cards' },
@@ -25,8 +25,8 @@ export default async function GalleryPage() {
 
   return (
     <>
-      <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
+      <div style={{ marginTop: 68, background: heroImage ? `url(${heroImage})` : '#15212c', backgroundSize: 'cover', backgroundPosition: 'center', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: heroImage ? 'rgba(0,0,0,.62)' : 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Gallery</span>

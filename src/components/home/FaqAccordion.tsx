@@ -25,7 +25,7 @@ export default async function FaqAccordion() {
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '0 48px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <span className="section-tag">FAQ</span>
-          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: '#1a181d', letterSpacing: '-0.025em', marginTop: 16 }}>
+          <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 900, color: 'var(--brand-heading, #1a181d)', letterSpacing: '-0.025em', marginTop: 16 }}>
             Frequently Asked Questions
           </h2>
         </div>
