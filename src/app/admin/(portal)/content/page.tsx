@@ -66,10 +66,11 @@ const SECTIONS = [
   {
     title: 'Contact Details',
     fields: [
-      { key: 'contact_address', label: 'Address',        multiline: false },
-      { key: 'contact_phone',   label: 'Phone',          multiline: false },
-      { key: 'contact_email',   label: 'Email',          multiline: false },
-      { key: 'contact_hours',   label: 'Business Hours', multiline: false },
+      { key: 'contact_address',   label: 'Address',          multiline: false },
+      { key: 'contact_phone',    label: 'Phone',            multiline: false },
+      { key: 'contact_whatsapp', label: 'WhatsApp Number',  multiline: false },
+      { key: 'contact_email',    label: 'Email',            multiline: false },
+      { key: 'contact_hours',    label: 'Business Hours',   multiline: false },
     ],
   },
   {
