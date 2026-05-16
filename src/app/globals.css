@@ -41,7 +41,7 @@
   --color-accent: #f7f8fa;
   --color-accent-foreground: #1a181d;
 
-  --font-sans: 'Poppins', sans-serif;
+  --font-sans: var(--brand-font, 'Poppins', sans-serif);
   --radius: 8px;
 }
 
@@ -49,9 +49,9 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--brand-font, 'Poppins', sans-serif);
   background: #ffffff;
-  color: #737a80;
+  color: var(--brand-text, #737a80);
   line-height: 1.7;
   overflow-x: hidden;
 }
@@ -64,7 +64,7 @@ ul  { list-style: none; }
 .btn {
   display: inline-block;
   padding: 13px 30px;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--brand-font, 'Poppins', sans-serif);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -359,7 +359,7 @@ html.menu-open { overflow: hidden; }
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  color: #1a181d;
+  color: var(--brand-heading, #1a181d);
   text-align: left;
   line-height: 1.5;
   touch-action: manipulation;
@@ -371,7 +371,7 @@ html.menu-open { overflow: hidden; }
 .faq-answer {
   padding: 0 24px 22px;
   font-size: 13px;
-  color: #737a80;
+  color: var(--brand-text, #737a80);
   line-height: 1.8;
 }
 @media (max-width: 480px) {

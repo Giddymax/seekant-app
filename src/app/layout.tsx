@@ -1,15 +1,7 @@
 import type { Metadata } from 'next'
-import { Poppins } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
 import ThemeProvider from '@/components/ThemeProvider'
 import './globals.css'
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'Seekant Multimedia – Design. Print. Brand.',
@@ -26,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full scroll-smooth">
-      <body className={`${poppins.className} min-h-full flex flex-col antialiased`}>
+      <body className="min-h-full flex flex-col antialiased">
         <ThemeProvider />
         {children}
         <Toaster richColors position="top-right" />

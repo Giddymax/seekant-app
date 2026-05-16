@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseJsClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co'
@@ -22,19 +23,11 @@ export async function createClient() {
   })
 }
 
-export async function createAdminClient() {
-  const cookieStore = await cookies()
-
-  return createServerClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    cookies: {
-      getAll()       { return cookieStore.getAll() },
-      setAll(toSet) {
-        try {
-          toSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          )
-        } catch { /* ignored */ }
-      },
+export function createAdminClient() {
+  return createSupabaseJsClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
   })
 }

@@ -224,7 +224,7 @@ export async function updateQuoteStatus(id: string, status: string) {
 
 // ── STAFF ACCOUNTS ────────────────────────────────────────
 export async function createStaffAccount(fd: FormData) {
-  const supabase = await createAdminClient()
+  const supabase = createAdminClient()
   const email = fd.get('email') as string
   const password = fd.get('password') as string
   const full_name = fd.get('full_name') as string || null
