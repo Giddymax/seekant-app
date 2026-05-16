@@ -54,7 +54,11 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
           {filtered.map(svc => (
             <div key={svc.id} className="card-shadow" style={{ background: '#fff', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
-              <div style={{ position: 'relative', height: 178, overflow: 'hidden' }}>
+              <Link
+                href={`/services/${svc.slug}`}
+                aria-label={`View ${svc.name} service details`}
+                style={{ position: 'relative', height: 178, overflow: 'hidden', display: 'block' }}
+              >
                 <Image
                   src={svc.image_url || 'https://placehold.co/370x178'}
                   alt={svc.name}
@@ -69,7 +73,7 @@ export default function ServicesGrid({ services }: { services: Service[] }) {
                   fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
                   padding: '3px 10px',
                 }}>{svc.category}</span>
-              </div>
+              </Link>
               <div style={{ padding: '20px 22px 22px' }}>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1a181d', marginBottom: 8, letterSpacing: '-0.01em' }}>
                   {svc.name}
