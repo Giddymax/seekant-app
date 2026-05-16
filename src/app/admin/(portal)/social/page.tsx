@@ -41,7 +41,7 @@ export default function SocialPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Social Links</h1>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>These appear in the footer and contact page.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>These power the footer social icons. Leave a field blank to hide that icon.</p>
         </div>
         <button onClick={handleSave} disabled={isPending} className="btn btn-gold" style={{ fontSize: 11 }}>
           {isPending ? 'Saving…' : 'Save Links'}

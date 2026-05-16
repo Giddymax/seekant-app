@@ -28,7 +28,7 @@ export default function ThemePage() {
     startTransition(async () => {
       const result = await saveSiteContent(values)
       if (result?.error) toast.error(result.error)
-      else toast.success('Theme saved! Colours will update on next deployment.')
+      else toast.success('Theme saved! Colours are now live on the site.')
     })
   }
 
@@ -37,7 +37,7 @@ export default function ThemePage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Brand Theme</h1>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Adjust brand colours. Changes take effect on next deploy.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Adjust brand colours. Changes reflect live on the public site immediately after saving.</p>
         </div>
         <button onClick={handleSave} disabled={isPending} className="btn btn-gold" style={{ fontSize: 11 }}>
           {isPending ? 'Saving…' : 'Save Theme'}
@@ -72,8 +72,8 @@ export default function ThemePage() {
         })}
       </div>
 
-      <div style={{ marginTop: 20, padding: '16px 20px', background: '#181b2e', borderLeft: '2px solid rgba(221,184,55,.3)', fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.6 }}>
-        Note: These values are stored in the database. To apply them to CSS, update the <code style={{ color: '#d42020', fontSize: 11 }}>globals.css</code> @theme block with these values and redeploy.
+      <div style={{ marginTop: 20, padding: '16px 20px', background: '#181b2e', borderLeft: '2px solid rgba(255,255,255,.1)', fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.6 }}>
+        Colours are applied via CSS custom properties injected on every page load. Visitors will see the new colours on their next page visit.
       </div>
     </div>
   )

@@ -81,23 +81,36 @@ export async function saveSiteContent(values: Record<string, string>) {
     .from('site_content')
     .upsert(entries, { onConflict: 'key' })
   if (error) return { error: error.message }
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
   revalidatePath('/admin/content')
   revalidatePath('/admin/theme')
   return { success: true }
 }
 
 // ── SOCIAL LINKS ──────────────────────────────────────────
+function normalizeExternalUrl(url: string) {
+  const value = url.trim()
+  if (!value) return ''
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`
+
+  try {
+    const parsed = new URL(candidate)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.toString() : ''
+  } catch {
+    return ''
+  }
+}
+
 export async function saveSocialLinks(links: Record<string, string>) {
   const supabase = await createClient()
   const entries = Object.entries(links)
-    .filter(([, url]) => url)
-    .map(([platform, url]) => ({ platform, url }))
+    .map(([platform, url]) => ({ platform, url: normalizeExternalUrl(url) }))
   if (!entries.length) return { success: true }
   const { error } = await supabase
     .from('social_links')
     .upsert(entries, { onConflict: 'platform' })
   if (error) return { error: error.message }
+  revalidatePath('/', 'layout')
   revalidatePath('/admin/social')
   return { success: true }
 }

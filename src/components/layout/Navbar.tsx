@@ -59,7 +59,7 @@ export default function Navbar() {
         id="nav"
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 999,
-          background: '#15212c', height: 68,
+          background: 'var(--brand-dark, #15212c)', height: 68,
           display: 'flex', alignItems: 'center',
           boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,.45)' : '0 2px 20px rgba(0,0,0,.35)',
           transition: 'box-shadow 0.3s',
@@ -81,7 +81,7 @@ export default function Navbar() {
             </div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               SEEKANT MULTIMEDIA
-              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#d42020', letterSpacing: '0.12em' }}>
+              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: 'var(--brand-gold, #d42020)', letterSpacing: '0.12em' }}>
                 Printing &amp; Branding
               </small>
             </div>
@@ -103,7 +103,7 @@ export default function Navbar() {
                 padding: '8px 10px', letterSpacing: '0.03em',
                 transition: 'color .18s', whiteSpace: 'nowrap',
               }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#d42020')}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--brand-gold, #d42020)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.72)')}
               >{label}</Link>
             ))}
@@ -125,7 +125,7 @@ export default function Navbar() {
                   transform: 'translateX(-50%)', background: '#29353f',
                   width: 520, padding: 16,
                   display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2,
-                  borderTop: '2px solid #d42020', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
+                  borderTop: '2px solid var(--brand-gold, #d42020)', boxShadow: '0 20px 50px rgba(0,0,0,.5)',
                   opacity: 0, pointerEvents: 'none', transition: 'opacity .22s',
                   zIndex: 2000,
                 }}
@@ -135,7 +135,7 @@ export default function Navbar() {
                     color: 'rgba(255,255,255,.68)', fontSize: 12, fontWeight: 500,
                     padding: '8px 12px', transition: 'color .15s, background .15s',
                   }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#d42020'; e.currentTarget.style.background = 'rgba(255,255,255,.06)' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--brand-gold, #d42020)'; e.currentTarget.style.background = 'rgba(255,255,255,.06)' }}
                     onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,.68)'; e.currentTarget.style.background = 'none' }}
                   >{name}</Link>
                 ))}
