@@ -20,6 +20,7 @@ type ReceiptSnapshot = {
   customer: string
   phone: string
   payment: string
+  staffName: string
   cart: CartItem[]
   discount: number
   amountPaid: number
@@ -303,6 +304,8 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
   return (
     <div className="pos-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
       <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '52px', height: '52px', objectFit: 'contain', display: 'block', margin: '0 auto 4px', filter: 'grayscale(1) contrast(1.8) brightness(0.1)' }} />
         <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
         <div>Design. Print. Brand.</div>
         <div>Asuom, Eastern Region, Ghana</div>
@@ -316,6 +319,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
       <div>Cust: {snap.customer}</div>
       {snap.phone && <div>Tel:  {snap.phone}</div>}
       <div>Pay:  {snap.payment}</div>
+      <div>Serv: {snap.staffName}</div>
       <div>{LINE}</div>
 
       <div style={{ display: 'flex', fontWeight: 'bold' }}>
@@ -338,11 +342,9 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         <span style={{ flex: 1 }}>SUBTOTAL</span>
         <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
       </div>
-      {snap.discount > 0
-        ? <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '100px', textAlign: 'right' }}>-{formatCurrency(snap.discount)}</span></div>
-        : <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '100px', textAlign: 'right' }}>None</span></div>
-      }
-      <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>TAX</span><span style={{ width: '100px', textAlign: 'right' }}>None</span></div>
+      {snap.discount > 0 && (
+        <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '100px', textAlign: 'right' }}>-{formatCurrency(snap.discount)}</span></div>
+      )}
       <div>{LINE}</div>
       <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
         <span style={{ flex: 1 }}>TOTAL</span>
@@ -377,7 +379,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
 }
 
 // ─── Main POS Component ───────────────────────────────────────────────────────
-export default function PosClient({ products }: { products: Product[] }) {
+export default function PosClient({ products, staffName }: { products: Product[]; staffName: string }) {
   const [cart, setCart]               = useState<CartItem[]>([])
   const [search, setSearch]           = useState('')
   const [cat, setCat]                 = useState('All')
@@ -416,6 +418,7 @@ export default function PosClient({ products }: { products: Product[] }) {
       customer:   customerName || 'Walk-in',
       phone:      customerPhone,
       payment,
+      staffName,
       cart:       [...cart],
       discount,
       amountPaid: amountPaid > 0 ? amountPaid : snapTotal,
