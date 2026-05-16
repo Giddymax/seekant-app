@@ -60,14 +60,16 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
 
   return (
     <div className="thermal-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
-      <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 4px 8px', borderBottom: '3px solid #000', marginBottom: '8px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '52px', height: '52px', objectFit: 'contain', display: 'block', margin: '0 auto 4px' }} />
-        <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
-        <div>Design. Print. Brand.</div>
-        <div>Asuom, Eastern Region, Ghana</div>
-        {contactPhone && <div>Tel: {contactPhone}</div>}
-        <div>www.seekantmultimedia.com</div>
+        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '56px', height: '56px', objectFit: 'contain', flexShrink: 0 }} />
+        <div style={{ lineHeight: '1.4' }}>
+          <div style={{ fontWeight: '900', fontSize: '14px', letterSpacing: '0.06em', color: '#000' }}>SEEKANT MULTIMEDIA</div>
+          <div style={{ fontWeight: '700', fontSize: '11px', letterSpacing: '0.04em', color: '#222' }}>Design. Print. Brand.</div>
+          <div style={{ fontSize: '10px', color: '#333' }}>Asuom, Eastern Region, Ghana</div>
+          {contactPhone && <div style={{ fontSize: '10px', color: '#333' }}>Tel: {contactPhone}</div>}
+          <div style={{ fontSize: '10px', color: '#333' }}>www.seekantmultimedia.com</div>
+        </div>
       </div>
 
       <div style={{ width: '232px', margin: '0 auto' }}>

@@ -89,10 +89,10 @@ export default function Navbar({ navItems }: { navItems?: { label: string; href:
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.25 }}>
               SEEKANT MULTIMEDIA
-              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: 'var(--brand-gold, #d42020)', letterSpacing: '0.12em' }}>
-                Printing &amp; Branding
+              <small style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.18em', opacity: 0.85 }}>
+                PRINTING &amp; BRANDING
               </small>
             </div>
           </Link>
