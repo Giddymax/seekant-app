@@ -258,3 +258,34 @@ export async function toggleStaffActive(id: string, active: boolean) {
   revalidatePath('/admin/staff')
   return { success: true }
 }
+
+export async function updateStaffAccount(fd: FormData) {
+  const id        = fd.get('id') as string
+  const full_name = (fd.get('full_name') as string) || null
+  const role      = (fd.get('role') as string) || 'staff'
+  const password  = (fd.get('password') as string) || ''
+
+  const supabase = createAdminClient()
+
+  const { error: profileErr } = await supabase
+    .from('profiles')
+    .update({ full_name, role })
+    .eq('id', id)
+  if (profileErr) return { error: profileErr.message }
+
+  if (password) {
+    const { error: pwErr } = await supabase.auth.admin.updateUserById(id, { password })
+    if (pwErr) return { error: pwErr.message }
+  }
+
+  revalidatePath('/admin/staff')
+  return { success: true }
+}
+
+export async function deleteStaffAccount(id: string) {
+  const supabase = createAdminClient()
+  const { error } = await supabase.auth.admin.deleteUser(id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/staff')
+  return { success: true }
+}
