@@ -30,6 +30,15 @@ function accent(category: string) {
   return CAT_COLOR[category] ?? '#d42020'
 }
 
+function ListMarker({ color }: { color: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '999px', background: color, flexShrink: 0, marginTop: 8 }}
+    />
+  )
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const supabase = await createClient()
@@ -123,7 +132,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <ul style={{ display: 'grid', gap: 10 }}>
                   {content.includes.map(item => (
                     <li key={item} style={{ display: 'flex', gap: 10, color: '#737a80', fontSize: 13, lineHeight: 1.7 }}>
-                      <span style={{ color, fontWeight: 900 }}>-</span>
+                      <ListMarker color={color} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -135,7 +144,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <ul style={{ display: 'grid', gap: 10 }}>
                   {content.idealFor.map(item => (
                     <li key={item} style={{ display: 'flex', gap: 10, color: '#737a80', fontSize: 13, lineHeight: 1.7 }}>
-                      <span style={{ color, fontWeight: 900 }}>-</span>
+                      <ListMarker color={color} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -169,7 +178,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <ul style={{ display: 'grid', gap: 8 }}>
                   {content.prepare.map(item => (
                     <li key={item} style={{ display: 'flex', gap: 9, color: '#737a80', fontSize: 13, lineHeight: 1.55 }}>
-                      <span style={{ color, fontWeight: 900 }}>-</span>
+                      <ListMarker color={color} />
                       <span>{item}</span>
                     </li>
                   ))}
