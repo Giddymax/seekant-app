@@ -47,7 +47,7 @@ const inp = {
 }
 
 // ─── Thermal Receipt ──────────────────────────────────────────────────────────
-function ThermalReceipt({ data }: { data: ReceiptData }) {
+function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhone: string }) {
   const { sale, items } = data
   const date     = new Date(sale.created_at)
   const dateStr  = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -58,58 +58,72 @@ function ThermalReceipt({ data }: { data: ReceiptData }) {
   const discount = sale.discount ?? 0
   const balance  = Math.max(0, sale.total - (sale.amount_paid ?? sale.total))
 
-  const Row = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
-    <div style={{ display: 'flex', fontWeight: bold ? 'bold' : 'normal', fontSize: bold ? '13px' : '12px' }}>
-      <span style={{ flex: 1 }}>{label}</span>
-      <span style={{ width: '100px', textAlign: 'right' }}>{value}</span>
-    </div>
-  )
-
   return (
-    <div className="thermal-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5' }}>
+    <div className="thermal-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
       <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '52px', height: '52px', objectFit: 'contain', display: 'block', margin: '0 auto 4px' }} />
         <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
         <div>Design. Print. Brand.</div>
         <div>Asuom, Eastern Region, Ghana</div>
-        <div>Tel: +233 XX XXX XXXX</div>
+        {contactPhone && <div>Tel: {contactPhone}</div>}
         <div>www.seekantmultimedia.com</div>
       </div>
 
-      <div>{DBL}</div>
-      <div>Date: {dateStr} {timeStr}</div>
-      <div>Ref:  {sale.sale_ref}</div>
-      <div>Cust: {sale.customer_name || 'Walk-in'}</div>
-      {sale.customer_phone && <div>Tel:  {sale.customer_phone}</div>}
-      <div>Pay:  {sale.payment_method}</div>
-      {sale.notes && <div>Note: {sale.notes}</div>}
-      <div>{LINE}</div>
+      <div style={{ width: '232px', margin: '0 auto' }}>
+        <div>{DBL}</div>
+        <div>Date: {dateStr} {timeStr}</div>
+        <div>Ref:  {sale.sale_ref}</div>
+        <div>Cust: {sale.customer_name || 'Walk-in'}</div>
+        {sale.customer_phone && <div>Tel:  {sale.customer_phone}</div>}
+        <div>Pay:  {sale.payment_method}</div>
+        {sale.notes && <div>Note: {sale.notes}</div>}
+        <div>{LINE}</div>
 
-      <div style={{ display: 'flex', fontWeight: 'bold' }}>
-        <span style={{ flex: 1 }}>ITEM</span>
-        <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
-        <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
-      </div>
-      <div>{LINE}</div>
-
-      {items.map((item, i) => (
-        <div key={i} style={{ display: 'flex' }}>
-          <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.product_name}</span>
-          <span style={{ width: '28px', textAlign: 'right' }}>{item.quantity}</span>
-          <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
+        <div style={{ display: 'flex', fontWeight: 'bold' }}>
+          <span style={{ flex: 1 }}>ITEM</span>
+          <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
+          <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
         </div>
-      ))}
-      {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
-      <div>{LINE}</div>
+        <div>{LINE}</div>
 
-      <Row label="SUBTOTAL" value={formatCurrency(subtotal)} />
-      <Row label="DISCOUNT" value={discount > 0 ? `-${formatCurrency(discount)}` : 'None'} />
-      <Row label="TAX" value="None" />
-      <div>{LINE}</div>
-      <Row label="TOTAL" value={formatCurrency(sale.total)} bold />
-      <Row label="PAID" value={formatCurrency(sale.amount_paid ?? sale.total)} />
-      {balance > 0 && <Row label="BALANCE DUE" value={formatCurrency(balance)} bold />}
-      <Row label="STATUS" value={sale.status.toUpperCase()} />
-      <div>{DBL}</div>
+        {items.map((item, i) => (
+          <div key={i} style={{ display: 'flex' }}>
+            <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.product_name}</span>
+            <span style={{ width: '28px', textAlign: 'right' }}>{item.quantity}</span>
+            <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
+          </div>
+        ))}
+        {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
+        <div>{LINE}</div>
+
+        <div style={{ display: 'flex' }}>
+          <span style={{ flex: 1 }}>SUBTOTAL</span>
+          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(subtotal)}</span>
+        </div>
+        {discount > 0 && (
+          <div style={{ display: 'flex' }}>
+            <span style={{ flex: 1 }}>DISCOUNT</span>
+            <span style={{ width: '80px', textAlign: 'right' }}>-{formatCurrency(discount)}</span>
+          </div>
+        )}
+        <div>{LINE}</div>
+        <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
+          <span style={{ flex: 1 }}>TOTAL</span>
+          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(sale.total)}</span>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <span style={{ flex: 1 }}>PAID</span>
+          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(sale.amount_paid ?? sale.total)}</span>
+        </div>
+        {balance > 0 && (
+          <div style={{ display: 'flex', fontWeight: 'bold' }}>
+            <span style={{ flex: 1 }}>BALANCE DUE</span>
+            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(balance)}</span>
+          </div>
+        )}
+        <div>{DBL}</div>
+      </div>
 
       <div style={{ textAlign: 'center', marginTop: '6px' }}>
         {balance > 0
@@ -313,9 +327,11 @@ function EditModal({
 export default function SalesClient({
   initialSales,
   role,
+  contactPhone,
 }: {
   initialSales: Sale[]
   role: string
+  contactPhone: string
 }) {
   const [sales, setSales]               = useState(initialSales)
   const [statusFilter, setStatusFilter] = useState('all')
@@ -407,7 +423,7 @@ export default function SalesClient({
       `}</style>
 
       <div className="thermal-receipt-wrapper">
-        {receipt && <ThermalReceipt data={receipt} />}
+        {receipt && <ThermalReceipt data={receipt} contactPhone={contactPhone} />}
       </div>
 
       {editing && (

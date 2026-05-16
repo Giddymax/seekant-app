@@ -6,14 +6,17 @@ export const metadata = { title: 'Sales – Seekant Admin' }
 export default async function SalesPage() {
   const supabase = await createClient()
 
-  const [{ data: { user } }, { data: sales }] = await Promise.all([
+  const [{ data: { user } }, { data: sales }, { data: phoneRow }] = await Promise.all([
     supabase.auth.getUser(),
     supabase
       .from('sales')
       .select('id, sale_ref, customer_name, customer_phone, total, discount, amount_paid, payment_method, status, notes, created_at')
       .order('created_at', { ascending: false })
       .limit(200),
+    supabase.from('site_content').select('value').eq('key', 'contact_phone').single(),
   ])
+
+  const contactPhone = (phoneRow as { value: string } | null)?.value || ''
 
   let role = 'staff'
   if (user) {
@@ -25,5 +28,5 @@ export default async function SalesPage() {
     role = profile?.role ?? 'staff'
   }
 
-  return <SalesClient initialSales={sales ?? []} role={role} />
+  return <SalesClient initialSales={sales ?? []} role={role} contactPhone={contactPhone} />
 }
