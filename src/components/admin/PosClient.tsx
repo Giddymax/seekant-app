@@ -21,6 +21,7 @@ type ReceiptSnapshot = {
   phone: string
   payment: string
   staffName: string
+  contactPhone: string
   cart: CartItem[]
   discount: number
   amountPaid: number
@@ -305,70 +306,72 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
     <div className="pos-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
       <div style={{ textAlign: 'center', marginBottom: '6px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '52px', height: '52px', objectFit: 'contain', display: 'block', margin: '0 auto 4px', filter: 'grayscale(1) contrast(1.8) brightness(0.1)' }} />
+        <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '52px', height: '52px', objectFit: 'contain', display: 'block', margin: '0 auto 4px' }} />
         <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.05em' }}>SEEKANT MULTIMEDIA</div>
         <div>Design. Print. Brand.</div>
         <div>Asuom, Eastern Region, Ghana</div>
-        <div>Tel: +233 XX XXX XXXX</div>
+        {snap.contactPhone && <div>Tel: {snap.contactPhone}</div>}
         <div>www.seekantmultimedia.com</div>
       </div>
 
-      <div>{DBL}</div>
-      <div>Date: {dateStr} {timeStr}</div>
-      <div>Ref:  {snap.ref}</div>
-      <div>Cust: {snap.customer}</div>
-      {snap.phone && <div>Tel:  {snap.phone}</div>}
-      <div>Pay:  {snap.payment}</div>
-      <div>Serv: {snap.staffName}</div>
-      <div>{LINE}</div>
+      <div style={{ width: '232px', margin: '0 auto' }}>
+        <div>{DBL}</div>
+        <div>Date: {dateStr} {timeStr}</div>
+        <div>Ref:  {snap.ref}</div>
+        <div>Cust: {snap.customer}</div>
+        {snap.phone && <div>Tel:  {snap.phone}</div>}
+        <div>Pay:  {snap.payment}</div>
+        <div>Serv: {snap.staffName}</div>
+        <div>{LINE}</div>
 
-      <div style={{ display: 'flex', fontWeight: 'bold' }}>
-        <span style={{ flex: 1 }}>ITEM</span>
-        <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
-        <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
-      </div>
-      <div>{LINE}</div>
-
-      {snap.cart.map(i => (
-        <div key={i.product_id} style={{ display: 'flex' }}>
-          <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{i.name}</span>
-          <span style={{ width: '28px', textAlign: 'right' }}>{i.quantity}</span>
-          <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(i.unit_price * i.quantity)}</span>
+        <div style={{ display: 'flex', fontWeight: 'bold' }}>
+          <span style={{ flex: 1 }}>ITEM</span>
+          <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
+          <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
         </div>
-      ))}
+        <div>{LINE}</div>
 
-      <div>{LINE}</div>
-      <div style={{ display: 'flex' }}>
-        <span style={{ flex: 1 }}>SUBTOTAL</span>
-        <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
-      </div>
-      {snap.discount > 0 && (
-        <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '100px', textAlign: 'right' }}>-{formatCurrency(snap.discount)}</span></div>
-      )}
-      <div>{LINE}</div>
-      <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
-        <span style={{ flex: 1 }}>TOTAL</span>
-        <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.total)}</span>
-      </div>
-      {snap.amountPaid > 0 && (
+        {snap.cart.map(i => (
+          <div key={i.product_id} style={{ display: 'flex' }}>
+            <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{i.name}</span>
+            <span style={{ width: '28px', textAlign: 'right' }}>{i.quantity}</span>
+            <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(i.unit_price * i.quantity)}</span>
+          </div>
+        ))}
+
+        <div>{LINE}</div>
         <div style={{ display: 'flex' }}>
-          <span style={{ flex: 1 }}>PAID</span>
-          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid)}</span>
+          <span style={{ flex: 1 }}>SUBTOTAL</span>
+          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
         </div>
-      )}
-      {snap.amountPaid > snap.total && (
-        <div style={{ display: 'flex', fontWeight: 'bold' }}>
-          <span style={{ flex: 1 }}>CHANGE</span>
-          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid - snap.total)}</span>
+        {snap.discount > 0 && (
+          <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '80px', textAlign: 'right' }}>-{formatCurrency(snap.discount)}</span></div>
+        )}
+        <div>{LINE}</div>
+        <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
+          <span style={{ flex: 1 }}>TOTAL</span>
+          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.total)}</span>
         </div>
-      )}
-      {snap.amountPaid > 0 && snap.amountPaid < snap.total && (
-        <div style={{ display: 'flex', fontWeight: 'bold' }}>
-          <span style={{ flex: 1 }}>BALANCE DUE</span>
-          <span style={{ width: '100px', textAlign: 'right' }}>{formatCurrency(snap.total - snap.amountPaid)}</span>
-        </div>
-      )}
-      <div>{DBL}</div>
+        {snap.amountPaid > 0 && (
+          <div style={{ display: 'flex' }}>
+            <span style={{ flex: 1 }}>PAID</span>
+            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid)}</span>
+          </div>
+        )}
+        {snap.amountPaid > snap.total && (
+          <div style={{ display: 'flex', fontWeight: 'bold' }}>
+            <span style={{ flex: 1 }}>CHANGE</span>
+            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid - snap.total)}</span>
+          </div>
+        )}
+        {snap.amountPaid > 0 && snap.amountPaid < snap.total && (
+          <div style={{ display: 'flex', fontWeight: 'bold' }}>
+            <span style={{ flex: 1 }}>BALANCE DUE</span>
+            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.total - snap.amountPaid)}</span>
+          </div>
+        )}
+        <div>{DBL}</div>
+      </div>
 
       <div style={{ textAlign: 'center', marginTop: '6px' }}>
         <div>Thank you for your patronage!</div>
@@ -379,7 +382,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
 }
 
 // ─── Main POS Component ───────────────────────────────────────────────────────
-export default function PosClient({ products, staffName }: { products: Product[]; staffName: string }) {
+export default function PosClient({ products, staffName, contactPhone }: { products: Product[]; staffName: string; contactPhone: string }) {
   const [cart, setCart]               = useState<CartItem[]>([])
   const [search, setSearch]           = useState('')
   const [cat, setCat]                 = useState('All')
@@ -414,16 +417,17 @@ export default function PosClient({ products, staffName }: { products: Product[]
     if (!cart.length) { toast.error('Cart is empty'); return }
     const snapTotal = Math.max(0, cart.reduce((s, i) => s + i.unit_price * i.quantity, 0) - discount)
     const snap: ReceiptSnapshot = {
-      ref:        '',
-      customer:   customerName || 'Walk-in',
-      phone:      customerPhone,
+      ref:          '',
+      customer:     customerName || 'Walk-in',
+      phone:        customerPhone,
       payment,
       staffName,
-      cart:       [...cart],
+      contactPhone,
+      cart:         [...cart],
       discount,
-      amountPaid: amountPaid > 0 ? amountPaid : snapTotal,
-      total:      snapTotal,
-      date:       new Date(),
+      amountPaid:   amountPaid > 0 ? amountPaid : snapTotal,
+      total:        snapTotal,
+      date:         new Date(),
     }
     startTransition(async () => {
       const result = await createSale({
