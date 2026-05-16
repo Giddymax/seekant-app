@@ -75,7 +75,13 @@ export default function ServicesClientPage({ services }: { services: Service[] }
           )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
             {filtered.map(svc => (
-              <div key={svc.id} className="card-shadow" style={{ background: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <Link
+                key={svc.id}
+                href={`/services/${svc.slug}`}
+                aria-label={`View ${svc.name}`}
+                className="card-shadow"
+                style={{ background: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+              >
                 {svc.image_url ? (
                   <div style={{ position: 'relative', height: 178 }}>
                     <Image src={svc.image_url} alt={svc.name} fill style={{ objectFit: 'cover' }} sizes="33vw" />
@@ -100,14 +106,14 @@ export default function ServicesClientPage({ services }: { services: Service[] }
                   {svc.description && (
                     <p style={{ fontSize: 13, color: '#737a80', lineHeight: 1.7, marginBottom: 16, flex: 1 }}>{svc.description}</p>
                   )}
-                  <Link href="/quote" style={{
+                  <span style={{
                     fontSize: 11, fontWeight: 700, color: '#d42020',
                     letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: 'auto',
                   }}>
-                    Get a Quote →
-                  </Link>
+                    View Details →
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
