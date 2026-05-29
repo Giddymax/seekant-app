@@ -185,10 +185,11 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
       <div style={{ position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 9, zIndex: 10 }}>
         {data.map((_, i) => (
           <button type="button" key={i} onClick={() => setCur(i)} aria-label={`Slide ${i + 1}`} style={{
-            width: i === cur ? 28 : 12, height: 12,
+            width: 12, height: 12, borderRadius: '50%',
             background: i === cur ? '#d42020' : 'rgba(255,255,255,.4)',
             border: 'none', cursor: 'pointer', padding: 0,
-            transition: 'width .3s, background .3s',
+            transition: 'background .3s, transform .2s',
+            transform: i === cur ? 'scale(1.15)' : 'scale(1)',
             touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
           }} />
         ))}
