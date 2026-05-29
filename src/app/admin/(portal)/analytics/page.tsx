@@ -1,10 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, toNumber } from '@/lib/utils'
 
 export const metadata = { title: 'Analytics – Seekant Admin' }
 
 export default async function AnalyticsPage() {
   const supabase = await createClient()
+  const today = new Date()
 
   const [
     { data: salesData },
@@ -17,7 +18,7 @@ export default async function AnalyticsPage() {
   ])
 
   const completed = (salesData ?? []).filter(s => s.status === 'Completed')
-  const totalRevenue = completed.reduce((sum, s) => sum + (s.total ?? 0), 0)
+  const totalRevenue = completed.reduce((sum, s) => sum + toNumber(s.total), 0)
   const avgOrderValue = completed.length ? totalRevenue / completed.length : 0
 
   // Payment breakdown
@@ -43,9 +44,12 @@ export default async function AnalyticsPage() {
   // Top products from sales
   const productMap: Record<string, { qty: number; revenue: number }> = {}
   ;(topProducts ?? []).forEach(item => {
-    if (!productMap[item.product_name]) productMap[item.product_name] = { qty: 0, revenue: 0 }
-    productMap[item.product_name].qty += item.quantity ?? 0
-    productMap[item.product_name].revenue += (item.unit_price ?? 0) * (item.quantity ?? 0)
+    const name = item.product_name || 'Unnamed item'
+    const quantity = toNumber(item.quantity)
+    const unitPrice = toNumber(item.unit_price)
+    if (!productMap[name]) productMap[name] = { qty: 0, revenue: 0 }
+    productMap[name].qty += quantity
+    productMap[name].revenue += unitPrice * quantity
   })
   const topProductsList = Object.entries(productMap).sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 5)
 
@@ -53,15 +57,15 @@ export default async function AnalyticsPage() {
   const monthLabels: string[] = []
   const monthRevenue: Record<string, number> = {}
   for (let i = 11; i >= 0; i--) {
-    const d = new Date()
+    const d = new Date(today)
     d.setMonth(d.getMonth() - i)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     monthLabels.push(d.toLocaleString('default', { month: 'short' }))
     monthRevenue[key] = 0
   }
   completed.forEach(s => {
-    const key = s.created_at.slice(0, 7)
-    if (key in monthRevenue) monthRevenue[key] += s.total ?? 0
+    const key = String(s.created_at ?? '').slice(0, 7)
+    if (key in monthRevenue) monthRevenue[key] += toNumber(s.total)
   })
   const monthValues = Object.values(monthRevenue)
   const maxMonth = Math.max(...monthValues, 1)
@@ -98,7 +102,7 @@ export default async function AnalyticsPage() {
           {monthLabels.map((m, i) => (
             <div key={m} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
               <div style={{ fontSize: 8, color: 'rgba(255,255,255,.3)' }}>{formatCurrency(monthValues[i]).replace('GH₵', '₵')}</div>
-              <div style={{ width: '100%', background: `rgba(221,184,55,${0.15 + 0.85 * monthValues[i] / maxMonth})`, height: `${Math.max(3, (monthValues[i] / maxMonth) * 100)}px` }} />
+              <div style={{ width: '100%', background: `rgba(221,184,55,${0.15 + 0.85 * (monthValues[i] / maxMonth)})`, height: `${Math.max(3, (monthValues[i] / maxMonth) * 100)}px` }} />
               <div style={{ fontSize: 9, color: 'rgba(255,255,255,.4)', fontWeight: 600 }}>{m}</div>
             </div>
           ))}

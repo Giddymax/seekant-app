@@ -153,7 +153,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
               }}>{slide.subtext}</p>
               <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', animation: i === cur ? 'fadeUp .65s .5s both' : undefined }}>
                 <Link href={slide.btn1_href} className="btn btn-gold">{slide.btn1_label}</Link>
-                <Link href={slide.btn2_href} className="btn btn-outline">{slide.btn2_label}</Link>
+                <Link href={slide.btn2_href} className="btn btn-gold">{slide.btn2_label}</Link>
               </div>
             </div>
           </div>

@@ -131,11 +131,11 @@ function editableLinks(content: Record<string, string>, links: EditableLink[]) {
     .filter(link => link.label && link.href)
 }
 
-function FooterTextLink({ href, children, className = 'footer-link' }: { href: string; children: ReactNode; className?: string }) {
+function FooterTextLink({ href, children, className = 'footer-link', newTab = false }: { href: string; children: ReactNode; className?: string; newTab?: boolean }) {
   const normalizedHref = normalizeHref(href)
   if (!normalizedHref) return null
 
-  if (isExternalHref(normalizedHref)) {
+  if (isExternalHref(normalizedHref) || newTab) {
     return (
       <a href={normalizedHref} target="_blank" rel="noopener noreferrer" className={className}>
         {children}
@@ -242,10 +242,10 @@ export default async function Footer() {
       <div className="footer-btm">
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,.3)' }}>{getContentValue(content, 'footer_copyright')}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-          <FooterTextLink href={getContentValue(content, 'footer_privacy_url')} className="footer-bottom-link">
+          <FooterTextLink href={getContentValue(content, 'footer_privacy_url')} className="footer-bottom-link" newTab>
             {getContentValue(content, 'footer_privacy_label')}
           </FooterTextLink>
-          <FooterTextLink href={getContentValue(content, 'footer_terms_url')} className="footer-bottom-link">
+          <FooterTextLink href={getContentValue(content, 'footer_terms_url')} className="footer-bottom-link" newTab>
             {getContentValue(content, 'footer_terms_label')}
           </FooterTextLink>
           <FooterTextLink href={getContentValue(content, 'footer_quote_url')} className="footer-bottom-link">

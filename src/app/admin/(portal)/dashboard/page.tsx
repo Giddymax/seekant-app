@@ -1,11 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, toNumber } from '@/lib/utils'
 import Link from 'next/link'
 
 export const metadata = { title: 'Dashboard – Seekant Admin' }
 
 export default async function DashboardPage() {
   const supabase = await createClient()
+  const today = new Date()
+  const salesCutoff = new Date(today)
+  salesCutoff.setDate(salesCutoff.getDate() - 180)
 
   const [
     { count: totalSales },
@@ -20,16 +23,16 @@ export default async function DashboardPage() {
     supabase.from('quote_requests').select('*', { count: 'exact', head: true }).eq('status', 'new'),
     supabase.from('inventory').select('*', { count: 'exact', head: true }).lt('stock', 10),
     supabase.from('sales').select('id, sale_ref, total, status, created_at').order('created_at', { ascending: false }).limit(8),
-    supabase.from('sales').select('created_at, total').eq('status', 'Completed').gte('created_at', new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString()),
+    supabase.from('sales').select('created_at, total').eq('status', 'Completed').gte('created_at', salesCutoff.toISOString()),
   ])
 
-  const totalRevenue = (revenueData ?? []).reduce((sum, s) => sum + (s.total ?? 0), 0)
+  const totalRevenue = (revenueData ?? []).reduce((sum, s) => sum + toNumber(s.total), 0)
 
   // Build 6-month bar chart data
   const months: string[] = []
   const monthTotals: Record<string, number> = {}
   for (let i = 5; i >= 0; i--) {
-    const d = new Date()
+    const d = new Date(today)
     d.setMonth(d.getMonth() - i)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     const label = d.toLocaleString('default', { month: 'short' })
@@ -37,8 +40,8 @@ export default async function DashboardPage() {
     monthTotals[key] = 0
   }
   ;(monthlySales ?? []).forEach(s => {
-    const key = s.created_at.slice(0, 7)
-    if (key in monthTotals) monthTotals[key] += s.total ?? 0
+    const key = String(s.created_at ?? '').slice(0, 7)
+    if (key in monthTotals) monthTotals[key] += toNumber(s.total)
   })
   const barValues = Object.values(monthTotals)
   const maxBar = Math.max(...barValues, 1)
@@ -53,6 +56,7 @@ export default async function DashboardPage() {
   const statusColor: Record<string, string> = {
     Completed: '#22c55e',
     Pending: '#d42020',
+    'Part-Payment': '#f97316',
     Cancelled: '#fd4682',
   }
 
@@ -86,7 +90,7 @@ export default async function DashboardPage() {
             {months.map((m, i) => (
               <div key={m} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                 <div style={{ fontSize: 9, color: 'rgba(255,255,255,.35)', letterSpacing: '0.04em' }}>{formatCurrency(barValues[i]).replace('GH₵', '')}</div>
-                <div style={{ width: '100%', background: `rgba(221,184,55,${0.15 + 0.85 * barValues[i] / maxBar})`, height: `${Math.max(4, (barValues[i] / maxBar) * 120)}px`, transition: 'height .3s' }} />
+                <div style={{ width: '100%', background: `rgba(221,184,55,${0.15 + 0.85 * (barValues[i] / maxBar)})`, height: `${Math.max(4, (barValues[i] / maxBar) * 120)}px`, transition: 'height .3s' }} />
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', fontWeight: 600 }}>{m}</div>
               </div>
             ))}

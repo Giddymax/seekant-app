@@ -12,8 +12,17 @@ export function slugify(text: string) {
     .replace(/(^-|-$)/g, '')
 }
 
-export function formatCurrency(amount: number) {
-  return `GH₵ ${amount.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+export function toNumber(value: number | string | null | undefined) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0
+  if (typeof value === 'string') {
+    const number = Number(value.replace(/,/g, '').trim())
+    return Number.isFinite(number) ? number : 0
+  }
+  return 0
+}
+
+export function formatCurrency(amount: number | string | null | undefined) {
+  return `GH₵ ${toNumber(amount).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function formatDate(date: string | Date) {
