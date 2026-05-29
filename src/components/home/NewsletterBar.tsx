@@ -21,9 +21,9 @@ export default function NewsletterBar() {
     <div className="newsletter-wrap">
       <div>
         <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
-          Stay <em style={{ color: '#d42020' }}>in the Loop</em>
+          Stay <em style={{ color: '#fff' }}>in the Loop</em>
         </p>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
+        <p style={{ fontSize: 12, color: '#fff' }}>
           Get printing tips, exclusive offers, and news from Seekant Multimedia.
         </p>
       </div>
@@ -33,6 +33,7 @@ export default function NewsletterBar() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           placeholder="Your email address"
+          className="newsletter-input"
           style={{
             padding: '12px 18px', fontSize: 13, border: 'none', outline: 'none',
             background: 'rgba(255,255,255,.08)', color: '#fff', flex: 1, minWidth: 180,

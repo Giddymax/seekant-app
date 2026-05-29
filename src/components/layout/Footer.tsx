@@ -177,7 +177,7 @@ export default async function Footer() {
   ]
 
   return (
-    <footer style={{ background: 'var(--brand-dark, #15212c)', color: 'rgba(255,255,255,.6)', fontFamily: 'Poppins, sans-serif' }}>
+    <footer style={{ background: 'var(--brand-dark, #15212c)', color: '#fff', fontFamily: 'Poppins, sans-serif' }}>
       <div className="footer-grid" style={{ maxWidth: 1280, margin: '0 auto' }}>
         <div>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 18, textDecoration: 'none' }}>
@@ -185,10 +185,10 @@ export default async function Footer() {
             <img src="/logo.png" alt="Seekant Multimedia" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               {getContentValue(content, 'footer_brand_name')}
-              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: 'var(--brand-gold, #d42020)', letterSpacing: '0.12em' }}>{getContentValue(content, 'footer_brand_subtitle')}</small>
+              <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#fff', letterSpacing: '0.12em' }}>{getContentValue(content, 'footer_brand_subtitle')}</small>
             </div>
           </Link>
-          <p style={{ fontSize: 13, lineHeight: 1.8, marginBottom: 24, color: 'rgba(255,255,255,.5)' }}>
+          <p style={{ fontSize: 13, lineHeight: 1.8, marginBottom: 24, color: '#fff' }}>
             {getContentValue(content, 'footer_tagline')}
           </p>
           {socialLinks.length > 0 && (
@@ -231,7 +231,7 @@ export default async function Footer() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold, #d42020)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }}>
                 <path d={icon} />
               </svg>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.6 }}>{text}</span>
+              <span style={{ fontSize: 12, color: '#fff', lineHeight: 1.6 }}>{text}</span>
             </div>
           ))}
         </div>
@@ -240,7 +240,7 @@ export default async function Footer() {
       <NewsletterBar />
 
       <div className="footer-btm">
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,.3)' }}>{getContentValue(content, 'footer_copyright')}</p>
+        <p style={{ fontSize: 12, color: '#fff' }}>{getContentValue(content, 'footer_copyright')}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
           <FooterTextLink href={getContentValue(content, 'footer_privacy_url')} className="footer-bottom-link" newTab>
             {getContentValue(content, 'footer_privacy_label')}
