@@ -316,7 +316,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         </div>
       </div>
 
-      <div style={{ width: '232px', margin: '0 auto' }}>
+      <div style={{ width: '280px', maxWidth: '100%', margin: '0 auto' }}>
         <div>{DBL}</div>
         <div>Date: {dateStr} {timeStr}</div>
         <div>Ref:  {snap.ref}</div>
@@ -326,18 +326,18 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         <div>Serv: {snap.staffName}</div>
         <div>{LINE}</div>
 
-        <div style={{ display: 'flex', fontWeight: 'bold' }}>
-          <span style={{ flex: 1 }}>ITEM</span>
-          <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
-          <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px', fontWeight: 'bold' }}>
+          <span>ITEM</span>
+          <span style={{ textAlign: 'center' }}>QTY</span>
+          <span style={{ textAlign: 'right' }}>TOTAL</span>
         </div>
         <div>{LINE}</div>
 
         {snap.cart.map(i => (
-          <div key={i.product_id} style={{ display: 'flex' }}>
-            <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{i.name}</span>
-            <span style={{ width: '28px', textAlign: 'right' }}>{i.quantity}</span>
-            <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(i.unit_price * i.quantity)}</span>
+          <div key={i.product_id} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px' }}>
+            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{i.name}</span>
+            <span style={{ textAlign: 'center' }}>{i.quantity}</span>
+            <span style={{ textAlign: 'right' }}>{formatCurrency(i.unit_price * i.quantity)}</span>
           </div>
         ))}
 

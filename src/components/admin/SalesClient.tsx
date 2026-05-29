@@ -72,7 +72,7 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
         </div>
       </div>
 
-      <div style={{ width: '232px', margin: '0 auto' }}>
+      <div style={{ width: '280px', maxWidth: '100%', margin: '0 auto' }}>
         <div>{DBL}</div>
         <div>Date: {dateStr} {timeStr}</div>
         <div>Ref:  {sale.sale_ref}</div>
@@ -82,18 +82,18 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
         {sale.notes && <div>Note: {sale.notes}</div>}
         <div>{LINE}</div>
 
-        <div style={{ display: 'flex', fontWeight: 'bold' }}>
-          <span style={{ flex: 1 }}>ITEM</span>
-          <span style={{ width: '28px', textAlign: 'right' }}>QTY</span>
-          <span style={{ width: '72px', textAlign: 'right' }}>TOTAL</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px', fontWeight: 'bold' }}>
+          <span>ITEM</span>
+          <span style={{ textAlign: 'center' }}>QTY</span>
+          <span style={{ textAlign: 'right' }}>TOTAL</span>
         </div>
         <div>{LINE}</div>
 
         {items.map((item, i) => (
-          <div key={i} style={{ display: 'flex' }}>
-            <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.product_name}</span>
-            <span style={{ width: '28px', textAlign: 'right' }}>{item.quantity}</span>
-            <span style={{ width: '72px', textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
+          <div key={i} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px' }}>
+            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{item.product_name}</span>
+            <span style={{ textAlign: 'center' }}>{item.quantity}</span>
+            <span style={{ textAlign: 'right' }}>{formatCurrency(item.line_total)}</span>
           </div>
         ))}
         {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
