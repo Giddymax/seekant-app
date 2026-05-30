@@ -4,6 +4,19 @@ import { revalidatePath } from 'next/cache'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { slugify } from '@/lib/utils'
 
+async function isCurrentUserAdmin(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return false
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, active')
+    .eq('id', user.id)
+    .single()
+
+  return profile?.role === 'admin' && profile?.active !== false
+}
+
 // ── SERVICES ──────────────────────────────────────────────
 export async function upsertService(fd: FormData) {
   const supabase = await createClient()
@@ -156,6 +169,10 @@ export async function deleteHeroSlide(id: string) {
 // ── INVENTORY ─────────────────────────────────────────────
 export async function upsertInventory(fd: FormData) {
   const supabase = await createClient()
+  if (!(await isCurrentUserAdmin(supabase))) {
+    return { error: 'Only admins can manage inventory.' }
+  }
+
   const id = fd.get('id') as string | null
   const isService = fd.get('is_service') === 'true'
   const payload = {
@@ -178,6 +195,10 @@ export async function upsertInventory(fd: FormData) {
 
 export async function deleteInventory(id: string) {
   const supabase = await createClient()
+  if (!(await isCurrentUserAdmin(supabase))) {
+    return { error: 'Only admins can manage inventory.' }
+  }
+
   const { error } = await supabase.from('inventory').delete().eq('id', id)
   if (error) return { error: error.message }
   revalidatePath('/admin/inventory')

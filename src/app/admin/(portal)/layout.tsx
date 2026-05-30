@@ -5,6 +5,7 @@ import AdminTopbar from '@/components/admin/AdminTopbar'
 
 const PAGE_TITLES: Record<string, string> = {
   '/admin/dashboard': 'Dashboard',
+  '/admin/summary': 'Business Summary',
   '/admin/pos': 'Point of Sale',
   '/admin/sales': 'Sales',
   '/admin/inventory': 'Inventory',

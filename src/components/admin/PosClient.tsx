@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { createSale, type CartItem } from '@/lib/actions/sales'
 import { formatCurrency } from '@/lib/utils'
@@ -301,81 +301,94 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
   const DBL  = '================================'
   const dateStr = snap.date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr = snap.date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const receiptText: CSSProperties = { overflowWrap: 'anywhere', wordBreak: 'break-word' }
+  const headerText: CSSProperties = { minWidth: 0, flex: 1, lineHeight: '1.4', overflow: 'hidden' }
+  const headerLine: CSSProperties = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
+  const separator: CSSProperties = { overflow: 'hidden', whiteSpace: 'nowrap' }
+  const itemGrid: CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'minmax(0,1fr) 38px 100px',
+    columnGap: '10px',
+    width: '100%',
+    overflow: 'hidden',
+  }
+  const amountCell: CSSProperties = { textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
+  const summaryRow: CSSProperties = { display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 100px', columnGap: '10px', width: '100%' }
 
   return (
-    <div className="pos-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 4px 8px', borderBottom: '3px solid #000', marginBottom: '8px' }}>
+    <div className="pos-receipt" style={{ fontFamily: 'monospace', fontSize: '12px', width: '302px', maxWidth: '80mm', boxSizing: 'border-box', overflow: 'hidden', padding: '8px 4px', lineHeight: '1.5', color: '#000', background: '#fff' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', boxSizing: 'border-box', overflow: 'hidden', padding: '6px 4px 8px', borderBottom: '3px solid #000', marginBottom: '8px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '56px', height: '56px', objectFit: 'contain', flexShrink: 0 }} />
-        <div style={{ lineHeight: '1.4' }}>
-          <div style={{ fontWeight: '900', fontSize: '14px', letterSpacing: '0.06em', color: '#000' }}>SEEKANT MULTIMEDIA</div>
-          <div style={{ fontWeight: '700', fontSize: '11px', letterSpacing: '0.04em', color: '#222' }}>Design. Print. Brand.</div>
-          <div style={{ fontSize: '10px', color: '#333' }}>Asuom, Eastern Region, Ghana</div>
-          {snap.contactPhone && <div style={{ fontSize: '10px', color: '#333' }}>Tel: {snap.contactPhone}</div>}
-          <div style={{ fontSize: '10px', color: '#333' }}>www.seekantmultimedia.com</div>
+        <div style={headerText}>
+          <div style={{ ...headerLine, fontWeight: '900', fontSize: '14px', letterSpacing: '0.06em', color: '#000' }}>SEEKANT MULTIMEDIA</div>
+          <div style={{ ...headerLine, fontWeight: '700', fontSize: '11px', letterSpacing: '0.04em', color: '#222' }}>Design. Print. Brand.</div>
+          <div style={{ ...headerLine, fontSize: '10px', color: '#333' }}>Asuom, Eastern Region, Ghana</div>
+          {snap.contactPhone && <div style={{ ...headerLine, fontSize: '10px', color: '#333' }}>Tel: {snap.contactPhone}</div>}
+          <div style={{ ...headerLine, fontSize: '10px', color: '#333' }}>www.seekantmultimedia.com</div>
         </div>
       </div>
 
-      <div style={{ width: '280px', maxWidth: '100%', margin: '0 auto' }}>
-        <div>{DBL}</div>
-        <div>Date: {dateStr} {timeStr}</div>
-        <div>Ref:  {snap.ref}</div>
-        <div>Cust: {snap.customer}</div>
-        {snap.phone && <div>Tel:  {snap.phone}</div>}
-        <div>Pay:  {snap.payment}</div>
-        <div>Serv: {snap.staffName}</div>
-        <div>{LINE}</div>
+      <div style={{ width: '280px', maxWidth: '100%', overflow: 'hidden', margin: '0 auto' }}>
+        <div style={separator}>{DBL}</div>
+        <div style={receiptText}>Date: {dateStr} {timeStr}</div>
+        <div style={receiptText}>Ref:  {snap.ref}</div>
+        <div style={receiptText}>Cust: {snap.customer}</div>
+        {snap.phone && <div style={receiptText}>Tel:  {snap.phone}</div>}
+        <div style={receiptText}>Pay:  {snap.payment}</div>
+        <div style={receiptText}>Serv: {snap.staffName}</div>
+        <div style={separator}>{LINE}</div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px', fontWeight: 'bold' }}>
+        <div style={{ ...itemGrid, fontWeight: 'bold' }}>
           <span>ITEM</span>
           <span style={{ textAlign: 'center' }}>QTY</span>
-          <span style={{ textAlign: 'right' }}>TOTAL</span>
+          <span style={amountCell}>TOTAL</span>
         </div>
-        <div>{LINE}</div>
+        <div style={separator}>{LINE}</div>
 
         {snap.cart.map(i => (
-          <div key={i.product_id} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 38px 100px', columnGap: '10px' }}>
+          <div key={i.product_id} style={itemGrid}>
             <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{i.name}</span>
             <span style={{ textAlign: 'center' }}>{i.quantity}</span>
-            <span style={{ textAlign: 'right' }}>{formatCurrency(i.unit_price * i.quantity)}</span>
+            <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
           </div>
         ))}
 
-        <div>{LINE}</div>
-        <div style={{ display: 'flex' }}>
-          <span style={{ flex: 1 }}>SUBTOTAL</span>
-          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
+        <div style={separator}>{LINE}</div>
+        <div style={summaryRow}>
+          <span>SUBTOTAL</span>
+          <span style={amountCell}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
         </div>
         {snap.discount > 0 && (
-          <div style={{ display: 'flex' }}><span style={{ flex: 1 }}>DISCOUNT</span><span style={{ width: '80px', textAlign: 'right' }}>-{formatCurrency(snap.discount)}</span></div>
+          <div style={summaryRow}><span>DISCOUNT</span><span style={amountCell}>-{formatCurrency(snap.discount)}</span></div>
         )}
-        <div>{LINE}</div>
-        <div style={{ display: 'flex', fontWeight: 'bold', fontSize: '13px' }}>
-          <span style={{ flex: 1 }}>TOTAL</span>
-          <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.total)}</span>
+        <div style={separator}>{LINE}</div>
+        <div style={{ ...summaryRow, fontWeight: 'bold', fontSize: '13px' }}>
+          <span>TOTAL</span>
+          <span style={amountCell}>{formatCurrency(snap.total)}</span>
         </div>
         {snap.amountPaid > 0 && (
-          <div style={{ display: 'flex' }}>
-            <span style={{ flex: 1 }}>PAID</span>
-            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid)}</span>
+          <div style={summaryRow}>
+            <span>PAID</span>
+            <span style={amountCell}>{formatCurrency(snap.amountPaid)}</span>
           </div>
         )}
         {snap.amountPaid > snap.total && (
-          <div style={{ display: 'flex', fontWeight: 'bold' }}>
-            <span style={{ flex: 1 }}>CHANGE</span>
-            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.amountPaid - snap.total)}</span>
+          <div style={{ ...summaryRow, fontWeight: 'bold' }}>
+            <span>CHANGE</span>
+            <span style={amountCell}>{formatCurrency(snap.amountPaid - snap.total)}</span>
           </div>
         )}
         {snap.amountPaid > 0 && snap.amountPaid < snap.total && (
-          <div style={{ display: 'flex', fontWeight: 'bold' }}>
-            <span style={{ flex: 1 }}>BALANCE DUE</span>
-            <span style={{ width: '80px', textAlign: 'right' }}>{formatCurrency(snap.total - snap.amountPaid)}</span>
+          <div style={{ ...summaryRow, fontWeight: 'bold' }}>
+            <span>BALANCE DUE</span>
+            <span style={amountCell}>{formatCurrency(snap.total - snap.amountPaid)}</span>
           </div>
         )}
-        <div>{DBL}</div>
+        <div style={separator}>{DBL}</div>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '6px' }}>
+      <div style={{ textAlign: 'center', marginTop: '6px', overflowWrap: 'anywhere' }}>
         <div>Thank you for your patronage!</div>
         <div style={{ marginTop: '8px', fontSize: '10px' }}>*** CUSTOMER COPY ***</div>
       </div>
@@ -466,12 +479,17 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
             position: fixed !important;
             top: 0 !important; left: 0 !important;
             width: 80mm !important;
+            max-width: 80mm !important;
+            overflow: hidden !important;
             background: #fff !important;
           }
           .pos-receipt {
+            box-sizing: border-box !important;
             font-family: 'Courier New', Courier, monospace !important;
             font-size: 12px !important;
             width: 80mm !important;
+            max-width: 80mm !important;
+            overflow: hidden !important;
             padding: 6px 4px !important;
             color: #000 !important;
             background: #fff !important;

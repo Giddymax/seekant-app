@@ -1,11 +1,24 @@
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, toNumber } from '@/lib/utils'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export const metadata = { title: 'Dashboard – Seekant Admin' }
 
 export default async function DashboardPage() {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/admin/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') redirect('/admin/pos')
+
   const today = new Date()
   const salesCutoff = new Date(today)
   salesCutoff.setDate(salesCutoff.getDate() - 180)
@@ -102,6 +115,7 @@ export default async function DashboardPage() {
           <h2 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 20 }}>Quick Actions</h2>
           {[
             { href: '/admin/pos', label: 'New Sale', color: '#d42020' },
+            { href: '/admin/summary', label: 'Print Business Summary', color: '#ddb837' },
             { href: '/admin/blog', label: 'Write Article', color: '#54b9fd' },
             { href: '/admin/services', label: 'Manage Services', color: '#fd4682' },
             { href: '/admin/inventory', label: 'Update Stock', color: '#315c5a' },

@@ -12,9 +12,22 @@ export type SignInFormState = {
 
 export async function signIn({ email, password }: { email: string; password: string }) {
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) return { error: error.message }
-  redirect('/admin/dashboard')
+
+  let homePath = '/admin/pos'
+  const user = data.user
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role === 'admin') homePath = '/admin/dashboard'
+  }
+
+  redirect(homePath)
 }
 
 export async function signInWithForm(

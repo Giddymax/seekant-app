@@ -469,17 +469,9 @@ create policy "Staff can read inventory"
   on public.inventory for select
   using (public.is_staff());
 
-create policy "Staff can update inventory"
-  on public.inventory for update
-  using (public.is_staff());
-
 create policy "Admins manage inventory"
   on public.inventory for all
   using (public.is_admin());
-
-create policy "Staff can insert inventory"
-  on public.inventory for insert
-  with check (public.is_staff());
 
 
 -- ── sales ─────────────────────────────────────────────────────────────────────

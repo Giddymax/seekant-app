@@ -21,16 +21,21 @@ const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, 
 const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
-export default function InventoryManager({ initialItems }: { initialItems: Item[] }) {
+export default function InventoryManager({ initialItems, role }: { initialItems: Item[]; role: string }) {
   const [items, setItems] = useState(initialItems)
   const [editing, setEditing] = useState<Partial<Item> | null>(null)
   const [search, setSearch] = useState('')
   const [isPending, startTransition] = useTransition()
+  const isAdmin = role === 'admin'
+  const tableHeaders = isAdmin
+    ? ['', 'Name', 'Category', 'Price', 'Stock / Type', '']
+    : ['', 'Name', 'Category', 'Price', 'Stock / Type']
 
   const filtered = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
   const lowStockCount = items.filter(i => !i.is_service && i.stock <= i.threshold).length
 
   const handleSave = () => {
+    if (!isAdmin) { toast.error('Only admins can manage inventory.'); return }
     if (!editing?.name) { toast.error('Name required'); return }
     startTransition(async () => {
       const fd = new FormData()
@@ -44,6 +49,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
   }
 
   const handleDelete = (id: string) => {
+    if (!isAdmin) { toast.error('Only admins can manage inventory.'); return }
     if (!confirm('Delete this item?')) return
     startTransition(async () => {
       const result = await deleteInventory(id)
@@ -58,10 +64,14 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Inventory</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
-            {items.length} items · {lowStockCount > 0 && <span style={{ color: '#fd4682', fontWeight: 700 }}>{lowStockCount} low stock</span>}
+            {items.length} items
+            {lowStockCount > 0 && <> · <span style={{ color: '#fd4682', fontWeight: 700 }}>{lowStockCount} low stock</span></>}
+            {!isAdmin && <> · View-only access</>}
           </p>
         </div>
-        <button onClick={() => setEditing({ ...BLANK })} className="btn btn-gold" style={{ fontSize: 11 }}>+ Add Item</button>
+        {isAdmin && (
+          <button onClick={() => setEditing({ ...BLANK })} className="btn btn-gold" style={{ fontSize: 11 }}>+ Add Item</button>
+        )}
       </div>
 
       <div style={{ marginBottom: 16 }}>
@@ -79,7 +89,7 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-              {['', 'Name', 'Category', 'Price', 'Stock / Type', ''].map((h, i) => (
+              {tableHeaders.map((h, i) => (
                 <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
               ))}
             </tr>
@@ -110,24 +120,26 @@ export default function InventoryManager({ initialItems }: { initialItems: Item[
                         </div>
                     }
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button onClick={() => setEditing({ ...item })} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
-                      <button onClick={() => handleDelete(item.id)} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
-                    </div>
-                  </td>
+                  {isAdmin && (
+                    <td style={{ padding: '12px 16px' }}>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button onClick={() => setEditing({ ...item })} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
+                        <button onClick={() => handleDelete(item.id)} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               )
             })}
             {!filtered.length && (
-              <tr><td colSpan={6} style={{ padding: '32px 20px', fontSize: 12, color: 'rgba(255,255,255,.3)', textAlign: 'center' }}>No items found.</td></tr>
+              <tr><td colSpan={tableHeaders.length} style={{ padding: '32px 20px', fontSize: 12, color: 'rgba(255,255,255,.3)', textAlign: 'center' }}>No items found.</td></tr>
             )}
           </tbody>
         </table>
       </div>
 
       {/* Edit modal */}
-      {editing && (
+      {isAdmin && editing && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}>
           <div style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Item' : 'New Item'}</h2>

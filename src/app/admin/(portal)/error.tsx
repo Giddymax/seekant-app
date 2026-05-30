@@ -60,14 +60,14 @@ export default function AdminError({
           </button>
           <button
             type="button"
-            onClick={() => router.push('/admin/dashboard')}
+            onClick={() => router.push('/admin')}
             style={{
               padding: '10px 22px', background: 'rgba(255,255,255,.06)', color: '#fff',
               border: 'none', fontWeight: 600, fontSize: 11, cursor: 'pointer',
               letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif',
             }}
           >
-            Dashboard
+            Portal Home
           </button>
         </div>
 
