@@ -202,6 +202,10 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
             background: transparent !important;
             box-shadow: none !important;
           }
+          .business-summary-logo {
+            background: #fff !important;
+            border: 1px solid #ddd !important;
+          }
           .business-summary-report section,
           .business-summary-report table,
           .business-summary-report .print-card {
@@ -252,10 +256,16 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
       <article className="business-summary-report" style={{ background: '#0d0f18' }}>
         <section style={{ ...card, marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 18, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 22 }}>
-            <div>
-              <p style={{ fontSize: 10, color: '#d42020', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 800, marginBottom: 8 }}>Seekant Multimedia</p>
-              <h2 style={{ fontSize: 24, color: '#fff', fontWeight: 900, marginBottom: 6 }}>Business Insights Summary</h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,.55)' }}>Period: {start} to {end}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 0 }}>
+              <div className="business-summary-logo" style={{ width: 64, height: 64, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Seekant Multimedia" style={{ width: 58, height: 58, objectFit: 'contain', display: 'block' }} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ fontSize: 10, color: '#d42020', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 800, marginBottom: 8 }}>Seekant Multimedia</p>
+                <h2 style={{ fontSize: 24, color: '#fff', fontWeight: 900, marginBottom: 6 }}>Business Insights Summary</h2>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,.55)' }}>Period: {start} to {end}</p>
+              </div>
             </div>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)', textAlign: 'right' }}>Generated {new Date().toLocaleDateString('en-GB')}</div>
           </div>
