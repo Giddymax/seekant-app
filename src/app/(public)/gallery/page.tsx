@@ -6,11 +6,15 @@ export const metadata = { title: 'Gallery – Seekant Multimedia' }
 
 export default async function GalleryPage() {
   const supabase = await createClient()
-  const [{ data: items }, { data: heroRow }] = await Promise.all([
+  const [{ data: items }, { data: contentRows }] = await Promise.all([
     supabase.from('gallery_items').select('*').eq('active', true).order('sort_order'),
-    supabase.from('site_content').select('value').eq('key', 'page_hero_gallery_image').single(),
+    supabase.from('site_content').select('key,value').in('key', ['page_hero_gallery_image', 'page_header_gallery_tag', 'page_header_gallery_title', 'page_header_gallery_subtitle']),
   ])
-  const heroImage = heroRow?.value || ''
+  const c = Object.fromEntries((contentRows ?? []).map(r => [r.key, r.value]))
+  const heroImage = c.page_hero_gallery_image || ''
+  const heroTag = c.page_header_gallery_tag || 'Our Work'
+  const heroTitle = c.page_header_gallery_title || 'Gallery'
+  const heroSubtitle = c.page_header_gallery_subtitle || 'A showcase of our finest printing and branding work.'
 
   const photos = items?.length ? items : [
     { id: 1, image_url: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=600&h=400&fit=crop', label: 'Business Cards' },
@@ -31,9 +35,9 @@ export default async function GalleryPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Gallery</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Our Work</span>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Gallery</h1>
-          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>A showcase of our finest printing and branding work.</p>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{heroTag}</span>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>{heroTitle}</h1>
+          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>{heroSubtitle}</p>
         </div>
       </div>
 

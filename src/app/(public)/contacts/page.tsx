@@ -8,6 +8,9 @@ export default async function ContactsPage() {
   const { data: rows } = await supabase.from('site_content').select('key,value')
   const c = Object.fromEntries((rows ?? []).map(r => [r.key, r.value]))
   const heroImage = c.page_hero_contacts_image || ''
+  const heroTag = c.page_header_contacts_tag || 'Get In Touch'
+  const heroTitle = c.page_header_contacts_title || 'Contact Us'
+  const heroSubtitle = c.page_header_contacts_subtitle || 'We\'re here Monday to Saturday. Walk in or reach out online.'
 
   const contactItems = [
     { icon: 'M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Address', value: c.contact_address || 'Asuom, Kwaebibirim Municipal, Eastern Region, Ghana' },
@@ -24,9 +27,9 @@ export default async function ContactsPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Contacts</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Get In Touch</span>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Contact Us</h1>
-          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>We&apos;re here Monday to Saturday. Walk in or reach out online.</p>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{heroTag}</span>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>{heroTitle}</h1>
+          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>{heroSubtitle}</p>
         </div>
       </div>
 

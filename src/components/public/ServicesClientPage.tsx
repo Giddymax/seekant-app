@@ -25,27 +25,33 @@ const CAT_COLOR: Record<string, string> = {
   Gifts:      '#2dd4bf',
 }
 
-export default function ServicesClientPage({ services }: { services: Service[] }) {
+type HeaderProps = { heroImage?: string; heroTag?: string; heroTitle?: string; heroSubtitle?: string }
+
+export default function ServicesClientPage({ services, heroImage = '', heroTag = '', heroTitle = '', heroSubtitle = '' }: { services: Service[] } & HeaderProps) {
   const [active, setActive] = useState('All')
   const filtered = active === 'All' ? services : services.filter(s => s.category === active)
   const accent = (cat: string) => CAT_COLOR[cat] ?? '#d42020'
 
+  const tag = heroTag || 'What We Offer'
+  const title = heroTitle || 'Our Services'
+  const subtitle = heroSubtitle || 'Over 36 professional printing, branding, and design services — all under one roof in Asuom.'
+
   return (
     <>
       {/* Hero */}
-      <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
+      <div style={{ marginTop: 68, background: heroImage ? `url(${heroImage})` : '#15212c', backgroundSize: 'cover', backgroundPosition: 'center', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: heroImage ? 'rgba(0,0,0,.62)' : 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span>
             <span style={{ color: '#d42020' }}>Services</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>What We Offer</span>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{tag}</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>
-            Our Services
+            {title}
           </h1>
           <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>
-            Over 36 professional printing, branding, and design services — all under one roof in Asuom.
+            {subtitle}
           </p>
         </div>
       </div>

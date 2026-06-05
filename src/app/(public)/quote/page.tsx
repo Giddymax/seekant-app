@@ -8,12 +8,20 @@ export default async function QuotePage() {
   const { data: rows } = await supabase
     .from('site_content')
     .select('key, value')
-    .in('key', ['contact_whatsapp', 'contact_phone'])
+    .in('key', ['contact_whatsapp', 'contact_phone', 'page_hero_quote_image', 'page_header_quote_tag', 'page_header_quote_title', 'page_header_quote_subtitle'])
 
   const map = Object.fromEntries(
     (rows ?? []).map((r: { key: string; value: string }) => [r.key, r.value])
   )
   const whatsappNumber = (map.contact_whatsapp || map.contact_phone || '') as string
 
-  return <QuoteForm whatsappNumber={whatsappNumber} />
+  return (
+    <QuoteForm
+      whatsappNumber={whatsappNumber}
+      heroImage={map.page_hero_quote_image || ''}
+      heroTag={map.page_header_quote_tag || ''}
+      heroTitle={map.page_header_quote_title || ''}
+      heroSubtitle={map.page_header_quote_subtitle || ''}
+    />
+  )
 }

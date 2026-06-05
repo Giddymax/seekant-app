@@ -7,11 +7,15 @@ export const metadata = { title: 'Blog – Seekant Multimedia' }
 
 export default async function BlogPage() {
   const supabase = await createClient()
-  const [{ data: posts }, { data: heroRow }] = await Promise.all([
+  const [{ data: posts }, { data: contentRows }] = await Promise.all([
     supabase.from('blog_posts').select('*').eq('status', 'Published').order('published_at', { ascending: false }),
-    supabase.from('site_content').select('value').eq('key', 'page_hero_blog_image').single(),
+    supabase.from('site_content').select('key,value').in('key', ['page_hero_blog_image', 'page_header_blog_tag', 'page_header_blog_title', 'page_header_blog_subtitle']),
   ])
-  const heroImage = heroRow?.value || ''
+  const c = Object.fromEntries((contentRows ?? []).map(r => [r.key, r.value]))
+  const heroImage = c.page_hero_blog_image || ''
+  const heroTag = c.page_header_blog_tag || 'Tips & Insights'
+  const heroTitle = c.page_header_blog_title || 'Our Blog'
+  const heroSubtitle = c.page_header_blog_subtitle || 'Design tips, printing guides, and branding advice from our team.'
 
   return (
     <>
@@ -21,9 +25,9 @@ export default async function BlogPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Blog</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Tips & Insights</span>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Our Blog</h1>
-          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>Design tips, printing guides, and branding advice from our team.</p>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{heroTag}</span>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>{heroTitle}</h1>
+          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>{heroSubtitle}</p>
         </div>
       </div>
 

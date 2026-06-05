@@ -15,11 +15,15 @@ const FALLBACK = [
 
 export default async function WorksPage() {
   const supabase = await createClient()
-  const [{ data }, { data: heroRow }] = await Promise.all([
+  const [{ data }, { data: contentRows }] = await Promise.all([
     supabase.from('gallery_items').select('id, image_url, label, category').eq('active', true).order('sort_order'),
-    supabase.from('site_content').select('value').eq('key', 'page_hero_works_image').single(),
+    supabase.from('site_content').select('key,value').in('key', ['page_hero_works_image', 'page_header_works_tag', 'page_header_works_title', 'page_header_works_subtitle']),
   ])
-  const heroImage = heroRow?.value || ''
+  const c = Object.fromEntries((contentRows ?? []).map(r => [r.key, r.value]))
+  const heroImage = c.page_hero_works_image || ''
+  const heroTag = c.page_header_works_tag || 'Portfolio'
+  const heroTitle = c.page_header_works_title || 'Our Works'
+  const heroSubtitle = c.page_header_works_subtitle || 'A selection of projects we\'re proud of — from logos to large format.'
 
   const works = data?.length
     ? data.map(item => ({ id: item.id, title: item.label ?? '', cat: item.category ?? '', img: item.image_url }))
@@ -33,9 +37,9 @@ export default async function WorksPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Our Works</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Portfolio</span>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Our Works</h1>
-          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>A selection of projects we&apos;re proud of — from logos to large format.</p>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{heroTag}</span>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>{heroTitle}</h1>
+          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>{heroSubtitle}</p>
         </div>
       </div>
 

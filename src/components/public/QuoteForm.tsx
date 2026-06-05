@@ -46,7 +46,7 @@ function buildWhatsAppUrl(number: string, data: QuoteFormData, attachmentUrl: st
   return `https://wa.me/${clean}?text=${encodeURIComponent(lines)}`
 }
 
-export default function QuoteForm({ whatsappNumber }: { whatsappNumber: string }) {
+export default function QuoteForm({ whatsappNumber, heroImage = '', heroTag = '', heroTitle = '', heroSubtitle = '' }: { whatsappNumber: string; heroImage?: string; heroTag?: string; heroTitle?: string; heroSubtitle?: string }) {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [waUrl, setWaUrl] = useState<string | null>(null)
@@ -116,15 +116,15 @@ export default function QuoteForm({ whatsappNumber }: { whatsappNumber: string }
 
   return (
     <>
-      <div style={{ marginTop: 68, background: '#15212c', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
+      <div style={{ marginTop: 68, background: heroImage ? `url(${heroImage})` : '#15212c', backgroundSize: 'cover', backgroundPosition: 'center', padding: '88px 0 72px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: heroImage ? 'rgba(0,0,0,.62)' : 'linear-gradient(135deg,rgba(221,184,55,.18),rgba(84,185,253,.1))', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
             <Link href="/">Home</Link><span>/</span><span style={{ color: '#d42020' }}>Get a Quote</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>Free Quote</span>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>Get a Quote</h1>
-          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>Fill in the form and we&apos;ll get back to you within 24 hours with a free, no-obligation quote.</p>
+          <span className="section-tag" style={{ marginBottom: 20, display: 'inline-block' }}>{heroTag || 'Free Quote'}</span>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>{heroTitle || 'Get a Quote'}</h1>
+          <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>{heroSubtitle || 'Fill in the form and we\'ll get back to you within 24 hours with a free, no-obligation quote.'}</p>
         </div>
       </div>
 

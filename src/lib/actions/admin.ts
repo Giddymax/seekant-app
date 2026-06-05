@@ -313,3 +313,34 @@ export async function deleteStaffAccount(id: string) {
   revalidatePath('/admin/staff')
   return { success: true }
 }
+
+// ── COMPLAINTS ────────────────────────────────────────────
+export async function submitComplaint(fd: FormData) {
+  const supabase = await createClient()
+  const name    = (fd.get('name') as string)?.trim()
+  const email   = (fd.get('email') as string)?.trim()
+  const message = (fd.get('message') as string)?.trim()
+
+  if (!name || !email || !message) return { error: 'All fields are required.' }
+  if (!email.includes('@')) return { error: 'Please enter a valid email address.' }
+
+  const { error } = await supabase.from('complaints').insert({ name, email, message })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateComplaintStatus(id: string, status: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('complaints').update({ status }).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/complaints')
+  return { success: true }
+}
+
+export async function deleteComplaint(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('complaints').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/complaints')
+  return { success: true }
+}

@@ -9,6 +9,9 @@ export default async function AboutPage() {
   const { data: content } = await supabase.from('site_content').select('key,value')
   const c = Object.fromEntries((content ?? []).map(r => [r.key, r.value]))
   const heroImage = c.page_hero_about_image || ''
+  const heroTag = c.page_header_about_tag || 'Our Story'
+  const heroTitle = c.page_header_about_title || 'About Seekant Multimedia'
+  const heroSubtitle = c.page_header_about_subtitle || 'We are a full-service printing and branding company based in Akyem Asuom, Ghana.'
 
   return (
     <>
@@ -21,12 +24,12 @@ export default async function AboutPage() {
             <span>/</span>
             <span style={{ color: '#d42020' }}>About Us</span>
           </div>
-          <span className="section-tag" style={{ marginBottom: 20 }}>Our Story</span>
+          <span className="section-tag" style={{ marginBottom: 20 }}>{heroTag}</span>
           <h1 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>
-            About Seekant Multimedia
+            {heroTitle}
           </h1>
           <p style={{ color: 'rgba(255,255,255,.58)', fontSize: 15, maxWidth: 560, lineHeight: 1.8 }}>
-            We are a full-service printing and branding company based in Akyem Asuom, Ghana.
+            {heroSubtitle}
           </p>
         </div>
       </div>
