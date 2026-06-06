@@ -169,7 +169,7 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
       {/* ── Modals ── */}
       {modal && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.72)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.72)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24, cursor: 'pointer', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
           onClick={e => { if (e.target === e.currentTarget) closeModal() }}
         >
 

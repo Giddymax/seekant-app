@@ -435,18 +435,36 @@ html.menu-open { overflow: hidden; }
   --animate-accordion-up:   accordion-up   0.2s ease-out;
 }
 
-/* ── Admin global: fast touch response on all interactive elements ── */
-.admin-main-padding button,
-.admin-main-padding a,
-.admin-main-padding select,
-.admin-main-padding input,
-.admin-main-padding textarea,
-.admin-topbar-actions button {
+/* ── Admin: comprehensive iOS touch fix ── */
+/* Covers entire content column (topbar + main) and sidebar */
+.admin-content-col button,
+.admin-content-col a,
+.admin-content-col select,
+.admin-content-col input,
+.admin-content-col textarea,
+.admin-content-col label,
+.admin-sidebar button,
+.admin-sidebar a {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Action buttons used inside table rows — baseline, override below for mobile */
+/* Ensure all admin buttons have cursor: pointer (iOS needs this for click events) */
+.admin-content-col button,
+.admin-sidebar button,
+.admin-hamburger,
+.admin-sidebar-close {
+  cursor: pointer;
+}
+
+/* Visible pressed state so users know a tap registered */
+.admin-content-col button:active,
+.admin-sidebar button:active {
+  opacity: 0.65;
+}
+
+
+/* Action buttons used inside table rows */
 .admin-action-btn {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -475,7 +493,8 @@ html.menu-open { overflow: hidden; }
   inset: 0;
   background: rgba(0,0,0,.55);
   z-index: 199;
-  touch-action: none;
+  touch-action: manipulation;
+  cursor: pointer;
 }
 .admin-sidebar-overlay.open { display: block; }
 
