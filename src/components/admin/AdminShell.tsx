@@ -30,7 +30,7 @@ export default function AdminShell({
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'auto' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <AdminTopbar
           role={role}
           email={email}

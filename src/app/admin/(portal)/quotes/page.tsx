@@ -88,7 +88,7 @@ export default function QuotesPage() {
             <div key={q.id} style={{ background: '#181b2e', overflow: 'hidden' }}>
               <div
                 onClick={() => setExpanded(isOpen ? null : q.id)}
-                style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
               >
                 <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 9px', background: STATUS_COLORS[status] ?? 'rgba(255,255,255,.08)', color: STATUS_TEXT[status] ?? '#aaa', textTransform: 'capitalize', flexShrink: 0 }}>{status}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>

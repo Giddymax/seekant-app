@@ -160,7 +160,7 @@ function PosProductGrid({
         </select>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 10, alignContent: 'start' }}>
+      <div className="pos-product-grid" style={{ flex: 1, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 10, alignContent: 'start' }}>
         {filtered.map(p => (
           <button
             key={p.id}
@@ -168,7 +168,8 @@ function PosProductGrid({
             style={{
               background: '#181b2e', border: '1.5px solid rgba(255,255,255,.06)',
               cursor: 'pointer', padding: 0, textAlign: 'left',
-              fontFamily: 'Poppins,sans-serif', transition: 'border-color .15s', overflow: 'hidden',
+              fontFamily: 'Poppins,sans-serif', transition: 'border-color .15s',
+              touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
             }}
             onMouseEnter={e => (e.currentTarget.style.borderColor = '#d42020')}
             onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,.06)')}
@@ -176,8 +177,8 @@ function PosProductGrid({
             {/* Product image or placeholder */}
             {p.image_url
               // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={p.image_url} alt={p.name} style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }} />
-              : <div style={{ width: '100%', height: 80, background: 'rgba(255,255,255,.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              ? <img src={p.image_url} alt={p.name} className="pos-product-img" style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }} />
+              : <div className="pos-product-img" style={{ width: '100%', height: 80, background: 'rgba(255,255,255,.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.15)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                 </div>
             }
@@ -185,7 +186,7 @@ function PosProductGrid({
               <div style={{ fontSize: 9, fontWeight: 700, color: p.is_service ? '#54b9fd' : '#d42020', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
                 {p.is_service ? 'Service' : p.category}
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
+              <div className="pos-product-name" style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#d42020' }}>{formatCurrency(p.price)}</div>
               {p.is_service
                 ? <div style={{ fontSize: 9, fontWeight: 700, color: '#54b9fd', marginTop: 4, letterSpacing: '0.06em' }}>UNLIMITED</div>
@@ -584,7 +585,7 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
       {/* On-screen receipt preview modal */}
       {showReceiptModal && receiptSnap && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24 }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24, cursor: 'pointer' }}
           onClick={e => { if (e.target === e.currentTarget) setShowReceiptModal(false) }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, maxHeight: '90vh' }}>

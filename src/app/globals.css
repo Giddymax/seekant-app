@@ -497,6 +497,15 @@ html.menu-open { overflow: hidden; }
   .admin-main-padding { padding: 16px !important; }
 }
 
+/* ── POS product grid: 3 small columns on phone ── */
+@media (max-width: 768px) {
+  .pos-product-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  .pos-product-img { height: 60px !important; }
+}
+
 /* ── POS responsive ── */
 @media (max-width: 768px) {
   .pos-layout {
@@ -524,6 +533,14 @@ html.menu-open { overflow: hidden; }
     overflow-y: auto !important;
     flex: none !important;
   }
+}
+
+/* ── POS product name: always 2 lines max for consistent card heights ── */
+.pos-product-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── Dashboard responsive layout ── */

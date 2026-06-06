@@ -1,7 +1,13 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Toaster } from '@/components/ui/sonner'
 import ThemeProvider from '@/components/ThemeProvider'
 import './globals.css'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   title: 'Seekant Multimedia – Design. Print. Brand.',

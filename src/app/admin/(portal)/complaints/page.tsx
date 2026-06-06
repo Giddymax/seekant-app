@@ -133,7 +133,7 @@ export default function ComplaintsPage() {
             {/* Row header */}
             <div
               className="complaint-row-header"
-              style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 12, alignItems: 'center', padding: '14px 20px', cursor: 'pointer' }}
+              style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 12, alignItems: 'center', padding: '14px 20px', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
               onClick={() => setExpanded(expanded === c.id ? null : c.id)}
             >
               <div style={{ minWidth: 0 }}>
