@@ -435,9 +435,31 @@ html.menu-open { overflow: hidden; }
   --animate-accordion-up:   accordion-up   0.2s ease-out;
 }
 
+/* ── Admin global: fast touch response on all interactive elements ── */
+.admin-main-padding button,
+.admin-main-padding a,
+.admin-main-padding select,
+.admin-main-padding input,
+.admin-main-padding textarea,
+.admin-topbar-actions button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Action buttons used inside table rows — baseline, override below for mobile */
+.admin-action-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
 /* ── Admin portal mobile layout ── */
 .admin-sidebar-label    { display: inline; }
 .admin-sidebar-logotext { display: block; }
+
+/* Hamburger and close-X default to hidden; shown via media query below */
+.admin-hamburger     { display: none; }
+.admin-sidebar-close { display: none; }
 
 /* Tap-to-close overlay behind the drawer */
 .admin-sidebar-overlay {
@@ -463,17 +485,13 @@ html.menu-open { overflow: hidden; }
     transform: translateX(-100%) !important;
     transition: transform .25s ease !important;
   }
-  .admin-sidebar.open {
-    transform: translateX(0) !important;
-  }
+  .admin-sidebar.open { transform: translateX(0) !important; }
 
-  /* Show close (X) button inside the sidebar */
-  .admin-sidebar-close { display: flex !important; }
+  /* Show close-X and hamburger */
+  .admin-sidebar-close { display: flex; }
+  .admin-hamburger     { display: flex; }
 
-  /* Show hamburger in the topbar */
-  .admin-hamburger { display: flex !important; }
-
-  /* Hide long email on small screens */
+  /* Hide email address on narrow screens */
   .admin-topbar-email { display: none !important; }
 
   .admin-main-padding { padding: 16px !important; }
@@ -487,16 +505,66 @@ html.menu-open { overflow: hidden; }
     min-height: unset !important;
     gap: 12px !important;
   }
-  /* Product grid: natural height, scrolls with the page */
+  /* Product grid: fixed scrollable height */
   .pos-layout > :first-child {
     flex: none !important;
-    height: 55vh !important;
-    min-height: 320px !important;
+    height: 50vh !important;
+    min-height: 280px !important;
   }
-  /* Cart panel: full width, fixed height */
+  /* Cart: full width, no height cap — page scroll shows checkout button */
   .pos-cart {
     width: 100% !important;
     height: auto !important;
-    max-height: 70vh !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  /* Limit the items list so the checkout section is always in view */
+  .pos-cart-items {
+    max-height: 160px !important;
+    overflow-y: auto !important;
+    flex: none !important;
+  }
+}
+
+/* ── Dashboard responsive layout ── */
+@media (max-width: 768px) {
+  /* Stat cards: 4 cols → 2 cols */
+  .dashboard-stat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  /* Revenue chart + quick actions: side-by-side → stacked */
+  .dashboard-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Admin tables: always horizontally scrollable ── */
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+/* ── Admin action buttons: bigger touch targets on mobile ── */
+@media (max-width: 768px) {
+  .admin-action-btn {
+    min-height: 36px !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+  }
+  /* Modal inner forms: single column on narrow screens */
+  .admin-modal-2col {
+    grid-template-columns: 1fr !important;
+  }
+  /* Complaint header row: wrap controls under the name on narrow screens */
+  .complaint-row-header {
+    grid-template-columns: 1fr auto auto !important;
+    row-gap: 8px !important;
+  }
+  .complaint-row-header > :first-child {
+    grid-column: 1 / -1 !important;
+  }
+  /* Quotes detail grid: 3 cols → single col */
+  .quotes-detail-grid {
+    grid-template-columns: 1fr !important;
   }
 }

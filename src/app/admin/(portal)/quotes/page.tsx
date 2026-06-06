@@ -101,7 +101,7 @@ export default function QuotesPage() {
 
               {isOpen && (
                 <div style={{ padding: '0 20px 20px', borderTop: '1px solid rgba(255,255,255,.06)' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, margin: '16px 0' }}>
+                  <div className="quotes-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, margin: '16px 0' }}>
                     {q.quantity && <div><div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Quantity</div><div style={{ fontSize: 12, color: '#fff' }}>{q.quantity}</div></div>}
                     {q.deadline && <div><div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Deadline</div><div style={{ fontSize: 12, color: '#fff' }}>{q.deadline}</div></div>}
                   </div>

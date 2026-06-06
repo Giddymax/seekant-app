@@ -40,6 +40,83 @@ const STATUS_COLOR: Record<string, string> = {
 const PAYMENT_METHODS = ['Cash', 'Mobile Money', 'Bank Transfer', 'Card']
 const STATUSES        = ['Completed', 'Pending', 'Part-Payment', 'Cancelled']
 
+function escHtml(s: string) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+function openSalesPrintWindow(data: ReceiptData, contactPhone: string) {
+  const win = window.open('', '_blank', 'width=420,height=700')
+  if (!win) return
+  const { sale, items } = data
+  const date    = new Date(sale.created_at)
+  const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const subtotal = items.reduce((s, i) => s + i.line_total, 0)
+  const discount = sale.discount ?? 0
+  const balance  = Math.max(0, sale.total - (sale.amount_paid ?? sale.total))
+  const fmt = (n: number) => `GH₵ ${n.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  const itemRows = items.map(i => `
+    <tr>
+      <td style="padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${escHtml(i.product_name)}</td>
+      <td style="text-align:center;padding:2px 4px">${i.quantity}</td>
+      <td style="text-align:right;padding:2px 0">${escHtml(fmt(i.line_total))}</td>
+    </tr>`).join('')
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt ${escHtml(sale.sale_ref)}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Courier New',Courier,monospace;font-size:12px;width:80mm;max-width:80mm;padding:6px 4px;color:#000;background:#fff;line-height:1.5}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    .bold{font-weight:bold} .center{text-align:center} .right{text-align:right}
+    .sep{white-space:pre;overflow:hidden;letter-spacing:0}
+    .logo-row{display:flex;align-items:center;gap:10px;border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:8px}
+    .logo-row img{width:56px;height:56px;object-fit:contain;flex-shrink:0}
+    .biz-name{font-weight:900;font-size:14px;letter-spacing:0.06em}
+    .biz-sub{font-weight:700;font-size:11px;letter-spacing:0.04em}
+    .biz-info{font-size:10px;color:#333}
+    @page{margin:4mm;size:80mm auto}
+  </style></head><body>
+  <div class="logo-row">
+    <img src="${location.origin}/logo.png" alt="Seekant Multimedia" />
+    <div>
+      <div class="biz-name">SEEKANT MULTIMEDIA</div>
+      <div class="biz-sub">Design. Print. Brand.</div>
+      <div class="biz-info">Asuom, Eastern Region, Ghana</div>
+      ${contactPhone ? `<div class="biz-info">Tel: ${escHtml(contactPhone)}</div>` : ''}
+      <div class="biz-info">www.seekantmultimedia.com</div>
+    </div>
+  </div>
+  <div class="sep">${'='.repeat(32)}</div>
+  <div>Date: ${escHtml(dateStr)} ${escHtml(timeStr)}</div>
+  <div>Ref:  ${escHtml(sale.sale_ref)}</div>
+  <div>Cust: ${escHtml(sale.customer_name || 'Walk-in')}</div>
+  ${sale.customer_phone ? `<div>Tel:  ${escHtml(sale.customer_phone)}</div>` : ''}
+  <div>Pay:  ${escHtml(sale.payment_method)}</div>
+  ${sale.notes ? `<div>Note: ${escHtml(sale.notes)}</div>` : ''}
+  <div class="sep">${'-'.repeat(32)}</div>
+  <table>
+    <thead><tr>
+      <th style="text-align:left">ITEM</th>
+      <th style="text-align:center">QTY</th>
+      <th style="text-align:right">TOTAL</th>
+    </tr></thead>
+    <tbody>${itemRows.length ? itemRows : '<tr><td colspan="3" style="color:#999">(no line items)</td></tr>'}</tbody>
+  </table>
+  <div class="sep">${'-'.repeat(32)}</div>
+  <table>
+    <tr><td>SUBTOTAL</td><td class="right">${escHtml(fmt(subtotal))}</td></tr>
+    ${discount > 0 ? `<tr><td>DISCOUNT</td><td class="right">-${escHtml(fmt(discount))}</td></tr>` : ''}
+    <tr class="bold" style="font-size:13px"><td>TOTAL</td><td class="right">${escHtml(fmt(sale.total))}</td></tr>
+    <tr><td>PAID</td><td class="right">${escHtml(fmt(sale.amount_paid ?? sale.total))}</td></tr>
+    ${balance > 0 ? `<tr class="bold"><td>BALANCE DUE</td><td class="right">${escHtml(fmt(balance))}</td></tr>` : ''}
+  </table>
+  <div class="sep">${'='.repeat(32)}</div>
+  <div class="center" style="margin-top:6px">${balance > 0 ? `<b>BALANCE DUE: ${escHtml(fmt(balance))}</b>` : 'Thank you for your patronage!'}</div>
+  <div class="center" style="margin-top:8px;font-size:10px">*** CUSTOMER COPY ***</div>
+  </body></html>`)
+  win.document.close()
+  setTimeout(() => { try { win.print() } catch(_) {} }, 400)
+}
+
 const inp = {
   width: '100%', padding: '10px 14px',
   background: '#111320', border: '1.5px solid rgba(255,255,255,.08)',
@@ -278,7 +355,7 @@ function EditModal({
         <p style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', marginBottom: 24 }}>{sale.sale_ref}</p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={lbl}>Customer Name</label>
               <input title="Customer Name" value={form.customer_name} onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))} style={inp}
@@ -290,7 +367,7 @@ function EditModal({
                 onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={lbl}>Payment Method</label>
               <select title="Payment Method" value={form.payment_method} onChange={e => setForm(f => ({ ...f, payment_method: e.target.value }))} style={{ ...inp, appearance: 'none', cursor: 'pointer' }}
@@ -306,7 +383,7 @@ function EditModal({
               </select>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={lbl}>Discount (GH₵)</label>
               <input title="Discount" type="number" min="0" step="0.01" value={form.discount} onChange={e => setForm(f => ({ ...f, discount: Number(e.target.value) }))} style={inp}
@@ -396,7 +473,7 @@ export default function SalesClient({
     const items = await getSaleItems(sale.id)
     setReceipt({ sale, items })
     setPrinting(null)
-    setTimeout(() => window.print(), 150)
+    openSalesPrintWindow({ sale, items }, contactPhone)
   }
 
   const handleEditSaved = (id: string, updates: Partial<Sale>) => {
@@ -474,7 +551,7 @@ export default function SalesClient({
               </div>
             </div>
 
-            <div style={{ background: '#181b2e', border: '1px solid rgba(249,115,22,.2)', overflow: 'auto' }}>
+            <div className="admin-table-wrap" style={{ background: '#181b2e', border: '1px solid rgba(249,115,22,.2)' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
@@ -499,12 +576,12 @@ export default function SalesClient({
                         <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString('en-GB')}</td>
                         <td style={{ padding: '12px 16px' }}>
                           <div style={{ display: 'flex', gap: 6 }}>
-                            <button type="button" onClick={() => setSettling(s)}
-                              style={{ fontSize: 9, padding: '4px 12px', background: 'rgba(249,115,22,.15)', color: '#f97316', border: '1px solid rgba(249,115,22,.3)', cursor: 'pointer', fontFamily: 'Poppins,sans-serif', fontWeight: 700 }}>
+                            <button type="button" onClick={() => setSettling(s)} className="admin-action-btn"
+                              style={{ fontSize: 9, padding: '4px 12px', background: 'rgba(249,115,22,.15)', color: '#f97316', border: '1px solid rgba(249,115,22,.3)', fontFamily: 'Poppins,sans-serif', fontWeight: 700 }}>
                               Settle
                             </button>
-                            <button type="button" onClick={() => handlePrint(s)} disabled={printing === s.id}
-                              style={{ fontSize: 9, padding: '4px 10px', background: 'rgba(84,185,253,.12)', color: '#54b9fd', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+                            <button type="button" onClick={() => handlePrint(s)} disabled={printing === s.id} className="admin-action-btn"
+                              style={{ fontSize: 9, padding: '4px 10px', background: 'rgba(84,185,253,.12)', color: '#54b9fd', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
                               {printing === s.id ? '…' : '🖨'}
                             </button>
                           </div>
@@ -538,7 +615,7 @@ export default function SalesClient({
         </div>
 
         {/* ── All Sales Table ── */}
-        <div style={{ background: '#181b2e', overflow: 'auto' }}>
+        <div className="admin-table-wrap" style={{ background: '#181b2e' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 720 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
@@ -582,36 +659,36 @@ export default function SalesClient({
                       <div style={{ display: 'flex', gap: 5, alignItems: 'center', flexWrap: 'wrap' }}>
                         {s.status === 'Pending' && (
                           <>
-                            <button type="button" onClick={() => handleStatusQuick(s.id, 'Completed')} disabled={isPending}
-                              style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(34,197,94,.12)', color: '#22c55e', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif', whiteSpace: 'nowrap' }}>
+                            <button type="button" onClick={() => handleStatusQuick(s.id, 'Completed')} disabled={isPending} className="admin-action-btn"
+                              style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(34,197,94,.12)', color: '#22c55e', border: 'none', fontFamily: 'Poppins,sans-serif', whiteSpace: 'nowrap' }}>
                               Complete
                             </button>
-                            <button type="button" onClick={() => handleStatusQuick(s.id, 'Cancelled')} disabled={isPending}
-                              style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+                            <button type="button" onClick={() => handleStatusQuick(s.id, 'Cancelled')} disabled={isPending} className="admin-action-btn"
+                              style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
                               Cancel
                             </button>
                           </>
                         )}
                         {isPartPay && (
-                          <button type="button" onClick={() => setSettling(s)}
-                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(249,115,22,.15)', color: '#f97316', border: '1px solid rgba(249,115,22,.3)', cursor: 'pointer', fontFamily: 'Poppins,sans-serif', fontWeight: 700 }}>
+                          <button type="button" onClick={() => setSettling(s)} className="admin-action-btn"
+                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(249,115,22,.15)', color: '#f97316', border: '1px solid rgba(249,115,22,.3)', fontFamily: 'Poppins,sans-serif', fontWeight: 700 }}>
                             Settle
                           </button>
                         )}
-                        <button type="button" onClick={() => handlePrint(s)} disabled={printing === s.id}
+                        <button type="button" onClick={() => handlePrint(s)} disabled={printing === s.id} className="admin-action-btn"
                           title="Print receipt"
-                          style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif', whiteSpace: 'nowrap' }}>
+                          style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd', border: 'none', fontFamily: 'Poppins,sans-serif', whiteSpace: 'nowrap' }}>
                           {printing === s.id ? '…' : '🖨 Print'}
                         </button>
                         {isAdmin && (
-                          <button type="button" onClick={() => setEditing(s)}
-                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(221,184,55,.12)', color: '#d42020', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+                          <button type="button" onClick={() => setEditing(s)} className="admin-action-btn"
+                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(221,184,55,.12)', color: '#d42020', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
                             Edit
                           </button>
                         )}
                         {isAdmin && (
-                          <button type="button" onClick={() => handleDelete(s)} disabled={isPending}
-                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(253,70,130,.10)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+                          <button type="button" onClick={() => handleDelete(s)} disabled={isPending} className="admin-action-btn"
+                            style={{ fontSize: 9, padding: '3px 8px', background: 'rgba(253,70,130,.10)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
                             Del
                           </button>
                         )}

@@ -76,7 +76,7 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
+      <div className="dashboard-stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
         {statCards.map(({ label, value, color, icon }) => (
           <div key={label} style={{ background: '#181b2e', padding: '24px 24px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: color }} />
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24, marginBottom: 24 }}>
+      <div className="dashboard-main-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24, marginBottom: 24 }}>
         {/* Revenue bar chart */}
         <div style={{ background: '#181b2e', padding: '28px 28px' }}>
           <h2 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 24 }}>Revenue — Last 6 Months</h2>
@@ -135,7 +135,8 @@ export default async function DashboardPage() {
           <h2 style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Recent Sales</h2>
           <Link href="/admin/sales" style={{ fontSize: 11, color: '#d42020', textDecoration: 'none' }}>View All →</Link>
         </div>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div className="admin-table-wrap">
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 400 }}>
           <thead>
             <tr>
               {['Ref', 'Amount', 'Status', 'Date'].map(h => (
@@ -161,6 +162,7 @@ export default async function DashboardPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

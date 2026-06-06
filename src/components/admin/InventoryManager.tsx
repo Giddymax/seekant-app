@@ -85,8 +85,8 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
         />
       </div>
 
-      <div style={{ background: '#181b2e', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="admin-table-wrap" style={{ background: '#181b2e' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 500 }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
               {tableHeaders.map((h, i) => (
@@ -123,8 +123,8 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                   {isAdmin && (
                     <td style={{ padding: '12px 16px' }}>
                       <div style={{ display: 'flex', gap: 8 }}>
-                        <button onClick={() => setEditing({ ...item })} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
-                        <button onClick={() => handleDelete(item.id)} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
+                        <button onClick={() => setEditing({ ...item })} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
+                        <button onClick={() => handleDelete(item.id)} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
                       </div>
                     </td>
                   )}
@@ -175,7 +175,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                 onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
                 label="Image (optional)"
               />
-              <div style={{ display: 'grid', gridTemplateColumns: editing.is_service ? '1fr' : '1fr 1fr', gap: 12 }}>
+              <div className={editing.is_service ? '' : 'admin-modal-2col'} style={{ display: 'grid', gridTemplateColumns: editing.is_service ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Price (GH₵)</label>
                   <input title="Price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />

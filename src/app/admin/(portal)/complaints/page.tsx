@@ -132,6 +132,7 @@ export default function ComplaintsPage() {
           <div key={c.id} style={{ background: '#181b2e' }}>
             {/* Row header */}
             <div
+              className="complaint-row-header"
               style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 12, alignItems: 'center', padding: '14px 20px', cursor: 'pointer' }}
               onClick={() => setExpanded(expanded === c.id ? null : c.id)}
             >
@@ -145,6 +146,7 @@ export default function ComplaintsPage() {
 
               {/* Status dropdown */}
               <select
+                title="Update complaint status"
                 value={c.status}
                 onChange={e => { e.stopPropagation(); handleStatus(c.id, e.target.value) }}
                 onClick={e => e.stopPropagation()}

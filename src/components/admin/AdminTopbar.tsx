@@ -24,9 +24,11 @@ export default function AdminTopbar({
         aria-label="Open menu"
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
-          color: '#fff', padding: 6, display: 'none',
+          color: '#fff', padding: 6,
           alignItems: 'center', justifyContent: 'center',
           minWidth: 44, minHeight: 44,
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
         }}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
