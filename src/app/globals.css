@@ -453,7 +453,14 @@ html.menu-open { overflow: hidden; }
   cursor: pointer;
 }
 
-/* ── Admin portal mobile layout ── */
+/* ── Admin portal layout ── */
+/* Content column shifts right on desktop to make room for the fixed sidebar */
+@media (min-width: 769px) {
+  .admin-content-col {
+    margin-left: 220px;
+  }
+}
+
 .admin-sidebar-label    { display: inline; }
 .admin-sidebar-logotext { display: block; }
 

@@ -41,9 +41,10 @@ export default function AdminSidebar({
     <aside
       className={`admin-sidebar${isOpen ? ' open' : ''}`}
       style={{
-        width: 220, minHeight: '100vh', background: '#111320',
+        width: 220, height: '100vh', background: '#111320',
         display: 'flex', flexDirection: 'column', flexShrink: 0,
-        position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
+        position: 'fixed', top: 0, left: 0, overflow: 'hidden',
+        zIndex: 30,
       }}
     >
       {/* Logo row + mobile close button */}
