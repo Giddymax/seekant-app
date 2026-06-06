@@ -25,14 +25,29 @@ const ADMIN_NAV = [
   { href: '/admin/legal', label: 'Legal Pages', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', adminOnly: true },
 ]
 
-export default function AdminSidebar({ role }: { role: string }) {
+export default function AdminSidebar({
+  role,
+  isOpen = false,
+  onClose,
+}: {
+  role: string
+  isOpen?: boolean
+  onClose?: () => void
+}) {
   const pathname = usePathname()
   const nav = role === 'admin' ? ADMIN_NAV : ADMIN_NAV.filter(n => !n.adminOnly)
 
   return (
-    <aside className="admin-sidebar" style={{ width: 220, minHeight: '100vh', background: '#111320', display: 'flex', flexDirection: 'column', flexShrink: 0, position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
-      {/* Logo */}
-      <div style={{ padding: '24px 14px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+    <aside
+      className={`admin-sidebar${isOpen ? ' open' : ''}`}
+      style={{
+        width: 220, minHeight: '100vh', background: '#111320',
+        display: 'flex', flexDirection: 'column', flexShrink: 0,
+        position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
+      }}
+    >
+      {/* Logo row + mobile close button */}
+      <div style={{ padding: '24px 14px 20px', borderBottom: '1px solid rgba(255,255,255,.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Seekant" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
@@ -41,6 +56,18 @@ export default function AdminSidebar({ role }: { role: string }) {
             <div style={{ fontSize: 8, color: 'rgba(255,255,255,.35)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Admin</div>
           </div>
         </div>
+        {/* Close button — only visible on mobile */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="admin-sidebar-close"
+          aria-label="Close menu"
+          style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', cursor: 'pointer', padding: 6, display: 'none', lineHeight: 1 }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Nav */}
@@ -52,6 +79,7 @@ export default function AdminSidebar({ role }: { role: string }) {
               key={href}
               href={href}
               title={label}
+              onClick={onClose}
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px',
                 fontSize: 12, fontWeight: active ? 700 : 500,
@@ -72,7 +100,7 @@ export default function AdminSidebar({ role }: { role: string }) {
 
       {/* Footer */}
       <div style={{ padding: '16px 14px', borderTop: '1px solid rgba(255,255,255,.06)' }}>
-        <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'rgba(255,255,255,.35)', textDecoration: 'none', marginBottom: 12 }}>
+        <Link href="/" target="_blank" onClick={onClose} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: 'rgba(255,255,255,.35)', textDecoration: 'none', marginBottom: 12 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
           <span className="admin-sidebar-footer-label">View Site</span>
         </Link>

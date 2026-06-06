@@ -155,7 +155,7 @@ function PosCartPanel({
   const balanceDue = amountPaid > 0 && amountPaid < total ? total - amountPaid : 0
 
   return (
-    <div style={{ background: '#181b2e', display: 'flex', flexDirection: 'column', width: 320, flexShrink: 0, overflow: 'hidden' }}>
+    <div className="pos-cart" style={{ background: '#181b2e', display: 'flex', flexDirection: 'column', width: 320, flexShrink: 0, overflow: 'hidden' }}>
       <div style={{ padding: '18px 20px 14px', borderBottom: '1px solid rgba(255,255,255,.06)', flexShrink: 0 }}>
         <h2 style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Cart ({cart.length} item{cart.length !== 1 ? 's' : ''})</h2>
       </div>
@@ -537,7 +537,7 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 120px)', minHeight: 600 }}>
+      <div className="pos-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 120px)', minHeight: 600 }}>
         <PosProductGrid
           products={products}
           search={search}
