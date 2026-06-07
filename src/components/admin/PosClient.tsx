@@ -32,88 +32,6 @@ type ReceiptSnapshot = {
 const CATEGORIES = ['All', 'Services', 'Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const PAYMENT_METHODS = ['Cash', 'Mobile Money', 'Bank Transfer', 'Card']
 
-function escHtml(s: string) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-}
-
-function openPrintWindow(snap: ReceiptSnapshot) {
-  const win = window.open('', '_blank', 'width=420,height=700')
-  if (!win) return
-  const subtotal = snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0)
-  const changeDue = snap.amountPaid > snap.total ? snap.amountPaid - snap.total : 0
-  const balanceDue = snap.amountPaid > 0 && snap.amountPaid < snap.total ? snap.total - snap.amountPaid : 0
-  const fmt = (n: number) => `GH₵ ${n.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-  const dateStr = snap.date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  const timeStr = snap.date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const isFullyPaid = snap.total > 0 && snap.amountPaid >= snap.total
-  const itemRows = snap.cart.map(i => `
-    <tr><td colspan="3" style="padding-top:4px;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">${escHtml(i.name)}</td></tr>
-    <tr>
-      <td style="padding:0 0 2px;color:#333;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${escHtml(fmt(i.unit_price))}/unit</td>
-      <td style="text-align:center;padding:0 4px 2px">${i.quantity}</td>
-      <td style="text-align:right;padding:0 0 2px">${escHtml(fmt(i.unit_price * i.quantity))}</td>
-    </tr>`).join('')
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt ${escHtml(snap.ref)}</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Courier New',Courier,monospace;font-size:12px;width:80mm;max-width:80mm;padding:6px 4px;color:#000;background:#fff;line-height:1.5}
-    table{width:100%;border-collapse:collapse;font-size:12px}
-    .bold{font-weight:bold} .center{text-align:center} .right{text-align:right}
-    .line{border-top:1px dashed #000;margin:4px 0}
-    .dbl{border-top:3px double #000;margin:4px 0}
-    .logo-row{display:flex;align-items:center;gap:10px;border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:8px}
-    .logo-row img{width:56px;height:56px;object-fit:contain;flex-shrink:0}
-    .biz-name{font-weight:900;font-size:14px;letter-spacing:0.06em}
-    .biz-sub{font-weight:700;font-size:11px;letter-spacing:0.04em}
-    .biz-info{font-size:10px;color:#333}
-    @page{margin:4mm;size:80mm auto}
-  </style></head><body>
-  <div class="logo-row">
-    <img src="${location.origin}/logo.png" alt="Seekant Multimedia" />
-    <div>
-      <div class="biz-name">SEEKANT MULTIMEDIA</div>
-      <div class="biz-sub">Design. Print. Brand.</div>
-      <div class="biz-info">Asuom, Eastern Region, Ghana</div>
-      ${snap.contactPhone ? `<div class="biz-info">Tel: ${escHtml(snap.contactPhone)}</div>` : ''}
-      <div class="biz-info">www.seekantmultimedia.com</div>
-    </div>
-  </div>
-  <div class="dbl"></div>
-  <table>
-    <tr><td>Date:</td><td class="right">${escHtml(dateStr)} ${escHtml(timeStr)}</td></tr>
-    <tr><td>Ref:</td><td class="right">${escHtml(snap.ref)}</td></tr>
-    <tr><td>Cust:</td><td class="right">${escHtml(snap.customer)}</td></tr>
-    ${snap.phone ? `<tr><td>Tel:</td><td class="right">${escHtml(snap.phone)}</td></tr>` : ''}
-    <tr><td>Pay:</td><td class="right">${escHtml(snap.payment)}</td></tr>
-    <tr><td>Serv:</td><td class="right">${escHtml(snap.staffName)}</td></tr>
-  </table>
-  <div class="line"></div>
-  <table>
-    <thead><tr>
-      <th style="text-align:left">ITEM</th>
-      <th style="text-align:center">QTY</th>
-      <th style="text-align:right">TOTAL</th>
-    </tr></thead>
-    <tbody>${itemRows}</tbody>
-  </table>
-  <div class="line"></div>
-  <table>
-    <tr><td>SUBTOTAL</td><td class="right">${escHtml(fmt(subtotal))}</td></tr>
-    ${snap.discount > 0 ? `<tr><td>DISCOUNT</td><td class="right">-${escHtml(fmt(snap.discount))}</td></tr>` : ''}
-    <tr class="bold" style="font-size:13px"><td>TOTAL</td><td class="right">${escHtml(fmt(snap.total))}</td></tr>
-    ${snap.amountPaid > 0 ? `<tr><td>PAID</td><td class="right">${escHtml(fmt(snap.amountPaid))}</td></tr>` : ''}
-    ${changeDue > 0 ? `<tr class="bold"><td>CHANGE</td><td class="right">${escHtml(fmt(changeDue))}</td></tr>` : ''}
-    ${balanceDue > 0 ? `<tr class="bold"><td>BALANCE DUE</td><td class="right">${escHtml(fmt(balanceDue))}</td></tr>` : ''}
-  </table>
-  <div class="dbl"></div>
-  ${isFullyPaid ? `<div class="center bold" style="border-top:3px solid #000;margin-top:8px;padding-top:6px;font-size:13px;letter-spacing:0.06em">PAID IN FULL</div>` : ''}
-  <div class="center" style="margin-top:6px">Thank you for your patronage!</div>
-  <div class="center" style="margin-top:8px;font-size:10px">*** CUSTOMER COPY ***</div>
-  </body></html>`)
-  win.document.close()
-  setTimeout(() => { try { win.print() } catch(_) {} }, 400)
-}
-
 const inp = (extra = {}) => ({
   padding: '10px 14px',
   background: '#111320',
@@ -603,7 +521,7 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
             <div style={{ display: 'flex', gap: 10 }}>
               <button
                 type="button"
-                onClick={() => receiptSnap && openPrintWindow(receiptSnap)}
+                onClick={() => window.print()}
                 style={{ padding: '10px 24px', background: '#d42020', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif' }}
               >
                 Print Receipt

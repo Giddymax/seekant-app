@@ -40,83 +40,6 @@ const STATUS_COLOR: Record<string, string> = {
 const PAYMENT_METHODS = ['Cash', 'Mobile Money', 'Bank Transfer', 'Card']
 const STATUSES        = ['Completed', 'Pending', 'Part-Payment', 'Cancelled']
 
-function escHtml(s: string) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-}
-
-function openSalesPrintWindow(data: ReceiptData, contactPhone: string) {
-  const win = window.open('', '_blank', 'width=420,height=700')
-  if (!win) return
-  const { sale, items } = data
-  const date    = new Date(sale.created_at)
-  const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const subtotal = items.reduce((s, i) => s + i.line_total, 0)
-  const discount = sale.discount ?? 0
-  const balance  = Math.max(0, sale.total - (sale.amount_paid ?? sale.total))
-  const fmt = (n: number) => `GH₵ ${n.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-  const itemRows = items.map(i => `
-    <tr>
-      <td style="padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${escHtml(i.product_name)}</td>
-      <td style="text-align:center;padding:2px 4px">${i.quantity}</td>
-      <td style="text-align:right;padding:2px 0">${escHtml(fmt(i.line_total))}</td>
-    </tr>`).join('')
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt ${escHtml(sale.sale_ref)}</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Courier New',Courier,monospace;font-size:12px;width:80mm;max-width:80mm;padding:6px 4px;color:#000;background:#fff;line-height:1.5}
-    table{width:100%;border-collapse:collapse;font-size:12px}
-    .bold{font-weight:bold} .center{text-align:center} .right{text-align:right}
-    .sep{white-space:pre;overflow:hidden;letter-spacing:0}
-    .logo-row{display:flex;align-items:center;gap:10px;border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:8px}
-    .logo-row img{width:56px;height:56px;object-fit:contain;flex-shrink:0}
-    .biz-name{font-weight:900;font-size:14px;letter-spacing:0.06em}
-    .biz-sub{font-weight:700;font-size:11px;letter-spacing:0.04em}
-    .biz-info{font-size:10px;color:#333}
-    @page{margin:4mm;size:80mm auto}
-  </style></head><body>
-  <div class="logo-row">
-    <img src="${location.origin}/logo.png" alt="Seekant Multimedia" />
-    <div>
-      <div class="biz-name">SEEKANT MULTIMEDIA</div>
-      <div class="biz-sub">Design. Print. Brand.</div>
-      <div class="biz-info">Asuom, Eastern Region, Ghana</div>
-      ${contactPhone ? `<div class="biz-info">Tel: ${escHtml(contactPhone)}</div>` : ''}
-      <div class="biz-info">www.seekantmultimedia.com</div>
-    </div>
-  </div>
-  <div class="sep">${'='.repeat(32)}</div>
-  <div>Date: ${escHtml(dateStr)} ${escHtml(timeStr)}</div>
-  <div>Ref:  ${escHtml(sale.sale_ref)}</div>
-  <div>Cust: ${escHtml(sale.customer_name || 'Walk-in')}</div>
-  ${sale.customer_phone ? `<div>Tel:  ${escHtml(sale.customer_phone)}</div>` : ''}
-  <div>Pay:  ${escHtml(sale.payment_method)}</div>
-  ${sale.notes ? `<div>Note: ${escHtml(sale.notes)}</div>` : ''}
-  <div class="sep">${'-'.repeat(32)}</div>
-  <table>
-    <thead><tr>
-      <th style="text-align:left">ITEM</th>
-      <th style="text-align:center">QTY</th>
-      <th style="text-align:right">TOTAL</th>
-    </tr></thead>
-    <tbody>${itemRows.length ? itemRows : '<tr><td colspan="3" style="color:#999">(no line items)</td></tr>'}</tbody>
-  </table>
-  <div class="sep">${'-'.repeat(32)}</div>
-  <table>
-    <tr><td>SUBTOTAL</td><td class="right">${escHtml(fmt(subtotal))}</td></tr>
-    ${discount > 0 ? `<tr><td>DISCOUNT</td><td class="right">-${escHtml(fmt(discount))}</td></tr>` : ''}
-    <tr class="bold" style="font-size:13px"><td>TOTAL</td><td class="right">${escHtml(fmt(sale.total))}</td></tr>
-    <tr><td>PAID</td><td class="right">${escHtml(fmt(sale.amount_paid ?? sale.total))}</td></tr>
-    ${balance > 0 ? `<tr class="bold"><td>BALANCE DUE</td><td class="right">${escHtml(fmt(balance))}</td></tr>` : ''}
-  </table>
-  <div class="sep">${'='.repeat(32)}</div>
-  <div class="center" style="margin-top:6px">${balance > 0 ? `<b>BALANCE DUE: ${escHtml(fmt(balance))}</b>` : 'Thank you for your patronage!'}</div>
-  <div class="center" style="margin-top:8px;font-size:10px">*** CUSTOMER COPY ***</div>
-  </body></html>`)
-  win.document.close()
-  setTimeout(() => { try { win.print() } catch(_) {} }, 400)
-}
-
 const inp = {
   width: '100%', padding: '10px 14px',
   background: '#111320', border: '1.5px solid rgba(255,255,255,.08)',
@@ -473,7 +396,8 @@ export default function SalesClient({
     const items = await getSaleItems(sale.id)
     setReceipt({ sale, items })
     setPrinting(null)
-    openSalesPrintWindow({ sale, items }, contactPhone)
+    // window.print() on the current page (vs. window.open, which mobile browsers block as a popup); delay lets .thermal-receipt-wrapper re-render with the new receipt first
+    setTimeout(() => window.print(), 150)
   }
 
   const handleEditSaved = (id: string, updates: Partial<Sale>) => {
