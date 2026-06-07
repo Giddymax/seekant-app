@@ -109,8 +109,8 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
       </div>
 
       {/* ── Table ── */}
-      <div style={{ background: '#181b2e', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="admin-table-wrap" style={{ background: '#181b2e' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 640 }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
               {['Name', 'Email', 'Role', 'Status', 'Joined', 'Actions'].map(h => (
@@ -137,20 +137,26 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
                 <td style={{ padding: '14px 20px' }}>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     <button
+                      type="button"
                       onClick={() => openEdit(s)}
+                      className="admin-action-btn"
                       style={{ fontSize: 10, padding: '4px 10px', background: 'rgba(84,185,253,.1)', color: '#54b9fd', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
                     >
                       Edit
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleToggle(s.id, s.active)}
                       disabled={isPending}
+                      className="admin-action-btn"
                       style={{ fontSize: 10, padding: '4px 10px', background: s.active ? 'rgba(253,70,130,.1)' : 'rgba(34,197,94,.1)', color: s.active ? '#fd4682' : '#22c55e', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
                     >
                       {s.active ? 'Deactivate' : 'Activate'}
                     </button>
                     <button
+                      type="button"
                       onClick={() => setModal({ type: 'delete', staff: s })}
+                      className="admin-action-btn"
                       style={{ fontSize: 10, padding: '4px 10px', background: 'rgba(239,68,68,.1)', color: '#ef4444', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
                     >
                       Delete
