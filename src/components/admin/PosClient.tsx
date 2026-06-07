@@ -45,11 +45,13 @@ function openPrintWindow(snap: ReceiptSnapshot) {
   const fmt = (n: number) => `GH₵ ${n.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   const dateStr = snap.date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr = snap.date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const isFullyPaid = snap.total > 0 && snap.amountPaid >= snap.total
   const itemRows = snap.cart.map(i => `
+    <tr><td colspan="3" style="padding-top:4px;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">${escHtml(i.name)}</td></tr>
     <tr>
-      <td style="padding:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${escHtml(i.name)}</td>
-      <td style="text-align:center;padding:2px 4px">${i.quantity}</td>
-      <td style="text-align:right;padding:2px 0">${escHtml(fmt(i.unit_price * i.quantity))}</td>
+      <td style="padding:0 0 2px;color:#333;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${escHtml(fmt(i.unit_price))}/unit</td>
+      <td style="text-align:center;padding:0 4px 2px">${i.quantity}</td>
+      <td style="text-align:right;padding:0 0 2px">${escHtml(fmt(i.unit_price * i.quantity))}</td>
     </tr>`).join('')
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt ${escHtml(snap.ref)}</title>
   <style>
@@ -76,12 +78,14 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     </div>
   </div>
   <div class="sep">${'='.repeat(32)}</div>
-  <div>Date: ${escHtml(dateStr)} ${escHtml(timeStr)}</div>
-  <div>Ref:  ${escHtml(snap.ref)}</div>
-  <div>Cust: ${escHtml(snap.customer)}</div>
-  ${snap.phone ? `<div>Tel:  ${escHtml(snap.phone)}</div>` : ''}
-  <div>Pay:  ${escHtml(snap.payment)}</div>
-  <div>Serv: ${escHtml(snap.staffName)}</div>
+  <table>
+    <tr><td>Date:</td><td class="right">${escHtml(dateStr)} ${escHtml(timeStr)}</td></tr>
+    <tr><td>Ref:</td><td class="right">${escHtml(snap.ref)}</td></tr>
+    <tr><td>Cust:</td><td class="right">${escHtml(snap.customer)}</td></tr>
+    ${snap.phone ? `<tr><td>Tel:</td><td class="right">${escHtml(snap.phone)}</td></tr>` : ''}
+    <tr><td>Pay:</td><td class="right">${escHtml(snap.payment)}</td></tr>
+    <tr><td>Serv:</td><td class="right">${escHtml(snap.staffName)}</td></tr>
+  </table>
   <div class="sep">${'-'.repeat(32)}</div>
   <table>
     <thead><tr>
@@ -101,6 +105,7 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     ${balanceDue > 0 ? `<tr class="bold"><td>BALANCE DUE</td><td class="right">${escHtml(fmt(balanceDue))}</td></tr>` : ''}
   </table>
   <div class="sep">${'='.repeat(32)}</div>
+  ${isFullyPaid ? `<div class="center bold" style="border-top:3px solid #000;margin-top:8px;padding-top:6px;font-size:13px;letter-spacing:0.06em">PAID IN FULL</div>` : ''}
   <div class="center" style="margin-top:6px">Thank you for your patronage!</div>
   <div class="center" style="margin-top:8px;font-size:10px">*** CUSTOMER COPY ***</div>
   </body></html>`)
@@ -378,7 +383,6 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
   const DBL  = '================================'
   const dateStr = snap.date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr = snap.date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const receiptText: CSSProperties = { overflowWrap: 'anywhere', wordBreak: 'break-word' }
   const headerText: CSSProperties = { minWidth: 0, flex: 1, lineHeight: '1.4', overflow: 'hidden' }
   const headerLine: CSSProperties = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
   const separator: CSSProperties = { overflow: 'hidden', whiteSpace: 'nowrap' }
@@ -408,12 +412,12 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
 
       <div style={{ width: '280px', maxWidth: '100%', overflow: 'hidden', margin: '0 auto' }}>
         <div style={separator}>{DBL}</div>
-        <div style={receiptText}>Date: {dateStr} {timeStr}</div>
-        <div style={receiptText}>Ref:  {snap.ref}</div>
-        <div style={receiptText}>Cust: {snap.customer}</div>
-        {snap.phone && <div style={receiptText}>Tel:  {snap.phone}</div>}
-        <div style={receiptText}>Pay:  {snap.payment}</div>
-        <div style={receiptText}>Serv: {snap.staffName}</div>
+        <div style={summaryRow}><span>Date:</span><span style={amountCell}>{dateStr} {timeStr}</span></div>
+        <div style={summaryRow}><span>Ref:</span><span style={amountCell}>{snap.ref}</span></div>
+        <div style={summaryRow}><span>Cust:</span><span style={amountCell}>{snap.customer}</span></div>
+        {snap.phone && <div style={summaryRow}><span>Tel:</span><span style={amountCell}>{snap.phone}</span></div>}
+        <div style={summaryRow}><span>Pay:</span><span style={amountCell}>{snap.payment}</span></div>
+        <div style={summaryRow}><span>Serv:</span><span style={amountCell}>{snap.staffName}</span></div>
         <div style={separator}>{LINE}</div>
 
         <div style={{ ...itemGrid, fontWeight: 'bold' }}>
@@ -424,10 +428,13 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         <div style={separator}>{LINE}</div>
 
         {snap.cart.map(i => (
-          <div key={i.product_id} style={itemGrid}>
-            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{i.name}</span>
-            <span style={{ textAlign: 'center' }}>{i.quantity}</span>
-            <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
+          <div key={i.product_id} style={{ marginTop: '4px' }}>
+            <div style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontWeight: 'bold' }}>{i.name}</div>
+            <div style={itemGrid}>
+              <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#333', fontSize: '11px' }}>{formatCurrency(i.unit_price)}/unit</span>
+              <span style={{ textAlign: 'center' }}>{i.quantity}</span>
+              <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
+            </div>
           </div>
         ))}
 
@@ -463,6 +470,9 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
           </div>
         )}
         <div style={separator}>{DBL}</div>
+        {snap.total > 0 && snap.amountPaid >= snap.total && (
+          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '13px', letterSpacing: '0.06em', marginTop: '8px', paddingTop: '6px', borderTop: '3px solid #000' }}>PAID IN FULL</div>
+        )}
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '6px', overflowWrap: 'anywhere' }}>
