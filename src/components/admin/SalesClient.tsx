@@ -499,7 +499,7 @@ export default function SalesClient({
                         <td style={{ padding: '12px 16px', fontSize: 13, color: '#f97316', fontWeight: 800 }}>{formatCurrency(balance)}</td>
                         <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString('en-GB')}</td>
                         <td style={{ padding: '12px 16px' }}>
-                          <div style={{ display: 'flex', gap: 6 }}>
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             <button type="button" onClick={() => setSettling(s)} className="admin-action-btn"
                               style={{ fontSize: 9, padding: '4px 12px', background: 'rgba(249,115,22,.15)', color: '#f97316', border: '1px solid rgba(249,115,22,.3)', fontFamily: 'Poppins,sans-serif', fontWeight: 700 }}>
                               Settle

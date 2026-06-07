@@ -122,7 +122,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                   </td>
                   {isAdmin && (
                     <td style={{ padding: '12px 16px' }}>
-                      <div style={{ display: 'flex', gap: 8 }}>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         <button onClick={() => setEditing({ ...item })} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
                         <button onClick={() => handleDelete(item.id)} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
                       </div>

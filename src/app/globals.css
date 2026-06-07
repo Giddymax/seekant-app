@@ -589,10 +589,22 @@ html.menu-open { overflow: hidden; }
 
 /* On phones, drop secondary columns so the Actions column (with the
    tap targets) stays on-screen instead of requiring a horizontal scroll
-   to reach it. */
+   to reach it. The table's min-width (set inline per-table for desktop
+   layout) is overridden here too — otherwise it keeps forcing the table
+   wider than the screen and pushes Actions off-screen anyway, even with
+   the secondary columns hidden. */
 @media (max-width: 640px) {
   .admin-table-wrap .admin-col-secondary {
     display: none !important;
+  }
+  .admin-table-wrap table {
+    min-width: 0 !important;
+    table-layout: fixed !important;
+  }
+  .admin-table-wrap td,
+  .admin-table-wrap th {
+    padding: 10px 8px !important;
+    overflow-wrap: break-word;
   }
 }
 
@@ -602,6 +614,17 @@ html.menu-open { overflow: hidden; }
     min-height: 36px !important;
     padding: 8px 12px !important;
     font-size: 11px !important;
+  }
+}
+
+/* On phones, the Actions column is narrow (table-layout: fixed splits
+   columns evenly) — trim button padding/size further so labels like
+   "Deactivate" fit inside it instead of poking past the edge. */
+@media (max-width: 640px) {
+  .admin-table-wrap .admin-action-btn {
+    padding: 6px 8px !important;
+    font-size: 9.5px !important;
+    letter-spacing: -0.2px;
   }
   /* Modal inner forms: single column on narrow screens */
   .admin-modal-2col {
