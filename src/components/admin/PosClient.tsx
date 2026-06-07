@@ -59,7 +59,8 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     body{font-family:'Courier New',Courier,monospace;font-size:12px;width:80mm;max-width:80mm;padding:6px 4px;color:#000;background:#fff;line-height:1.5}
     table{width:100%;border-collapse:collapse;font-size:12px}
     .bold{font-weight:bold} .center{text-align:center} .right{text-align:right}
-    .sep{white-space:pre;overflow:hidden;letter-spacing:0}
+    .line{border-top:1px dashed #000;margin:4px 0}
+    .dbl{border-top:3px double #000;margin:4px 0}
     .logo-row{display:flex;align-items:center;gap:10px;border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:8px}
     .logo-row img{width:56px;height:56px;object-fit:contain;flex-shrink:0}
     .biz-name{font-weight:900;font-size:14px;letter-spacing:0.06em}
@@ -77,7 +78,7 @@ function openPrintWindow(snap: ReceiptSnapshot) {
       <div class="biz-info">www.seekantmultimedia.com</div>
     </div>
   </div>
-  <div class="sep">${'='.repeat(32)}</div>
+  <div class="dbl"></div>
   <table>
     <tr><td>Date:</td><td class="right">${escHtml(dateStr)} ${escHtml(timeStr)}</td></tr>
     <tr><td>Ref:</td><td class="right">${escHtml(snap.ref)}</td></tr>
@@ -86,7 +87,7 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     <tr><td>Pay:</td><td class="right">${escHtml(snap.payment)}</td></tr>
     <tr><td>Serv:</td><td class="right">${escHtml(snap.staffName)}</td></tr>
   </table>
-  <div class="sep">${'-'.repeat(32)}</div>
+  <div class="line"></div>
   <table>
     <thead><tr>
       <th style="text-align:left">ITEM</th>
@@ -95,7 +96,7 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     </tr></thead>
     <tbody>${itemRows}</tbody>
   </table>
-  <div class="sep">${'-'.repeat(32)}</div>
+  <div class="line"></div>
   <table>
     <tr><td>SUBTOTAL</td><td class="right">${escHtml(fmt(subtotal))}</td></tr>
     ${snap.discount > 0 ? `<tr><td>DISCOUNT</td><td class="right">-${escHtml(fmt(snap.discount))}</td></tr>` : ''}
@@ -104,7 +105,7 @@ function openPrintWindow(snap: ReceiptSnapshot) {
     ${changeDue > 0 ? `<tr class="bold"><td>CHANGE</td><td class="right">${escHtml(fmt(changeDue))}</td></tr>` : ''}
     ${balanceDue > 0 ? `<tr class="bold"><td>BALANCE DUE</td><td class="right">${escHtml(fmt(balanceDue))}</td></tr>` : ''}
   </table>
-  <div class="sep">${'='.repeat(32)}</div>
+  <div class="dbl"></div>
   ${isFullyPaid ? `<div class="center bold" style="border-top:3px solid #000;margin-top:8px;padding-top:6px;font-size:13px;letter-spacing:0.06em">PAID IN FULL</div>` : ''}
   <div class="center" style="margin-top:6px">Thank you for your patronage!</div>
   <div class="center" style="margin-top:8px;font-size:10px">*** CUSTOMER COPY ***</div>
@@ -379,13 +380,12 @@ function PosCartPanel({
 
 // ─── POS Thermal Receipt ──────────────────────────────────────────────────────
 function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
-  const LINE = '--------------------------------'
-  const DBL  = '================================'
   const dateStr = snap.date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr = snap.date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
   const headerText: CSSProperties = { minWidth: 0, flex: 1, lineHeight: '1.4', overflow: 'hidden' }
   const headerLine: CSSProperties = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
-  const separator: CSSProperties = { overflow: 'hidden', whiteSpace: 'nowrap' }
+  const lineRule: CSSProperties = { borderTop: '1px dashed #000', margin: '4px 0' }
+  const dblRule: CSSProperties = { borderTop: '3px double #000', margin: '4px 0' }
   const itemGrid: CSSProperties = {
     display: 'grid',
     gridTemplateColumns: 'minmax(0,1fr) 38px 100px',
@@ -411,21 +411,21 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
       </div>
 
       <div style={{ width: '280px', maxWidth: '100%', overflow: 'hidden', margin: '0 auto' }}>
-        <div style={separator}>{DBL}</div>
+        <div style={dblRule} />
         <div style={summaryRow}><span>Date:</span><span style={amountCell}>{dateStr} {timeStr}</span></div>
         <div style={summaryRow}><span>Ref:</span><span style={amountCell}>{snap.ref}</span></div>
         <div style={summaryRow}><span>Cust:</span><span style={amountCell}>{snap.customer}</span></div>
         {snap.phone && <div style={summaryRow}><span>Tel:</span><span style={amountCell}>{snap.phone}</span></div>}
         <div style={summaryRow}><span>Pay:</span><span style={amountCell}>{snap.payment}</span></div>
         <div style={summaryRow}><span>Serv:</span><span style={amountCell}>{snap.staffName}</span></div>
-        <div style={separator}>{LINE}</div>
+        <div style={lineRule} />
 
         <div style={{ ...itemGrid, fontWeight: 'bold' }}>
           <span>ITEM</span>
           <span style={{ textAlign: 'center' }}>QTY</span>
           <span style={amountCell}>TOTAL</span>
         </div>
-        <div style={separator}>{LINE}</div>
+        <div style={lineRule} />
 
         {snap.cart.map(i => (
           <div key={i.product_id} style={{ marginTop: '4px' }}>
@@ -438,7 +438,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
           </div>
         ))}
 
-        <div style={separator}>{LINE}</div>
+        <div style={lineRule} />
         <div style={summaryRow}>
           <span>SUBTOTAL</span>
           <span style={amountCell}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
@@ -446,7 +446,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         {snap.discount > 0 && (
           <div style={summaryRow}><span>DISCOUNT</span><span style={amountCell}>-{formatCurrency(snap.discount)}</span></div>
         )}
-        <div style={separator}>{LINE}</div>
+        <div style={lineRule} />
         <div style={{ ...summaryRow, fontWeight: 'bold', fontSize: '13px' }}>
           <span>TOTAL</span>
           <span style={amountCell}>{formatCurrency(snap.total)}</span>
@@ -469,7 +469,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
             <span style={amountCell}>{formatCurrency(snap.total - snap.amountPaid)}</span>
           </div>
         )}
-        <div style={separator}>{DBL}</div>
+        <div style={dblRule} />
         {snap.total > 0 && snap.amountPaid >= snap.total && (
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '13px', letterSpacing: '0.06em', marginTop: '8px', paddingTop: '6px', borderTop: '3px solid #000' }}>PAID IN FULL</div>
         )}
