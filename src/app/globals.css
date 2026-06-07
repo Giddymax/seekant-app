@@ -587,6 +587,15 @@ html.menu-open { overflow: hidden; }
   overflow-x: auto;
 }
 
+/* On phones, drop secondary columns so the Actions column (with the
+   tap targets) stays on-screen instead of requiring a horizontal scroll
+   to reach it. */
+@media (max-width: 640px) {
+  .admin-table-wrap .admin-col-secondary {
+    display: none !important;
+  }
+}
+
 /* ── Admin action buttons: bigger touch targets on mobile ── */
 @media (max-width: 768px) {
   .admin-action-btn {

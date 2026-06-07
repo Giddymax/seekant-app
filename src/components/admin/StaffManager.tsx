@@ -114,7 +114,7 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
               {['Name', 'Email', 'Role', 'Status', 'Joined', 'Actions'].map(h => (
-                <th key={h} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px' }}>{h}</th>
+                <th key={h} className={h === 'Email' || h === 'Joined' ? 'admin-col-secondary' : undefined} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -122,7 +122,7 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
             {staff.map(s => (
               <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
                 <td style={{ padding: '14px 20px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{s.full_name || '—'}</td>
-                <td style={{ padding: '14px 20px', fontSize: 12, color: 'rgba(255,255,255,.6)' }}>{s.email}</td>
+                <td className="admin-col-secondary" style={{ padding: '14px 20px', fontSize: 12, color: 'rgba(255,255,255,.6)' }}>{s.email}</td>
                 <td style={{ padding: '14px 20px' }}>
                   <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: s.role === 'admin' ? 'rgba(212,32,32,.15)' : 'rgba(84,185,253,.15)', color: s.role === 'admin' ? '#d42020' : '#54b9fd' }}>
                     {s.role}
@@ -133,7 +133,7 @@ export default function StaffManager({ initialStaff }: { initialStaff: Staff[] }
                     {s.active ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td style={{ padding: '14px 20px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString()}</td>
+                <td className="admin-col-secondary" style={{ padding: '14px 20px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString()}</td>
                 <td style={{ padding: '14px 20px' }}>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     <button
