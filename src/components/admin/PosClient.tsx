@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, type CSSProperties } from 'react'
+import { useState, useTransition, useRef, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { createSale, type CartItem } from '@/lib/actions/sales'
 import { formatCurrency } from '@/lib/utils'
@@ -415,6 +415,21 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
   const [receiptSnap, setReceiptSnap] = useState<ReceiptSnapshot | null>(null)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
 
+  const receiptPreviewRef = useRef<HTMLDivElement>(null)
+
+  function openPrintWindow(mode: 'thermal' | 'pdf') {
+    const content = receiptPreviewRef.current?.innerHTML || ''
+    const base = window.location.origin
+    const win = window.open('', '_blank', 'width=500,height=750')
+    if (!win) { toast.error('Enable popups to print'); return }
+    const thermalCSS = `@page{size:80mm auto;margin:2mm}body{font-family:'Courier New',monospace;font-size:10px;line-height:1.4;margin:0;padding:4px;width:72mm;background:#fff;color:#000}img{max-width:80px;display:block;margin:0 auto 4px}div{word-break:break-word}`
+    const pdfCSS = `@page{size:A4;margin:18mm 20mm}body{font-family:'Courier New',monospace;font-size:12px;line-height:1.6;margin:0 auto;padding:0;max-width:400px;background:#fff;color:#000}img{max-width:110px;display:block;margin:0 auto 8px}`
+    win.document.write(`<html><head><title>Receipt</title><base href="${base}/"><style>*{box-sizing:border-box}${mode === 'thermal' ? thermalCSS : pdfCSS}table{width:100%;border-collapse:collapse}td{vertical-align:top;padding:1px 0}</style></head><body>${content}</body></html>`)
+    win.document.close()
+    win.focus()
+    setTimeout(() => { win.print(); win.close() }, 400)
+  }
+
   const addToCart = (p: Product) => {
     setCart(c => {
       const existing = c.find(x => x.product_id === p.id)
@@ -474,69 +489,36 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
 
   return (
     <>
-      {/* Print CSS — visibility approach so nested receipt becomes visible */}
-      <style>{`
-        @media print {
-          body * { visibility: hidden !important; }
-          .pos-receipt-wrapper,
-          .pos-receipt-wrapper * { visibility: visible !important; }
-          .pos-receipt-wrapper {
-            position: fixed !important;
-            top: 0 !important; left: 0 !important;
-            width: 80mm !important;
-            max-width: 80mm !important;
-            overflow: hidden !important;
-            background: #fff !important;
-          }
-          .pos-receipt {
-            box-sizing: border-box !important;
-            font-family: 'Courier New', Courier, monospace !important;
-            font-size: 12px !important;
-            width: 80mm !important;
-            max-width: 80mm !important;
-            overflow: hidden !important;
-            padding: 6px 4px !important;
-            color: #000 !important;
-            background: #fff !important;
-            line-height: 1.5 !important;
-          }
-          @page { margin: 4mm; size: 80mm auto; }
-        }
-        @media screen { .pos-receipt-wrapper { display: none; } }
-      `}</style>
-
-      {/* Hidden print source */}
-      <div className="pos-receipt-wrapper">
-        {receiptSnap && <PosReceipt snap={receiptSnap} />}
-      </div>
-
-      {/* On-screen receipt preview modal */}
+      {/* Receipt preview modal — print via window.open() for mobile compatibility */}
       {showReceiptModal && receiptSnap && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24, cursor: 'pointer' }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.78)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 16, cursor: 'pointer' }}
           onClick={e => { if (e.target === e.currentTarget) setShowReceiptModal(false) }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, maxHeight: '90vh' }}>
+          <div style={{ background: '#181b2e', borderRadius: 12, overflow: 'hidden', width: '100%', maxWidth: 360, maxHeight: '90vh', display: 'flex', flexDirection: 'column', border: '1px solid rgba(255,255,255,.08)' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,.08)', flexShrink: 0 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Receipt — {receiptSnap.ref}</h3>
+              <button type="button" onClick={() => setShowReceiptModal(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', cursor: 'pointer', padding: 4, fontSize: 20, lineHeight: 1, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } as CSSProperties}>×</button>
+            </div>
+            {/* Receipt preview — scrollable */}
+            <div ref={receiptPreviewRef} style={{ overflowY: 'auto', flex: 1, padding: 16 }}>
+              <PosReceipt snap={receiptSnap} />
+            </div>
             {/* Action buttons */}
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                style={{ padding: '10px 24px', background: '#d42020', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif' }}
-              >
-                Print Receipt
+            <div style={{ display: 'flex', gap: 8, padding: '14px 16px', borderTop: '1px solid rgba(255,255,255,.08)', flexShrink: 0 }}>
+              <button type="button" onClick={() => openPrintWindow('thermal')}
+                style={{ flex: 1, padding: '11px 8px', background: '#d42020', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'Poppins,sans-serif', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } as CSSProperties}>
+                Print
               </button>
-              <button
-                type="button"
-                onClick={() => setShowReceiptModal(false)}
-                style={{ padding: '10px 24px', background: 'rgba(255,255,255,.1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, fontFamily: 'Poppins,sans-serif' }}
-              >
+              <button type="button" onClick={() => openPrintWindow('pdf')}
+                style={{ flex: 1, padding: '11px 8px', background: 'rgba(34,197,94,.12)', color: '#22c55e', border: '1px solid rgba(34,197,94,.25)', cursor: 'pointer', fontSize: 11, fontWeight: 700, fontFamily: 'Poppins,sans-serif', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } as CSSProperties}>
+                Save PDF
+              </button>
+              <button type="button" onClick={() => setShowReceiptModal(false)}
+                style={{ flex: 1, padding: '11px 8px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 600, fontFamily: 'Poppins,sans-serif', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' } as CSSProperties}>
                 Close
               </button>
-            </div>
-            {/* Receipt preview */}
-            <div style={{ overflowY: 'auto', boxShadow: '0 8px 40px rgba(0,0,0,.6)' }}>
-              <PosReceipt snap={receiptSnap} />
             </div>
           </div>
         </div>
