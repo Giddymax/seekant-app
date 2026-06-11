@@ -14,7 +14,7 @@ export default function AdminTopbar({
       height: 60, background: '#181b2e',
       borderBottom: '1px solid rgba(255,255,255,.06)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 20px', flexShrink: 0, position: 'sticky', top: 0, zIndex: 10,
+      padding: '0 20px', flexShrink: 0, zIndex: 10, position: 'relative',
     }}>
       {/* Left — hamburger (mobile) */}
       <button

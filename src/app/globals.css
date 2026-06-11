@@ -449,6 +449,17 @@ html.menu-open { overflow: hidden; }
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Prevent iOS Safari from auto-zooming when an input/select is focused.
+   iOS zooms the viewport whenever font-size < 16px, which shifts all tap
+   targets and breaks subsequent button taps until the user manually zooms out. */
+@supports (-webkit-touch-callout: none) {
+  .admin-content-col input,
+  .admin-content-col select,
+  .admin-content-col textarea {
+    font-size: 16px !important;
+  }
+}
+
 /* Ensure all admin buttons have cursor: pointer (iOS needs this for click events) */
 .admin-content-col button,
 .admin-sidebar button,
@@ -472,6 +483,13 @@ html.menu-open { overflow: hidden; }
 }
 
 /* ── Admin portal layout ── */
+/* height: 100dvh overrides 100vh set via inline style when the browser supports
+   dynamic viewport units (iOS Safari 15.4+). This prevents the browser chrome
+   from obscuring the bottom of the shell on iPhone. */
+.admin-shell-outer {
+  height: 100dvh;
+}
+
 /* Content column shifts right on desktop to make room for the fixed sidebar */
 @media (min-width: 769px) {
   .admin-content-col {
