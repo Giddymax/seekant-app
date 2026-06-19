@@ -189,18 +189,32 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
         @media print {
           body { background: #fff !important; }
           .admin-sidebar,
+          .admin-sidebar-overlay,
           header,
           .admin-print-hide { display: none !important; }
-          .admin-main-padding { padding: 0 !important; }
+          .admin-shell-outer {
+            height: auto !important;
+            overflow: visible !important;
+            display: block !important;
+          }
+          .admin-content-col {
+            overflow: visible !important;
+          }
+          .admin-main-padding {
+            padding: 0 !important;
+            overflow: visible !important;
+          }
           .business-summary-report {
             background: #fff !important;
             color: #000 !important;
             padding: 0 !important;
+            overflow: visible !important;
           }
           .business-summary-report * {
             color: #000 !important;
             background: transparent !important;
             box-shadow: none !important;
+            overflow: visible !important;
           }
           .business-summary-logo {
             background: #fff !important;
