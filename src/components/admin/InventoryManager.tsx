@@ -12,12 +12,13 @@ type Item = {
   category: string
   image_url: string | null
   price: number
+  cost_price: number
   stock: number
   threshold: number
   is_service: boolean
 }
 
-const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, price: 0, stock: 0, threshold: 10, is_service: false }
+const BLANK: Omit<Item, 'id'> = { name: '', category: 'Print', image_url: null, price: 0, cost_price: 0, stock: 0, threshold: 10, is_service: false }
 const CATEGORIES = ['Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other']
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
 
@@ -28,8 +29,8 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
   const [isPending, startTransition] = useTransition()
   const isAdmin = role === 'admin'
   const tableHeaders = isAdmin
-    ? ['', 'Name', 'Category', 'Price', 'Stock / Type', '']
-    : ['', 'Name', 'Category', 'Price', 'Stock / Type']
+    ? ['', 'Name', 'Category', 'Cost', 'Selling', 'Margin', 'Stock / Type', '']
+    : ['', 'Name', 'Category', 'Cost', 'Selling', 'Margin', 'Stock / Type']
 
   const filtered = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
   const lowStockCount = items.filter(i => !i.is_service && i.stock <= i.threshold).length
@@ -110,7 +111,16 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                   </td>
                   <td style={{ padding: '12px 16px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{item.name}</td>
                   <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
+                  <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.5)' }}>{formatCurrency(item.cost_price)}</td>
                   <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    {(() => {
+                      const profit = item.price - item.cost_price
+                      const margin = item.price > 0 ? (profit / item.price) * 100 : 0
+                      const color = profit > 0 ? '#22c55e' : profit < 0 ? '#fd4682' : 'rgba(255,255,255,.35)'
+                      return <span style={{ fontSize: 11, fontWeight: 700, color }}>{profit > 0 ? '+' : ''}{margin.toFixed(0)}%</span>
+                    })()}
+                  </td>
                   <td style={{ padding: '12px 16px' }}>
                     {item.is_service
                       ? <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd' }}>SERVICE</span>
@@ -175,18 +185,44 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                 onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
                 label="Image (optional)"
               />
-              <div className={editing.is_service ? '' : 'admin-modal-2col'} style={{ display: 'grid', gridTemplateColumns: editing.is_service ? '1fr' : '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Price (GH₵)</label>
-                  <input title="Price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Cost Price (GH₵)</label>
+                  <input title="Cost price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.cost_price ?? 0} onChange={e => setEditing(p => ({ ...p, cost_price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                 </div>
-                {!editing.is_service && (
+                <div>
+                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Selling Price (GH₵)</label>
+                  <input title="Selling price" type="number" min="0" step="0.01" placeholder="0.00" value={editing.price ?? 0} onChange={e => setEditing(p => ({ ...p, price: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+                </div>
+              </div>
+              {(() => {
+                const cost = editing.cost_price ?? 0
+                const sell = editing.price ?? 0
+                const profit = sell - cost
+                const margin = sell > 0 ? (profit / sell) * 100 : 0
+                const isLoss = profit < 0
+                const color = profit > 0 ? '#22c55e' : profit < 0 ? '#fd4682' : 'rgba(255,255,255,.35)'
+                return cost > 0 || sell > 0 ? (
+                  <div style={{ display: 'flex', gap: 16, padding: '10px 14px', background: isLoss ? 'rgba(253,70,130,.06)' : 'rgba(34,197,94,.06)', border: `1px solid ${isLoss ? 'rgba(253,70,130,.15)' : 'rgba(34,197,94,.15)'}` }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>{isLoss ? 'Loss' : 'Profit'} / Unit</div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color }}>{profit > 0 ? '+' : ''}{formatCurrency(profit)}</div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>Margin</div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color }}>{margin.toFixed(1)}%</div>
+                    </div>
+                  </div>
+                ) : null
+              })()}
+              {!editing.is_service && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Stock</label>
                     <input title="Stock quantity" type="number" min="0" placeholder="0" value={editing.stock ?? 0} onChange={e => setEditing(p => ({ ...p, stock: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
                   </div>
-                )}
-              </div>
+                </div>
+              )}
               {!editing.is_service && (
                 <div>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 6 }}>Low Stock Threshold</label>

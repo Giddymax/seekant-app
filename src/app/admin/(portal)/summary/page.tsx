@@ -26,6 +26,7 @@ type SaleItemRow = {
   quantity: number | string | null
   line_total: number | string | null
   unit_price: number | string | null
+  cost_price: number | string | null
 }
 
 type QuoteRow = {
@@ -89,14 +90,16 @@ function buildCountMap(values: Array<string | null>) {
 }
 
 function buildProductMap(items: SaleItemRow[]) {
-  const map: Record<string, { qty: number; revenue: number }> = {}
+  const map: Record<string, { qty: number; revenue: number; cost: number }> = {}
   items.forEach(item => {
     const name = item.product_name || 'Unnamed item'
     const qty = toNumber(item.quantity)
     const revenue = toNumber(item.line_total) || toNumber(item.unit_price) * qty
-    if (!map[name]) map[name] = { qty: 0, revenue: 0 }
+    const cost = toNumber(item.cost_price) * qty
+    if (!map[name]) map[name] = { qty: 0, revenue: 0, cost: 0 }
     map[name].qty += qty
     map[name].revenue += revenue
+    map[name].cost += cost
   })
   return Object.entries(map).sort((a, b) => b[1].revenue - a[1].revenue)
 }
@@ -150,7 +153,7 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
   const quotes = (quoteRows ?? []) as QuoteRow[]
   const saleIds = sales.map(sale => sale.id).filter(Boolean)
   const { data: itemRows } = saleIds.length
-    ? await supabase.from('sale_items').select('product_name,quantity,line_total,unit_price').in('sale_id', saleIds)
+    ? await supabase.from('sale_items').select('product_name,quantity,line_total,unit_price,cost_price').in('sale_id', saleIds)
     : { data: [] as SaleItemRow[] }
 
   const completed = sales.filter(sale => sale.status === 'Completed')
@@ -159,6 +162,10 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
   const totalDiscounts = sales.reduce((sum, sale) => sum + toNumber(sale.discount), 0)
   const amountPaid = sales.reduce((sum, sale) => sum + toNumber(sale.amount_paid), 0)
   const outstanding = sales.reduce((sum, sale) => sum + Math.max(0, toNumber(sale.total) - toNumber(sale.amount_paid)), 0)
+  const allItems = (itemRows ?? []) as SaleItemRow[]
+  const totalCost = allItems.reduce((sum, i) => sum + toNumber(i.cost_price) * toNumber(i.quantity), 0)
+  const totalProfit = totalRevenue - totalCost
+  const profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0
   const avgOrderValue = completed.length ? totalRevenue / completed.length : 0
   const quoteCompletion = quotes.length ? (quotes.filter(q => q.status === 'completed').length / quotes.length) * 100 : 0
   const paymentRows = Object.entries(buildCountMap(completed.map(s => s.payment_method))).sort((a, b) => b[1] - a[1])
@@ -181,6 +188,9 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
       ? `${bestPayment[0]} is the most used completed-sale payment method.`
       : 'No completed-sale payment method data is available for this period.',
     `Quote completion rate is ${quoteCompletion.toFixed(1)}% for ${quotes.length} quote request${quotes.length === 1 ? '' : 's'}.`,
+    totalCost > 0
+      ? `${totalProfit >= 0 ? 'Profit' : 'Loss'} for the period is ${formatCurrency(Math.abs(totalProfit))} (${profitMargin.toFixed(1)}% margin on completed sales revenue).`
+      : 'No cost price data is recorded yet — set cost prices in Inventory to track profit.',
   ]
 
   return (
@@ -286,16 +296,17 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 14 }}>
             {[
-              ['Revenue', formatCurrency(totalRevenue)],
-              ['Completed Sales', String(completed.length)],
-              ['Amount Paid', formatCurrency(amountPaid)],
-              ['Outstanding', formatCurrency(outstanding)],
-              ['Discounts', formatCurrency(totalDiscounts)],
-              ['Quotes', String(quotes.length)],
-            ].map(([label, value]) => (
+              ['Revenue', formatCurrency(totalRevenue), ''],
+              ['Profit / Loss', formatCurrency(totalProfit), totalProfit >= 0 ? '#22c55e' : '#fd4682'],
+              ['Completed Sales', String(completed.length), ''],
+              ['Amount Paid', formatCurrency(amountPaid), ''],
+              ['Outstanding', formatCurrency(outstanding), ''],
+              ['Discounts', formatCurrency(totalDiscounts), ''],
+              ['Quotes', String(quotes.length), ''],
+            ].map(([label, value, accent]) => (
               <div key={label} className="print-card" style={{ background: '#111320', padding: 16 }}>
                 <p style={{ fontSize: 9, color: 'rgba(255,255,255,.45)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 7, fontWeight: 800 }}>{label}</p>
-                <p style={{ fontSize: 17, color: '#fff', fontWeight: 900 }}>{value}</p>
+                <p style={{ fontSize: 17, color: accent || '#fff', fontWeight: 900 }}>{value}</p>
               </div>
             ))}
           </div>
@@ -319,18 +330,23 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  {['Name', 'Qty', 'Revenue'].map(h => <th key={h} style={{ textAlign: 'left', color: 'rgba(255,255,255,.45)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '0 12px 10px 0' }}>{h}</th>)}
+                  {['Name', 'Qty', 'Revenue', 'Profit'].map(h => <th key={h} style={{ textAlign: 'left', color: 'rgba(255,255,255,.45)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '0 12px 10px 0' }}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
-                {productRows.map(([name, stats]) => (
-                  <tr key={name} style={{ borderTop: '1px solid rgba(255,255,255,.06)' }}>
-                    <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0' }}>{name}</td>
-                    <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0' }}>{stats.qty}</td>
-                    <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0', fontWeight: 800 }}>{formatCurrency(stats.revenue)}</td>
-                  </tr>
-                ))}
-                {!productRows.length && <tr><td colSpan={3} style={{ color: 'rgba(255,255,255,.4)', fontSize: 12, padding: '18px 0' }}>No product data for this filter.</td></tr>}
+                {productRows.map(([name, stats]) => {
+                  const profit = stats.revenue - stats.cost
+                  const color = profit > 0 ? '#22c55e' : profit < 0 ? '#fd4682' : '#fff'
+                  return (
+                    <tr key={name} style={{ borderTop: '1px solid rgba(255,255,255,.06)' }}>
+                      <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0' }}>{name}</td>
+                      <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0' }}>{stats.qty}</td>
+                      <td style={{ color: '#fff', fontSize: 12, padding: '10px 12px 10px 0', fontWeight: 800 }}>{formatCurrency(stats.revenue)}</td>
+                      <td style={{ color, fontSize: 12, padding: '10px 12px 10px 0', fontWeight: 800 }}>{formatCurrency(profit)}</td>
+                    </tr>
+                  )
+                })}
+                {!productRows.length && <tr><td colSpan={4} style={{ color: 'rgba(255,255,255,.4)', fontSize: 12, padding: '18px 0' }}>No product data for this filter.</td></tr>}
               </tbody>
             </table>
           </div>

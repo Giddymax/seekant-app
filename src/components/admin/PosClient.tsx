@@ -11,6 +11,7 @@ type Product = {
   category: string
   image_url: string | null
   price: number
+  cost_price: number
   stock: number
   is_service: boolean
 }
@@ -438,7 +439,7 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
         return c.map(x => x.product_id === p.id ? { ...x, quantity: x.quantity + 1 } : x)
       }
       if (!p.is_service && p.stock < 1) { toast.error('Out of stock'); return c }
-      return [...c, { product_id: p.id, name: p.name, quantity: 1, unit_price: p.price, is_service: p.is_service }]
+      return [...c, { product_id: p.id, name: p.name, quantity: 1, unit_price: p.price, cost_price: p.cost_price, is_service: p.is_service }]
     })
   }
 

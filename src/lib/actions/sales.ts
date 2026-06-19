@@ -9,6 +9,7 @@ export type CartItem = {
   name: string
   quantity: number
   unit_price: number
+  cost_price?: number
   is_service?: boolean
 }
 
@@ -65,6 +66,7 @@ export async function createSale({
     product_name: i.name,
     quantity:     i.quantity,
     unit_price:   i.unit_price,
+    cost_price:   i.cost_price ?? 0,
     line_total:   i.quantity * i.unit_price,
   }))
 

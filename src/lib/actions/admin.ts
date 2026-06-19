@@ -180,6 +180,7 @@ export async function upsertInventory(fd: FormData) {
     category: fd.get('category') as string,
     image_url: (fd.get('image_url') as string) || null,
     price: Number(fd.get('price') ?? 0),
+    cost_price: Number(fd.get('cost_price') ?? 0),
     stock: isService ? 0 : Number(fd.get('stock') ?? 0),
     threshold: isService ? 0 : Number(fd.get('threshold') ?? 10),
     is_service: isService,

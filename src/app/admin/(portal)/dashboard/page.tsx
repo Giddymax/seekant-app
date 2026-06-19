@@ -23,6 +23,13 @@ export default async function DashboardPage() {
   const salesCutoff = new Date(today)
   salesCutoff.setDate(salesCutoff.getDate() - 180)
 
+  const completedSaleIds = await supabase
+    .from('sales')
+    .select('id')
+    .eq('status', 'Completed')
+
+  const saleIds = (completedSaleIds.data ?? []).map(s => s.id)
+
   const [
     { count: totalSales },
     { data: revenueData },
@@ -30,6 +37,7 @@ export default async function DashboardPage() {
     { count: lowStock },
     { data: recentSales },
     { data: monthlySales },
+    { data: costData },
   ] = await Promise.all([
     supabase.from('sales').select('*', { count: 'exact', head: true }),
     supabase.from('sales').select('total').eq('status', 'Completed'),
@@ -37,9 +45,14 @@ export default async function DashboardPage() {
     supabase.from('inventory').select('*', { count: 'exact', head: true }).lt('stock', 10),
     supabase.from('sales').select('id, sale_ref, total, status, created_at').order('created_at', { ascending: false }).limit(8),
     supabase.from('sales').select('created_at, total').eq('status', 'Completed').gte('created_at', salesCutoff.toISOString()),
+    saleIds.length
+      ? supabase.from('sale_items').select('cost_price, quantity').in('sale_id', saleIds)
+      : Promise.resolve({ data: [] as { cost_price: number | string | null; quantity: number | string | null }[] }),
   ])
 
   const totalRevenue = (revenueData ?? []).reduce((sum, s) => sum + toNumber(s.total), 0)
+  const totalCost = (costData ?? []).reduce((sum, i) => sum + toNumber(i.cost_price) * toNumber(i.quantity), 0)
+  const totalProfit = totalRevenue - totalCost
 
   // Build 6-month bar chart data
   const months: string[] = []
@@ -59,8 +72,11 @@ export default async function DashboardPage() {
   const barValues = Object.values(monthTotals)
   const maxBar = Math.max(...barValues, 1)
 
+  const profitColor = totalProfit >= 0 ? '#22c55e' : '#fd4682'
+
   const statCards = [
     { label: 'Total Revenue', value: formatCurrency(totalRevenue), color: '#d42020', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 13v-1m0 0c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { label: 'Total Profit', value: formatCurrency(totalProfit), color: profitColor, icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' },
     { label: 'Total Sales', value: String(totalSales ?? 0), color: '#54b9fd', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
     { label: 'Pending Quotes', value: String(pendingQuotes ?? 0), color: '#fd4682', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
     { label: 'Low Stock Items', value: String(lowStock ?? 0), color: '#315c5a', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
@@ -76,7 +92,7 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Stat cards */}
-      <div className="dashboard-stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
+      <div className="dashboard-stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 20, marginBottom: 32 }}>
         {statCards.map(({ label, value, color, icon }) => (
           <div key={label} style={{ background: '#181b2e', padding: '24px 24px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: color }} />

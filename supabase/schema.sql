@@ -216,6 +216,7 @@ create table if not exists public.inventory (
                check (category in ('Print', 'Signage', 'Apparel', 'Design', 'Gifts', 'Other')),
   image_url  text,
   price      numeric(10,2) not null default 0,
+  cost_price numeric(10,2) not null default 0,
   stock      integer not null default 0,
   threshold  integer not null default 10,
   is_service boolean not null default false,
@@ -225,6 +226,7 @@ create table if not exists public.inventory (
 -- Migration for existing installs:
 -- alter table public.inventory add column if not exists image_url text;
 -- alter table public.inventory add column if not exists is_service boolean not null default false;
+-- alter table public.inventory add column if not exists cost_price numeric(10,2) not null default 0;
 
 create trigger inventory_updated_at
   before update on public.inventory
@@ -281,12 +283,14 @@ create table if not exists public.sale_items (
   product_name text not null,
   quantity     numeric(10,2) not null,
   unit_price   numeric(10,2) not null,
+  cost_price   numeric(10,2) not null default 0,
   line_total   numeric(10,2) not null,
   created_at   timestamptz not null default now()
 );
 -- Migration for existing installs:
 -- alter table public.sale_items add column if not exists product_id integer references public.inventory(id) on delete set null;
 -- alter table public.sale_items add column if not exists is_service boolean not null default false;
+-- alter table public.sale_items add column if not exists cost_price numeric(10,2) not null default 0;
 
 create index if not exists idx_sale_items_sale_id
   on public.sale_items(sale_id);

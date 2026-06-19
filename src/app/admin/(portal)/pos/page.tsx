@@ -8,7 +8,7 @@ export default async function PosPage() {
 
   const [{ data: products }, { data: { user } }, { data: phoneRow }] = await Promise.all([
     supabase.from('inventory')
-      .select('id, name, category, image_url, price, stock, is_service')
+      .select('id, name, category, image_url, price, cost_price, stock, is_service')
       .or('stock.gt.0,is_service.eq.true')
       .order('name', { ascending: true }),
     supabase.auth.getUser(),

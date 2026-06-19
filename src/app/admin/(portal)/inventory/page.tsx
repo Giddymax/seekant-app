@@ -8,7 +8,7 @@ export default async function InventoryPage() {
   const [{ data: items }, { data: { user } }] = await Promise.all([
     supabase
       .from('inventory')
-      .select('id, name, category, image_url, price, stock, threshold, is_service')
+      .select('id, name, category, image_url, price, cost_price, stock, threshold, is_service')
       .order('is_service', { ascending: true })
       .order('name', { ascending: true }),
     supabase.auth.getUser(),
