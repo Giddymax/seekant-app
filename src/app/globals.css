@@ -479,11 +479,13 @@ html.menu-open { overflow: hidden; }
 }
 
 /* ── Admin portal layout ── */
-/* height: 100dvh overrides 100vh set via inline style when the browser supports
-   dynamic viewport units (iOS Safari 15.4+). This prevents the browser chrome
-   from obscuring the bottom of the shell on iPhone. */
 .admin-shell-outer {
   height: 100dvh;
+  overflow: clip;
+}
+
+.admin-content-col {
+  overflow: clip;
 }
 
 /* Content column shifts right on desktop to make room for the fixed sidebar */

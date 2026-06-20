@@ -17,7 +17,7 @@ export default function AdminShell({
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="admin-shell-outer" style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#0d0f18', fontFamily: 'Poppins,sans-serif' }}>
+    <div className="admin-shell-outer" style={{ display: 'flex', background: '#0d0f18', fontFamily: 'Poppins,sans-serif' }}>
       {/* Mobile overlay — tap to close */}
       <div
         className={`admin-sidebar-overlay${sidebarOpen ? ' open' : ''}`}
@@ -30,13 +30,13 @@ export default function AdminShell({
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="admin-content-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+      <div className="admin-content-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <AdminTopbar
           role={role}
           email={email}
           onToggleSidebar={() => setSidebarOpen(s => !s)}
         />
-        <main className="admin-main-padding" style={{ flex: 1, overflowY: 'auto', padding: '28px', minHeight: 0, WebkitOverflowScrolling: 'touch' }}>
+        <main className="admin-main-padding" style={{ flex: 1, overflowY: 'auto', padding: '28px', minHeight: 0 }}>
           {children}
         </main>
       </div>
