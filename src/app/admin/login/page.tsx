@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { signInWithForm, type SignInFormState } from '@/lib/actions/auth'
 
@@ -8,7 +8,6 @@ const INITIAL_STATE: SignInFormState = {}
 
 export default function AdminLoginPage() {
   const [state, formAction, isPending] = useActionState(signInWithForm, INITIAL_STATE)
-  const [showHint, setShowHint] = useState(false)
 
   useEffect(() => {
     if (state.error) toast.error(state.error)
@@ -87,22 +86,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Hint box */}
-          <div style={{ marginTop: 28 }}>
-            <button
-              onClick={() => setShowHint(h => !h)}
-              style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.35)', fontSize: 11, cursor: 'pointer', padding: 0, fontFamily: 'Poppins,sans-serif', display: 'flex', alignItems: 'center', gap: 6 }}
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              .
-            </button>
-            {showHint && (
-              <div style={{ marginTop: 12, background: '#111320', padding: '14px 16px', borderLeft: '2px solid rgba(221,184,55,.4)', fontSize: 11, color: 'rgba(255,255,255,.5)', lineHeight: 1.7 }}>
-                Create your admin account via the Supabase Dashboard → Authentication → Users → Add User, then run:<br />
-                <code style={{ color: '#d42020', fontSize: 10 }}>{"INSERT INTO profiles (id, email, role) VALUES ('<uid>', 'admin@example.com', 'admin');"}</code>
-              </div>
-            )}
-          </div>
         </div>
 
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 11, color: 'rgba(255,255,255,.2)' }}>
