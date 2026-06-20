@@ -219,7 +219,7 @@ function DonutChart({ data }: { data: Array<[string, number]> }) {
     : 'rgba(255,255,255,.08) 0% 100%'
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '150px minmax(0,1fr)', gap: 20, alignItems: 'center' }}>
+    <div className="analytics-donut-grid" style={{ display: 'grid', gridTemplateColumns: '150px minmax(0,1fr)', gap: 20, alignItems: 'center' }}>
       <div style={{ width: 150, height: 150, borderRadius: '50%', background: `conic-gradient(${stops})`, position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 34, borderRadius: '50%', background: '#181b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20, fontWeight: 800 }}>{total}</div>
       </div>

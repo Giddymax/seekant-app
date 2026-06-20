@@ -170,7 +170,7 @@ export default function ContentPage() {
 
   return (
     <div style={{ maxWidth: 720 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Site Content</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Edit all text shown on your public website.</p>
@@ -187,7 +187,7 @@ export default function ContentPage() {
               <h2 style={{ fontSize: 11, fontWeight: 800, color: '#d42020', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0, flexShrink: 0 }}>{section.title}</h2>
               <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.06)' }} />
             </div>
-            <div style={{ background: '#181b2e', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div className="admin-card-padded" style={{ background: '#181b2e', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
               {section.fields.map(({ key, label, multiline, inputType }) => (
                 <div key={key}>
                   <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 8 }}>{label}</label>

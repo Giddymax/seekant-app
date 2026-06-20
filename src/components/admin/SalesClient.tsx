@@ -484,7 +484,7 @@ export default function SalesClient({
 
       <div>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Sales</h1>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
@@ -499,7 +499,7 @@ export default function SalesClient({
         {/* ── Part-Payment Outstanding Section ── */}
         {partPayments.length > 0 && (
           <div style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <div className="sales-outstanding-header" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#f97316' }}>Outstanding Balances</div>
               <div style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(249,115,22,.15)', color: '#f97316' }}>{partPayments.length} sale{partPayments.length !== 1 ? 's' : ''}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.4)', marginLeft: 'auto' }}>
@@ -512,7 +512,7 @@ export default function SalesClient({
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
                     {['Ref', 'Customer', 'Total', 'Paid', 'Balance', 'Date', ''].map((h, i) => (
-                      <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '12px 16px', whiteSpace: 'nowrap' }}>{h}</th>
+                      <th key={i} className={['Customer', 'Paid', 'Date'].includes(h) ? 'admin-col-secondary' : undefined} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '12px 16px', whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -522,14 +522,14 @@ export default function SalesClient({
                     return (
                       <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
                         <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700 }}>{s.sale_ref}</td>
-                        <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
+                        <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
                           <div>{s.customer_name || 'Walk-in'}</div>
                           {s.customer_phone && <div style={{ fontSize: 10, color: 'rgba(255,255,255,.35)' }}>{s.customer_phone}</div>}
                         </td>
                         <td style={{ padding: '12px 16px', fontSize: 12, color: '#fff', fontWeight: 600 }}>{formatCurrency(s.total)}</td>
-                        <td style={{ padding: '12px 16px', fontSize: 12, color: '#22c55e', fontWeight: 600 }}>{formatCurrency(s.amount_paid)}</td>
+                        <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 12, color: '#22c55e', fontWeight: 600 }}>{formatCurrency(s.amount_paid)}</td>
                         <td style={{ padding: '12px 16px', fontSize: 13, color: '#f97316', fontWeight: 800 }}>{formatCurrency(balance)}</td>
-                        <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString('en-GB')}</td>
+                        <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{new Date(s.created_at).toLocaleDateString('en-GB')}</td>
                         <td style={{ padding: '12px 16px' }}>
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             <button type="button" onClick={() => setSettling(s)} className="admin-action-btn"
@@ -552,7 +552,7 @@ export default function SalesClient({
         )}
 
         {/* ── Filters ── */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+        <div className="admin-filters-row" style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -576,7 +576,7 @@ export default function SalesClient({
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
                 {['Ref', 'Customer', 'Total', 'Paid / Balance', 'Payment', 'Status', 'Date', 'Actions'].map(h => (
-                  <th key={h} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px', whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} className={['Customer', 'Paid / Balance', 'Payment', 'Date'].includes(h) ? 'admin-col-secondary' : undefined} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px', whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -587,12 +587,12 @@ export default function SalesClient({
                 return (
                   <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)', background: isPartPay ? 'rgba(249,115,22,.03)' : 'transparent' }}>
                     <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700, whiteSpace: 'nowrap' }}>{s.sale_ref}</td>
-                    <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
+                    <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.7)' }}>
                       <div>{s.customer_name || '—'}</div>
                       {s.customer_phone && <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)' }}>{s.customer_phone}</div>}
                     </td>
                     <td style={{ padding: '12px 16px', fontSize: 12, color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}>{formatCurrency(s.total)}</td>
-                    <td style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}>
+                    <td className="admin-col-secondary" style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}>
                       {isPartPay ? (
                         <div>
                           <div style={{ fontSize: 11, color: '#22c55e' }}>Paid {formatCurrency(s.amount_paid)}</div>
@@ -602,13 +602,13 @@ export default function SalesClient({
                         <span style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>{formatCurrency(s.amount_paid)}</span>
                       )}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)', whiteSpace: 'nowrap' }}>{s.payment_method}</td>
+                    <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)', whiteSpace: 'nowrap' }}>{s.payment_method}</td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: `${STATUS_COLOR[s.status] ?? '#aaa'}18`, color: STATUS_COLOR[s.status] ?? '#aaa', whiteSpace: 'nowrap' }}>
                         {s.status}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)', whiteSpace: 'nowrap' }}>
+                    <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)', whiteSpace: 'nowrap' }}>
                       {new Date(s.created_at).toLocaleDateString('en-GB')}
                     </td>
                     <td style={{ padding: '12px 16px' }}>

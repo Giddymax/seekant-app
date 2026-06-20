@@ -587,6 +587,36 @@ html.menu-open { overflow: hidden; }
   overflow: hidden;
 }
 
+/* ── Admin page headers: title + action button wrap on mobile ── */
+@media (max-width: 640px) {
+  .admin-page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+}
+
+/* ── Admin filter rows: stack inputs on mobile ── */
+@media (max-width: 640px) {
+  .admin-filters-row {
+    flex-direction: column !important;
+  }
+}
+
+/* ── Admin card padding: tighter on mobile ── */
+@media (max-width: 640px) {
+  .admin-card-padded {
+    padding: 20px 16px !important;
+  }
+}
+
+/* ── Admin modal inner: tighter padding on mobile ── */
+@media (max-width: 480px) {
+  .admin-modal-inner {
+    padding: 24px 16px !important;
+  }
+}
+
 /* ── Dashboard responsive layout ── */
 @media (max-width: 768px) {
   /* Stat cards: 4 cols → 2 cols */
@@ -597,6 +627,103 @@ html.menu-open { overflow: hidden; }
   /* Revenue chart + quick actions: side-by-side → stacked */
   .dashboard-main-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+/* Stat card values: smaller text on phone */
+@media (max-width: 480px) {
+  .dashboard-stat-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .dashboard-stat-value {
+    font-size: 20px !important;
+  }
+  .dashboard-chart-bar-label {
+    font-size: 7px !important;
+  }
+}
+
+/* ── Sales outstanding header: wrap on mobile ── */
+@media (max-width: 640px) {
+  .sales-outstanding-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+}
+
+/* ── Hero slides list items: wrap on mobile ── */
+@media (max-width: 640px) {
+  .admin-hero-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .admin-hero-row > img {
+    width: 100% !important;
+    height: 120px !important;
+  }
+}
+
+/* ── Analytics donut chart: stack on mobile ── */
+@media (max-width: 640px) {
+  .analytics-donut-grid {
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+  }
+}
+
+/* ── Theme font grid: 2 cols on tablet, 1 on phone ── */
+@media (max-width: 768px) {
+  .theme-font-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 480px) {
+  .theme-font-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Theme color picker rows: wrap on narrow screens ── */
+@media (max-width: 640px) {
+  .theme-color-row {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+  .theme-color-swatch {
+    display: none !important;
+  }
+}
+
+/* ── Pages nav items grid: stack on mobile ── */
+@media (max-width: 640px) {
+  .pages-nav-row {
+    grid-template-columns: 1fr 32px !important;
+  }
+  .pages-nav-header {
+    grid-template-columns: 1fr 32px !important;
+  }
+  .pages-nav-url-header {
+    display: none !important;
+  }
+}
+
+/* ── Legal / summary 2-col grids ── */
+@media (max-width: 640px) {
+  .admin-2col {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Quotes accordion row: wrap on mobile ── */
+@media (max-width: 640px) {
+  .admin-quote-row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .admin-quote-date {
+    width: 100% !important;
+    order: -1 !important;
   }
 }
 

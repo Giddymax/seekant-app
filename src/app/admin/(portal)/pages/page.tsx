@@ -237,7 +237,7 @@ export default function PagesPage() {
 
   return (
     <div style={{ maxWidth: 780 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Pages &amp; Navigation</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Manage navbar links, page header text, and hero background images.</p>
@@ -257,14 +257,14 @@ export default function PagesPage() {
           </p>
 
           <div style={{ background: '#181b2e', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 0 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 32px', gap: 8, marginBottom: 8 }}>
+            <div className="pages-nav-header" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 32px', gap: 8, marginBottom: 8 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Label</div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>URL / Path</div>
+              <div className="pages-nav-url-header" style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>URL / Path</div>
               <div />
             </div>
 
             {navItems.map((item, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 32px', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+              <div key={i} className="pages-nav-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 32px', gap: 8, alignItems: 'center', marginBottom: 8 }}>
                 <input
                   value={item.label}
                   onChange={e => setNav(i, 'label', e.target.value)}

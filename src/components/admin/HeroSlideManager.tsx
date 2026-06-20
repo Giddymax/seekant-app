@@ -60,7 +60,7 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Hero Slides</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Manage homepage hero carousel slides.</p>
@@ -70,7 +70,7 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
         {slides.map(s => (
-          <div key={s.id} style={{ background: '#181b2e', padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div key={s.id} className="admin-hero-row" style={{ background: '#181b2e', padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
             {s.image_url && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={s.image_url} alt="" style={{ width: 80, height: 52, objectFit: 'cover', flexShrink: 0 }} />
@@ -92,7 +92,7 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
 
       {editing && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}>
-          <div style={{ background: '#181b2e', width: '100%', maxWidth: 560, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="admin-modal-inner" style={{ background: '#181b2e', width: '100%', maxWidth: 560, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Slide' : 'New Slide'}</h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

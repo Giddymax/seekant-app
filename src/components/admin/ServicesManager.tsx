@@ -48,7 +48,7 @@ export default function ServicesManager({ initialServices }: { initialServices: 
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Services</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Manage services shown on your website.</p>
@@ -56,19 +56,19 @@ export default function ServicesManager({ initialServices }: { initialServices: 
         <button type="button" onClick={() => setEditing({ ...BLANK })} className="btn btn-gold" style={{ fontSize: 11 }}>+ Add Service</button>
       </div>
 
-      <div style={{ background: '#181b2e', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="admin-table-wrap" style={{ background: '#181b2e', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480 }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
               {['', 'Name', 'Category', 'Status', 'Order', ''].map((h, i) => (
-                <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
+                <th key={i} className={i === 0 || h === 'Category' || h === 'Order' ? 'admin-col-secondary' : undefined} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {services.map(s => (
               <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
-                <td style={{ padding: '10px 16px', width: 52 }}>
+                <td className="admin-col-secondary" style={{ padding: '10px 16px', width: 52 }}>
                   {s.image_url
                     // eslint-disable-next-line @next/next/no-img-element
                     ? <img src={s.image_url} alt="" style={{ width: 44, height: 32, objectFit: 'cover' }} />
@@ -76,17 +76,17 @@ export default function ServicesManager({ initialServices }: { initialServices: 
                   }
                 </td>
                 <td style={{ padding: '10px 16px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{s.name}</td>
-                <td style={{ padding: '10px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{s.category}</td>
+                <td className="admin-col-secondary" style={{ padding: '10px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{s.category}</td>
                 <td style={{ padding: '10px 16px' }}>
                   <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: s.active ? 'rgba(34,197,94,.15)' : 'rgba(255,255,255,.08)', color: s.active ? '#22c55e' : '#aaa' }}>
                     {s.active ? 'Active' : 'Hidden'}
                   </span>
                 </td>
-                <td style={{ padding: '10px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{s.sort_order}</td>
+                <td className="admin-col-secondary" style={{ padding: '10px 16px', fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{s.sort_order}</td>
                 <td style={{ padding: '10px 16px' }}>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button type="button" onClick={() => setEditing({ ...s })} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
-                    <button type="button" onClick={() => handleDelete(s.id)} style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
+                    <button type="button" onClick={() => setEditing({ ...s })} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
+                    <button type="button" onClick={() => handleDelete(s.id)} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -100,7 +100,7 @@ export default function ServicesManager({ initialServices }: { initialServices: 
 
       {editing && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}>
-          <div style={{ background: '#181b2e', width: '100%', maxWidth: 520, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="admin-modal-inner" style={{ background: '#181b2e', width: '100%', maxWidth: 520, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Service' : 'New Service'}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>

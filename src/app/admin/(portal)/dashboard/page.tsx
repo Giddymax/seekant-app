@@ -99,7 +99,7 @@ export default async function DashboardPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>{label}</p>
-                <p style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{value}</p>
+                <p className="dashboard-stat-value" style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{value}</p>
               </div>
               <div style={{ width: 38, height: 38, background: `${color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -118,7 +118,7 @@ export default async function DashboardPage() {
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, height: 160 }}>
             {months.map((m, i) => (
               <div key={m} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontSize: 9, color: 'rgba(255,255,255,.35)', letterSpacing: '0.04em' }}>{formatCurrency(barValues[i]).replace('GH₵', '')}</div>
+                <div className="dashboard-chart-bar-label" style={{ fontSize: 9, color: 'rgba(255,255,255,.35)', letterSpacing: '0.04em' }}>{formatCurrency(barValues[i]).replace('GH₵', '')}</div>
                 <div style={{ width: '100%', background: `rgba(221,184,55,${0.15 + 0.85 * (barValues[i] / maxBar)})`, height: `${Math.max(4, (barValues[i] / maxBar) * 120)}px`, transition: 'height .3s' }} />
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', fontWeight: 600 }}>{m}</div>
               </div>

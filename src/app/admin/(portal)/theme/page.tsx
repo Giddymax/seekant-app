@@ -75,7 +75,7 @@ export default function ThemePage() {
       <link rel="stylesheet" href={previewFontUrl} />
 
       <div style={{ maxWidth: 680 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+        <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Brand Theme</h1>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Colours, font, and text colour reflect live on the site after saving.</p>
@@ -90,11 +90,11 @@ export default function ThemePage() {
           {/* ── Brand Colours ── */}
           <div>
             {sectionHeader('Brand Colours')}
-            <div style={{ background: '#181b2e', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div className="admin-card-padded" style={{ background: '#181b2e', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
               {COLORS.map(({ key, label, defaultVal, description }) => {
                 const val = values[key] || defaultVal
                 return (
-                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                  <div key={key} className="theme-color-row" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                     <input
                       type="color"
                       value={val}
@@ -112,7 +112,7 @@ export default function ThemePage() {
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                       />
                     </div>
-                    <div style={{ width: 64, height: 52, background: val, flexShrink: 0 }} />
+                    <div className="theme-color-swatch" style={{ width: 64, height: 52, background: val, flexShrink: 0 }} />
                   </div>
                 )
               })}
@@ -122,11 +122,11 @@ export default function ThemePage() {
           {/* ── Text Colours ── */}
           <div>
             {sectionHeader('Text Colours')}
-            <div style={{ background: '#181b2e', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div className="admin-card-padded" style={{ background: '#181b2e', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
               {TEXT_COLORS.map(({ key, label, defaultVal, description }) => {
                 const val = values[key] || defaultVal
                 return (
-                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                  <div key={key} className="theme-color-row" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                     <input
                       type="color"
                       value={val}
@@ -144,8 +144,7 @@ export default function ThemePage() {
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')}
                       />
                     </div>
-                    {/* Live text preview */}
-                    <div style={{ width: 64, flexShrink: 0, textAlign: 'center' }}>
+                    <div className="theme-color-swatch" style={{ width: 64, flexShrink: 0, textAlign: 'center' }}>
                       <span style={{ fontSize: 22, fontWeight: 700, color: val, lineHeight: 1 }}>Aa</span>
                     </div>
                   </div>
@@ -161,7 +160,7 @@ export default function ThemePage() {
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', marginBottom: 20, lineHeight: 1.7 }}>
                 Select the typeface used across the entire public site. Each card shows the font in its own style. Click to select.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+              <div className="theme-font-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
                 {FONTS.map(({ value, label }) => {
                   const active = selectedFont === value
                   return (

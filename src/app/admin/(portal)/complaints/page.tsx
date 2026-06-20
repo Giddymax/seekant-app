@@ -87,7 +87,7 @@ export default function ComplaintsPage() {
 
   return (
     <div style={{ maxWidth: 860 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Customer Complaints</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>

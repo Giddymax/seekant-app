@@ -47,7 +47,7 @@ export default function SocialPage() {
 
   return (
     <div style={{ maxWidth: 640 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Social Links</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>These power the footer social icons. Clear a link to hide that icon.</p>
@@ -57,7 +57,7 @@ export default function SocialPage() {
         </button>
       </div>
 
-      <div style={{ background: '#181b2e', padding: '32px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="admin-card-padded" style={{ background: '#181b2e', padding: '32px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         {PLATFORMS.map(({ key, label, placeholder }) => (
           <div key={key}>
             <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 8 }}>{label}</label>

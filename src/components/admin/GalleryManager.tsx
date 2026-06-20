@@ -55,7 +55,7 @@ export default function GalleryManager({ initialItems }: { initialItems: Gallery
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Works &amp; Gallery</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Photos uploaded here appear on both the Our Works and Gallery pages.</p>
@@ -84,7 +84,7 @@ export default function GalleryManager({ initialItems }: { initialItems: Gallery
 
       {editing && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}>
-          <div style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="admin-modal-inner" style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Photo' : 'Add Photo'}</h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

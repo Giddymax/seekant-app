@@ -63,7 +63,7 @@ export default function LegalPage() {
 
   return (
     <div style={{ maxWidth: 860 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Legal Pages</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>Edit the Terms of Use and Privacy Policy pages. Use blank lines to separate paragraphs.</p>
@@ -76,10 +76,10 @@ export default function LegalPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
 
         {/* Terms of Use */}
-        <div style={{ background: '#181b2e', padding: '28px 32px' }}>
+        <div className="admin-card-padded" style={{ background: '#181b2e', padding: '28px 32px' }}>
           <SectionHeader title="Terms of Use" href="/terms" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div className="admin-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <div>
                 <label style={lbl}>Page Title</label>
                 <input
@@ -120,10 +120,10 @@ export default function LegalPage() {
         </div>
 
         {/* Privacy Policy */}
-        <div style={{ background: '#181b2e', padding: '28px 32px' }}>
+        <div className="admin-card-padded" style={{ background: '#181b2e', padding: '28px 32px' }}>
           <SectionHeader title="Privacy Policy" href="/privacy" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div className="admin-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <div>
                 <label style={lbl}>Page Title</label>
                 <input

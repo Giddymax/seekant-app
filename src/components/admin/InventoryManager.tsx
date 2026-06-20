@@ -61,7 +61,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Inventory</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>
@@ -91,7 +91,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,.06)' }}>
               {tableHeaders.map((h, i) => (
-                <th key={i} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
+                <th key={i} className={h === 'Category' || h === 'Cost' || h === 'Margin' || (h === '' && i === 0) ? 'admin-col-secondary' : undefined} style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 16px' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -100,7 +100,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
               const lowStock = !item.is_service && item.stock <= item.threshold
               return (
                 <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
-                  <td style={{ padding: '8px 8px 8px 16px', width: 48 }}>
+                  <td className="admin-col-secondary" style={{ padding: '8px 8px 8px 16px', width: 48 }}>
                     {item.image_url
                       // eslint-disable-next-line @next/next/no-img-element
                       ? <img src={item.image_url} alt="" style={{ width: 40, height: 40, objectFit: 'cover' }} />
@@ -110,10 +110,10 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                     }
                   </td>
                   <td style={{ padding: '12px 16px', fontSize: 13, color: '#fff', fontWeight: 600 }}>{item.name}</td>
-                  <td style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
-                  <td style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.5)' }}>{formatCurrency(item.cost_price)}</td>
+                  <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>{item.category}</td>
+                  <td className="admin-col-secondary" style={{ padding: '12px 16px', fontSize: 12, color: 'rgba(255,255,255,.5)' }}>{formatCurrency(item.cost_price)}</td>
                   <td style={{ padding: '12px 16px', fontSize: 12, color: '#d42020', fontWeight: 700 }}>{formatCurrency(item.price)}</td>
-                  <td style={{ padding: '12px 16px' }}>
+                  <td className="admin-col-secondary" style={{ padding: '12px 16px' }}>
                     {(() => {
                       const profit = item.price - item.cost_price
                       const margin = item.price > 0 ? (profit / item.price) * 100 : 0
@@ -133,8 +133,8 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                   {isAdmin && (
                     <td style={{ padding: '12px 16px' }}>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        <button onClick={() => setEditing({ ...item })} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
-                        <button onClick={() => handleDelete(item.id)} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
+                        <button onClick={() => setEditing({ ...item })} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Edit</button>
+                        <button onClick={() => handleDelete(item.id)} className="admin-action-btn" style={{ fontSize: 10, padding: '4px 12px', background: 'rgba(253,70,130,.12)', color: '#fd4682', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>Delete</button>
                       </div>
                     </td>
                   )}
@@ -151,7 +151,7 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
       {/* Edit modal */}
       {isAdmin && editing && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 24 }}>
-          <div style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="admin-modal-inner" style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '36px 36px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>{editing.id ? 'Edit Item' : 'New Item'}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Service toggle */}

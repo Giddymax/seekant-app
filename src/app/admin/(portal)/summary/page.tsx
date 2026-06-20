@@ -240,7 +240,7 @@ export default async function BusinessSummaryPage({ searchParams }: { searchPara
         }
       `}</style>
 
-      <div className="admin-print-hide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 18, marginBottom: 24, flexWrap: 'wrap' }}>
+      <div className="admin-print-hide admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 18, marginBottom: 24, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Business Summary</h1>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.45)' }}>Filter and print business insights for meetings, accounting, or management review.</p>

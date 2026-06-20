@@ -87,6 +87,7 @@ export default function QuotesPage() {
           return (
             <div key={q.id} style={{ background: '#181b2e', overflow: 'hidden' }}>
               <div
+                className="admin-quote-row"
                 onClick={() => setExpanded(isOpen ? null : q.id)}
                 style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
               >
@@ -95,7 +96,7 @@ export default function QuotesPage() {
                   <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{q.name} — <span style={{ color: '#d42020' }}>{q.service_type}</span></div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,.4)', marginTop: 2 }}>{q.email}{q.phone ? ` · ${q.phone}` : ''}</div>
                 </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', flexShrink: 0 }}>{new Date(q.created_at).toLocaleDateString()}</div>
+                <div className="admin-quote-date" style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', flexShrink: 0 }}>{new Date(q.created_at).toLocaleDateString()}</div>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="2" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}><path d="M6 9l6 6 6-6"/></svg>
               </div>
 
