@@ -52,15 +52,14 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
   const date     = new Date(sale.created_at)
   const dateStr  = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const timeStr  = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const LINE     = '--------------------------------'
-  const DBL      = '================================'
   const subtotal = items.reduce((s, i) => s + i.line_total, 0)
   const discount = sale.discount ?? 0
   const balance  = Math.max(0, sale.total - (sale.amount_paid ?? sale.total))
   const receiptText: CSSProperties = { overflowWrap: 'anywhere', wordBreak: 'break-word' }
   const headerText: CSSProperties = { minWidth: 0, flex: 1, lineHeight: '1.4', overflow: 'hidden' }
   const headerLine: CSSProperties = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
-  const separator: CSSProperties = { overflow: 'hidden', whiteSpace: 'nowrap' }
+  const singleLine: CSSProperties = { borderTop: '1px dashed #000', margin: '6px 0' }
+  const doubleLine: CSSProperties = { borderTop: '3px double #000', margin: '6px 0' }
   const itemGrid: CSSProperties = {
     display: 'grid',
     gridTemplateColumns: 'minmax(0,1fr) 38px 100px',
@@ -85,22 +84,22 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
         </div>
       </div>
 
-      <div style={{ width: '280px', maxWidth: '100%', overflow: 'hidden', margin: '0 auto' }}>
-        <div style={separator}>{DBL}</div>
+      <div style={{ overflow: 'hidden', padding: '0 4px' }}>
+        <div style={doubleLine} />
         <div style={receiptText}>Date: {dateStr} {timeStr}</div>
         <div style={receiptText}>Ref:  {sale.sale_ref}</div>
         <div style={receiptText}>Cust: {sale.customer_name || 'Walk-in'}</div>
         {sale.customer_phone && <div style={receiptText}>Tel:  {sale.customer_phone}</div>}
         <div style={receiptText}>Pay:  {sale.payment_method}</div>
         {sale.notes && <div style={receiptText}>Note: {sale.notes}</div>}
-        <div style={separator}>{LINE}</div>
+        <div style={singleLine} />
 
         <div style={{ ...itemGrid, fontWeight: 'bold' }}>
           <span>ITEM</span>
           <span style={{ textAlign: 'center' }}>QTY</span>
           <span style={amountCell}>TOTAL</span>
         </div>
-        <div style={separator}>{LINE}</div>
+        <div style={singleLine} />
 
         {items.map((item, i) => (
           <div key={i} style={itemGrid}>
@@ -110,7 +109,7 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
           </div>
         ))}
         {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
-        <div style={separator}>{LINE}</div>
+        <div style={singleLine} />
 
         <div style={summaryRow}>
           <span>SUBTOTAL</span>
@@ -122,7 +121,7 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
             <span style={amountCell}>-{formatCurrency(discount)}</span>
           </div>
         )}
-        <div style={separator}>{LINE}</div>
+        <div style={singleLine} />
         <div style={{ ...summaryRow, fontWeight: 'bold', fontSize: '13px' }}>
           <span>TOTAL</span>
           <span style={amountCell}>{formatCurrency(sale.total)}</span>
@@ -137,7 +136,7 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
             <span style={amountCell}>{formatCurrency(balance)}</span>
           </div>
         )}
-        <div style={separator}>{DBL}</div>
+        <div style={doubleLine} />
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '6px', overflowWrap: 'anywhere' }}>

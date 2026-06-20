@@ -329,7 +329,7 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         </div>
       </div>
 
-      <div style={{ width: '280px', maxWidth: '100%', overflow: 'hidden', margin: '0 auto' }}>
+      <div style={{ overflow: 'hidden', padding: '0 4px' }}>
         <div style={dblRule} />
         <div style={summaryRow}><span>Date:</span><span style={amountCell}>{dateStr} {timeStr}</span></div>
         <div style={summaryRow}><span>Ref:</span><span style={amountCell}>{snap.ref}</span></div>
