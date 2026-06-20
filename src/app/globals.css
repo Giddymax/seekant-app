@@ -435,8 +435,7 @@ html.menu-open { overflow: hidden; }
   --animate-accordion-up:   accordion-up   0.2s ease-out;
 }
 
-/* ── Admin: comprehensive iOS touch fix ── */
-/* Covers entire content column (topbar + main) and sidebar */
+/* ── Admin: comprehensive mobile touch fixes ── */
 .admin-content-col button,
 .admin-content-col a,
 .admin-content-col select,
@@ -449,9 +448,7 @@ html.menu-open { overflow: hidden; }
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent iOS Safari from auto-zooming when an input/select is focused.
-   iOS zooms the viewport whenever font-size < 16px, which shifts all tap
-   targets and breaks subsequent button taps until the user manually zooms out. */
+/* iOS: prevent auto-zoom on input focus (font-size < 16px triggers zoom) */
 @supports (-webkit-touch-callout: none) {
   .admin-content-col input,
   .admin-content-col select,
@@ -460,7 +457,7 @@ html.menu-open { overflow: hidden; }
   }
 }
 
-/* Ensure all admin buttons have cursor: pointer (iOS needs this for click events) */
+/* iOS requires cursor: pointer for click events on non-anchor elements */
 .admin-content-col button,
 .admin-sidebar button,
 .admin-hamburger,
@@ -468,12 +465,11 @@ html.menu-open { overflow: hidden; }
   cursor: pointer;
 }
 
-/* Visible pressed state so users know a tap registered */
+/* Visible pressed state so users see tap feedback */
 .admin-content-col button:active,
 .admin-sidebar button:active {
   opacity: 0.65;
 }
-
 
 /* Action buttons used inside table rows */
 .admin-action-btn {
@@ -528,8 +524,14 @@ html.menu-open { overflow: hidden; }
     z-index: 200 !important;
     transform: translateX(-100%) !important;
     transition: transform .25s ease !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
   }
-  .admin-sidebar.open { transform: translateX(0) !important; }
+  .admin-sidebar.open {
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+  }
 
   /* Show close-X and hamburger */
   .admin-sidebar-close { display: flex; }
