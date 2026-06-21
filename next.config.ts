@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**.supabase.co' },
     ],
   },
+  transpilePackages: [
+    'sonner',
+    'lucide-react',
+    'next-themes',
+    '@supabase/supabase-js',
+    '@supabase/ssr',
+  ],
 };
 
 export default nextConfig;
