@@ -169,11 +169,13 @@ export default async function Footer() {
     .map(([platform, meta]) => ({ ...meta, href: normalizeHref(socialMap[platform]) }))
     .filter(link => link.href)
 
+  const phoneVal = getContentValue(content, 'contact_phone')
+  const emailVal = getContentValue(content, 'contact_email')
   const contactItems = [
-    { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', text: getContentValue(content, 'contact_address') },
-    { icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', text: getContentValue(content, 'contact_phone') },
-    { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', text: getContentValue(content, 'contact_email') },
-    { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', text: getContentValue(content, 'contact_hours') },
+    { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', text: getContentValue(content, 'contact_address'), href: '' },
+    { icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', text: phoneVal, href: `tel:${phoneVal.replace(/\s+/g, '')}` },
+    { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', text: emailVal, href: `mailto:${emailVal}` },
+    { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', text: getContentValue(content, 'contact_hours'), href: '' },
   ]
 
   return (
@@ -226,12 +228,16 @@ export default async function Footer() {
         <div>
           <h4 style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>{getContentValue(content, 'footer_contact_title')}</h4>
           <div style={{ width: 32, height: 2, background: 'var(--brand-gold, #d42020)', marginBottom: 18 }} />
-          {contactItems.map(({ icon, text }) => (
+          {contactItems.map(({ icon, text, href }) => (
             <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold, #d42020)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }}>
                 <path d={icon} />
               </svg>
-              <span style={{ fontSize: 12, color: '#fff', lineHeight: 1.6 }}>{text}</span>
+              {href ? (
+                <a href={href} style={{ fontSize: 12, color: '#fff', lineHeight: 1.6, textDecoration: 'none', transition: 'color .15s' }}>{text}</a>
+              ) : (
+                <span style={{ fontSize: 12, color: '#fff', lineHeight: 1.6 }}>{text}</span>
+              )}
             </div>
           ))}
         </div>
