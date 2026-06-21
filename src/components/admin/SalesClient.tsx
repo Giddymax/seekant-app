@@ -16,6 +16,7 @@ type Sale = {
   payment_method: string
   status: string
   notes: string | null
+  staff_id: string | null
   created_at: string
 }
 
@@ -47,7 +48,7 @@ const inp = {
 }
 
 // ─── Thermal Receipt ──────────────────────────────────────────────────────────
-function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhone: string }) {
+function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; contactPhone: string; staffName?: string }) {
   const { sale, items } = data
   const date     = new Date(sale.created_at)
   const dateStr  = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -91,6 +92,7 @@ function ThermalReceipt({ data, contactPhone }: { data: ReceiptData; contactPhon
         <div style={receiptText}>Cust: {sale.customer_name || 'Walk-in'}</div>
         {sale.customer_phone && <div style={receiptText}>Tel:  {sale.customer_phone}</div>}
         <div style={receiptText}>Pay:  {sale.payment_method}</div>
+        {staffName && <div style={receiptText}>Serv: {staffName}</div>}
         {sale.notes && <div style={receiptText}>Note: {sale.notes}</div>}
         <div style={singleLine} />
 
@@ -342,10 +344,12 @@ export default function SalesClient({
   initialSales,
   role,
   contactPhone,
+  staffNames,
 }: {
   initialSales: Sale[]
   role: string
   contactPhone: string
+  staffNames: Record<string, string>
 }) {
   const [sales, setSales]               = useState(initialSales)
   const [statusFilter, setStatusFilter] = useState('all')
@@ -452,7 +456,7 @@ export default function SalesClient({
             </div>
             {/* Receipt preview — scrollable */}
             <div ref={receiptPreviewRef} style={{ overflowY: 'auto', flex: 1, padding: 16 }}>
-              <ThermalReceipt data={previewReceipt} contactPhone={contactPhone} />
+              <ThermalReceipt data={previewReceipt} contactPhone={contactPhone} staffName={previewReceipt.sale.staff_id ? staffNames[previewReceipt.sale.staff_id] : undefined} />
             </div>
             {/* Action buttons */}
             <div style={{ display: 'flex', gap: 8, padding: '14px 16px', borderTop: '1px solid rgba(255,255,255,.08)', flexShrink: 0 }}>

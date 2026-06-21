@@ -20,21 +20,21 @@ export default async function AdminLayout({
   if (!user) redirect('/admin/login')
 
   let role = 'staff'
-  let email = user.email ?? ''
+  let displayName = user.email ?? ''
   try {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role, email')
+      .select('role, full_name, email')
       .eq('id', user.id)
       .single()
     role = profile?.role ?? 'staff'
-    email = profile?.email ?? user.email ?? ''
+    displayName = profile?.full_name || profile?.email || user.email || ''
   } catch {
     // profile fetch failed — continue with defaults
   }
 
   return (
-    <AdminShell role={role} email={email}>
+    <AdminShell role={role} email={displayName}>
       {children}
     </AdminShell>
   )
