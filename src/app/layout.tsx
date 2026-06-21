@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Toaster } from '@/components/ui/sonner'
+import dynamic from 'next/dynamic'
 import ThemeProvider from '@/components/ThemeProvider'
 import './globals.css'
+
+const Toaster = dynamic(
+  () => import('@/components/ui/sonner').then(m => m.Toaster),
+  { ssr: false }
+)
 
 export const viewport: Viewport = {
   width: 'device-width',
