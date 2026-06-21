@@ -33,7 +33,9 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
     : ['', 'Name', 'Category', 'Cost', 'Selling', 'Margin', 'Stock / Type']
 
   const filtered = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
-  const lowStockCount = items.filter(i => !i.is_service && i.stock <= i.threshold).length
+  const lowStockItems = items.filter(i => !i.is_service && i.stock > 0 && i.stock <= i.threshold)
+  const outOfStockItems = items.filter(i => !i.is_service && i.stock === 0)
+  const lowStockCount = lowStockItems.length + outOfStockItems.length
 
   const handleSave = () => {
     if (!isAdmin) { toast.error('Only admins can manage inventory.'); return }
@@ -86,6 +88,29 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
         />
       </div>
 
+      {(outOfStockItems.length > 0 || lowStockItems.length > 0) && (
+        <div style={{ marginBottom: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {outOfStockItems.length > 0 && (
+            <div style={{ flex: 1, minWidth: 200, padding: '12px 16px', background: 'rgba(253,70,130,.08)', borderLeft: '3px solid #fd4682' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#fd4682', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Out of Stock ({outOfStockItems.length})</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)', lineHeight: 1.6 }}>
+                {outOfStockItems.slice(0, 5).map(i => i.name).join(', ')}
+                {outOfStockItems.length > 5 && ` +${outOfStockItems.length - 5} more`}
+              </div>
+            </div>
+          )}
+          {lowStockItems.length > 0 && (
+            <div style={{ flex: 1, minWidth: 200, padding: '12px 16px', background: 'rgba(249,115,22,.06)', borderLeft: '3px solid #f97316' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#f97316', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Low Stock ({lowStockItems.length})</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)', lineHeight: 1.6 }}>
+                {lowStockItems.slice(0, 5).map(i => `${i.name} (${i.stock})`).join(', ')}
+                {lowStockItems.length > 5 && ` +${lowStockItems.length - 5} more`}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="admin-table-wrap" style={{ background: '#181b2e' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 500 }}>
           <thead>
@@ -98,8 +123,13 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
           <tbody>
             {filtered.map(item => {
               const lowStock = !item.is_service && item.stock <= item.threshold
+              const outOfStock = !item.is_service && item.stock === 0
               return (
-                <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,.04)' }}>
+                <tr key={item.id} style={{
+                  borderBottom: '1px solid rgba(255,255,255,.04)',
+                  borderLeft: outOfStock ? '3px solid #fd4682' : lowStock ? '3px solid #f97316' : '3px solid transparent',
+                  background: outOfStock ? 'rgba(253,70,130,.04)' : lowStock ? 'rgba(249,115,22,.03)' : 'transparent',
+                }}>
                   <td className="admin-col-secondary" style={{ padding: '8px 8px 8px 16px', width: 48 }}>
                     {item.image_url
                       // eslint-disable-next-line @next/next/no-img-element
@@ -124,10 +154,12 @@ export default function InventoryManager({ initialItems, role }: { initialItems:
                   <td style={{ padding: '12px 16px' }}>
                     {item.is_service
                       ? <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(84,185,253,.12)', color: '#54b9fd' }}>SERVICE</span>
-                      : <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 12, color: lowStock ? '#fd4682' : '#fff', fontWeight: lowStock ? 700 : 400 }}>{item.stock}</span>
-                          {lowStock && <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', background: 'rgba(253,70,130,.15)', color: '#fd4682' }}>LOW</span>}
-                        </div>
+                      : outOfStock
+                        ? <span style={{ fontSize: 9, fontWeight: 700, padding: '3px 8px', background: 'rgba(253,70,130,.18)', color: '#fd4682', letterSpacing: '0.06em' }}>OUT OF STOCK</span>
+                        : <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 12, color: lowStock ? '#f97316' : '#fff', fontWeight: lowStock ? 700 : 400 }}>{item.stock}</span>
+                            {lowStock && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', background: 'rgba(249,115,22,.15)', color: '#f97316', letterSpacing: '0.06em' }}>LOW STOCK</span>}
+                          </div>
                     }
                   </td>
                   {isAdmin && (
