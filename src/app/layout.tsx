@@ -1,12 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import dynamic from 'next/dynamic'
 import ThemeProvider from '@/components/ThemeProvider'
+import ToasterWrapper from '@/components/ui/toaster-wrapper'
 import './globals.css'
-
-const Toaster = dynamic(
-  () => import('@/components/ui/sonner').then(m => m.Toaster),
-  { ssr: false }
-)
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col antialiased">
         <ThemeProvider />
         {children}
-        <Toaster richColors position="top-right" />
+        <ToasterWrapper />
       </body>
     </html>
   )
