@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
+import { Toaster } from '@/components/ui/sonner'
 import ThemeProvider from '@/components/ThemeProvider'
-import ToasterWrapper from '@/components/ui/toaster-wrapper'
 import './globals.css'
 
 export const viewport: Viewport = {
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col antialiased">
         <ThemeProvider />
         {children}
-        <ToasterWrapper />
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   )
