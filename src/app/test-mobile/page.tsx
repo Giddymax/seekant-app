@@ -1,29 +1,14 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import Script from 'next/script'
 
 export default function MobileTestPage() {
-  const [hydrated, setHydrated] = useState(false)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    setHydrated(true)
-
-    // Also add a raw DOM listener to the document as proof JS runs
-    const marker = document.getElementById('js-marker')
-    if (marker) marker.textContent = 'JS IS RUNNING'
-    if (marker) marker.style.background = '#22c55e'
-  }, [])
-
   return (
     <div style={{ minHeight: '100vh', background: '#0d0f18', padding: 24, fontFamily: 'sans-serif' }}>
       <h1 style={{ color: '#fff', fontSize: 18, fontWeight: 800, marginBottom: 16 }}>
-        Mobile Debug
+        Mobile Debug v2
       </h1>
 
-      {/* This div will be changed by useEffect if JS runs */}
       <div
-        id="js-marker"
+        id="raw-js-test"
         style={{
           padding: 16,
           background: '#d42020',
@@ -34,28 +19,12 @@ export default function MobileTestPage() {
           marginBottom: 16,
         }}
       >
-        JS NOT RUNNING
+        RAW JS: NOT RUNNING
       </div>
-
-      <div style={{
-        padding: 16,
-        background: hydrated ? '#22c55e' : '#d42020',
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 700,
-        textAlign: 'center',
-        marginBottom: 16,
-      }}>
-        React hydrated: {hydrated ? 'YES' : 'NO'}
-      </div>
-
-      <p style={{ color: '#fff', fontSize: 20, marginBottom: 16 }}>
-        Count: {count}
-      </p>
 
       <button
+        id="raw-btn"
         type="button"
-        onClick={() => setCount(c => c + 1)}
         style={{
           padding: '20px 32px',
           background: '#54b9fd',
@@ -69,8 +38,22 @@ export default function MobileTestPage() {
           marginBottom: 16,
         }}
       >
-        TAP ME (+1)
+        TAP ME (raw JS)
       </button>
+
+      <div
+        id="tap-result"
+        style={{
+          padding: 16,
+          background: '#181b2e',
+          color: '#fff',
+          fontSize: 16,
+          textAlign: 'center',
+          marginBottom: 16,
+        }}
+      >
+        tap count: 0
+      </div>
 
       <a
         href="/"
@@ -87,6 +70,30 @@ export default function MobileTestPage() {
       >
         Go Home (plain link)
       </a>
+
+      <Script id="raw-test" strategy="afterInteractive">{`
+        (function() {
+          var marker = document.getElementById('raw-js-test');
+          if (marker) {
+            marker.textContent = 'RAW JS: RUNNING';
+            marker.style.background = '#22c55e';
+          }
+          var count = 0;
+          var btn = document.getElementById('raw-btn');
+          var result = document.getElementById('tap-result');
+          if (btn && result) {
+            btn.addEventListener('click', function() {
+              count++;
+              result.textContent = 'tap count: ' + count;
+            });
+            btn.addEventListener('touchend', function(e) {
+              e.preventDefault();
+              count++;
+              result.textContent = 'tap count: ' + count + ' (touch)';
+            });
+          }
+        })();
+      `}</Script>
     </div>
   )
 }
