@@ -248,6 +248,30 @@ export async function updateQuoteStatus(id: string, status: string) {
   return { success: true }
 }
 
+export async function updateQuote(id: string, fields: {
+  name?: string
+  email?: string
+  phone?: string
+  service_type?: string
+  quantity?: string
+  deadline?: string
+  details?: string
+}) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('quote_requests').update(fields).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/quotes')
+  return { success: true }
+}
+
+export async function deleteQuote(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('quote_requests').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/quotes')
+  return { success: true }
+}
+
 // ── STAFF ACCOUNTS ────────────────────────────────────────
 export async function createStaffAccount(fd: FormData) {
   const supabase = createAdminClient()

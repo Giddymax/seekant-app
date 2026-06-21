@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
-import { updateQuoteStatus } from '@/lib/actions/admin'
+import { updateQuoteStatus, updateQuote, deleteQuote } from '@/lib/actions/admin'
 
 type Quote = {
   id: string
@@ -34,10 +34,98 @@ const STATUS_TEXT: Record<string, string> = {
 }
 const STATUSES = ['pending', 'reviewed', 'quoted', 'completed', 'cancelled']
 
+const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
+const lbl = { display: 'block' as const, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,.45)', marginBottom: 6 }
+
+function EditModal({ quote, onClose, onSaved }: { quote: Quote; onClose: () => void; onSaved: (updated: Partial<Quote>) => void }) {
+  const [form, setForm] = useState({
+    name: quote.name,
+    email: quote.email,
+    phone: quote.phone ?? '',
+    service_type: quote.service_type,
+    quantity: quote.quantity ?? '',
+    deadline: quote.deadline ?? '',
+    details: quote.details,
+  })
+  const [isPending, startTransition] = useTransition()
+
+  const handleSave = () => {
+    if (!form.name || !form.email) { toast.error('Name and email are required'); return }
+    startTransition(async () => {
+      const result = await updateQuote(quote.id, form)
+      if (result?.error) { toast.error(result.error); return }
+      toast.success('Quote updated')
+      onSaved(form)
+      onClose()
+    })
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24 }}>
+      <div style={{ background: '#181b2e', width: '100%', maxWidth: 500, padding: '32px', maxHeight: '90vh', overflowY: 'auto' }}>
+        <h2 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 24 }}>Edit Quote Request</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Name *</label>
+              <input title="Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+            <div>
+              <label style={lbl}>Email *</label>
+              <input title="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+          </div>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Phone</label>
+              <input title="Phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+            <div>
+              <label style={lbl}>Service Type</label>
+              <input title="Service Type" value={form.service_type} onChange={e => setForm(f => ({ ...f, service_type: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+          </div>
+          <div className="admin-modal-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <label style={lbl}>Quantity</label>
+              <input title="Quantity" value={form.quantity} onChange={e => setForm(f => ({ ...f, quantity: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+            <div>
+              <label style={lbl}>Deadline</label>
+              <input title="Deadline" value={form.deadline} onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))} style={inp}
+                onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+            </div>
+          </div>
+          <div>
+            <label style={lbl}>Project Details</label>
+            <textarea title="Details" rows={5} value={form.details} onChange={e => setForm(f => ({ ...f, details: e.target.value }))} style={{ ...inp, resize: 'vertical' }}
+              onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} />
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+          <button type="button" onClick={handleSave} disabled={isPending} className="btn btn-gold" style={{ fontSize: 11 }}>
+            {isPending ? 'Saving…' : 'Save Changes'}
+          </button>
+          <button type="button" onClick={onClose} style={{ fontSize: 11, padding: '10px 18px', background: 'rgba(255,255,255,.06)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'Poppins,sans-serif' }}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function QuotesPage() {
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [editing, setEditing] = useState<Quote | null>(null)
   const [isPending, startTransition] = useTransition()
+  const [role, setRole] = useState<string>('staff')
 
   useEffect(() => {
     const supabase = createClient()
@@ -47,7 +135,16 @@ export default function QuotesPage() {
       .order('created_at', { ascending: false })
       .limit(200)
       .then(({ data }) => setQuotes(data ?? []))
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        supabase.from('profiles').select('role').eq('id', user.id).single()
+          .then(({ data }) => { if (data?.role) setRole(data.role) })
+      }
+    })
   }, [])
+
+  const isAdmin = role === 'admin'
 
   const handleStatus = (id: string, status: string) => {
     startTransition(async () => {
@@ -60,10 +157,29 @@ export default function QuotesPage() {
     })
   }
 
-  const inp = { background: '#111320', border: '1px solid rgba(255,255,255,.1)', color: '#fff', fontSize: 11, fontFamily: 'Poppins,sans-serif', padding: '4px 8px', cursor: 'pointer', outline: 'none' }
+  const handleDelete = (q: Quote) => {
+    if (!confirm(`Delete quote from "${q.name}"? This cannot be undone.`)) return
+    startTransition(async () => {
+      const result = await deleteQuote(q.id)
+      if (result?.error) { toast.error(result.error); return }
+      toast.success('Quote deleted')
+      setQuotes(qs => qs.filter(x => x.id !== q.id))
+      if (expanded === q.id) setExpanded(null)
+    })
+  }
+
+  const handleEditSaved = (id: string, updates: Partial<Quote>) => {
+    setQuotes(q => q.map(x => x.id === id ? { ...x, ...updates } : x))
+  }
+
+  const selectInp = { background: '#111320', border: '1px solid rgba(255,255,255,.1)', color: '#fff', fontSize: 11, fontFamily: 'Poppins,sans-serif', padding: '4px 8px', cursor: 'pointer', outline: 'none' }
 
   return (
     <div>
+      {editing && (
+        <EditModal quote={editing} onClose={() => setEditing(null)} onSaved={u => handleEditSaved(editing.id, u)} />
+      )}
+
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Quote Requests</h1>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)' }}>All quote submissions from the website. Update status to track progress.</p>
@@ -110,18 +226,30 @@ export default function QuotesPage() {
                     <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Project Details</div>
                     <div style={{ fontSize: 12, color: 'rgba(255,255,255,.7)', lineHeight: 1.7, background: '#111320', padding: '12px 14px', whiteSpace: 'pre-wrap' }}>{q.details}</div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,.4)' }}>Update status:</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,.4)' }}>Status:</span>
                     <select
                       title="Update status"
                       value={status}
                       disabled={isPending}
                       onChange={e => handleStatus(q.id, e.target.value)}
-                      style={inp}
+                      style={selectInp}
                     >
                       {STATUSES.map(s => <option key={s} value={s} style={{ textTransform: 'capitalize' }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                     </select>
                     <a href={`mailto:${q.email}`} style={{ fontSize: 11, padding: '4px 14px', background: 'rgba(221,184,55,.12)', color: '#d42020', textDecoration: 'none', fontFamily: 'Poppins,sans-serif' }}>Reply by Email</a>
+                    {isAdmin && (
+                      <button type="button" onClick={() => setEditing(q)} className="admin-action-btn"
+                        style={{ fontSize: 11, padding: '4px 14px', background: 'rgba(84,185,253,.1)', color: '#54b9fd', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
+                        Edit
+                      </button>
+                    )}
+                    {isAdmin && (
+                      <button type="button" onClick={() => handleDelete(q)} disabled={isPending} className="admin-action-btn"
+                        style={{ fontSize: 11, padding: '4px 14px', background: 'rgba(253,70,130,.1)', color: '#fd4682', border: 'none', fontFamily: 'Poppins,sans-serif' }}>
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
