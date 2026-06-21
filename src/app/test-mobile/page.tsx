@@ -1,55 +1,47 @@
-import Script from 'next/script'
-
 export default function MobileTestPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#0d0f18', padding: 24, fontFamily: 'sans-serif' }}>
       <h1 style={{ color: '#fff', fontSize: 18, fontWeight: 800, marginBottom: 16 }}>
-        Mobile Debug v2
+        Mobile Debug v3
       </h1>
+
+      {/* noscript: only shows if JavaScript is DISABLED in the browser */}
+      <noscript>
+        <div style={{
+          padding: 16, background: '#ff0000', color: '#fff',
+          fontSize: 18, fontWeight: 700, textAlign: 'center', marginBottom: 16,
+        }}>
+          JAVASCRIPT IS DISABLED IN YOUR BROWSER
+        </div>
+      </noscript>
 
       <div
         id="raw-js-test"
         style={{
-          padding: 16,
-          background: '#d42020',
-          color: '#fff',
-          fontSize: 16,
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: 16,
+          padding: 16, background: '#d42020', color: '#fff',
+          fontSize: 16, fontWeight: 700, textAlign: 'center', marginBottom: 16,
         }}
       >
-        RAW JS: NOT RUNNING
+        JS STATUS: NOT RUNNING
       </div>
 
       <button
         id="raw-btn"
         type="button"
         style={{
-          padding: '20px 32px',
-          background: '#54b9fd',
-          color: '#000',
-          border: 'none',
-          fontSize: 18,
-          fontWeight: 700,
-          cursor: 'pointer',
-          display: 'block',
-          width: '100%',
-          marginBottom: 16,
+          padding: '20px 32px', background: '#54b9fd', color: '#000',
+          border: 'none', fontSize: 18, fontWeight: 700, cursor: 'pointer',
+          display: 'block', width: '100%', marginBottom: 16,
         }}
       >
-        TAP ME (raw JS)
+        TAP ME
       </button>
 
       <div
         id="tap-result"
         style={{
-          padding: 16,
-          background: '#181b2e',
-          color: '#fff',
-          fontSize: 16,
-          textAlign: 'center',
-          marginBottom: 16,
+          padding: 16, background: '#181b2e', color: '#fff',
+          fontSize: 16, textAlign: 'center', marginBottom: 16,
         }}
       >
         tap count: 0
@@ -58,42 +50,24 @@ export default function MobileTestPage() {
       <a
         href="/"
         style={{
-          display: 'block',
-          padding: '20px 32px',
-          background: '#ddb837',
-          color: '#000',
-          fontSize: 18,
-          fontWeight: 700,
-          textAlign: 'center',
+          display: 'block', padding: '20px 32px', background: '#ddb837',
+          color: '#000', fontSize: 18, fontWeight: 700, textAlign: 'center',
           textDecoration: 'none',
         }}
       >
-        Go Home (plain link)
+        Go Home
       </a>
 
-      <Script id="raw-test" strategy="afterInteractive">{`
-        (function() {
-          var marker = document.getElementById('raw-js-test');
-          if (marker) {
-            marker.textContent = 'RAW JS: RUNNING';
-            marker.style.background = '#22c55e';
-          }
-          var count = 0;
-          var btn = document.getElementById('raw-btn');
-          var result = document.getElementById('tap-result');
-          if (btn && result) {
-            btn.addEventListener('click', function() {
-              count++;
-              result.textContent = 'tap count: ' + count;
-            });
-            btn.addEventListener('touchend', function(e) {
-              e.preventDefault();
-              count++;
-              result.textContent = 'tap count: ' + count + ' (touch)';
-            });
-          }
-        })();
-      `}</Script>
+      {/* Raw inline script - runs immediately, no React/Next.js dependency */}
+      <script dangerouslySetInnerHTML={{ __html: `
+        document.getElementById('raw-js-test').textContent = 'JS STATUS: RUNNING';
+        document.getElementById('raw-js-test').style.background = '#22c55e';
+        var c = 0;
+        document.getElementById('raw-btn').onclick = function() {
+          c++;
+          document.getElementById('tap-result').textContent = 'tap count: ' + c;
+        };
+      ` }} />
     </div>
   )
 }
