@@ -1,0 +1,58 @@
+{
+  "name": "Seekant Multimedia",
+  "short_name": "Seekant",
+  "description": "Design. Print. Brand. — Professional printing, branding, and design services in Asuom, Ghana.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0f18",
+  "theme_color": "#d42020",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "967x967",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Point of Sale",
+      "short_name": "POS",
+      "url": "/admin/pos",
+      "description": "Open the Point of Sale",
+      "icons": [{ "src": "/logo.png", "sizes": "967x967" }]
+    },
+    {
+      "name": "Get a Quote",
+      "short_name": "Quote",
+      "url": "/quote",
+      "description": "Request a free quote"
+    }
+  ]
+}
