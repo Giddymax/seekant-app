@@ -172,8 +172,11 @@ create trigger site_content_updated_at
 
 -- ─── SOCIAL LINKS ────────────────────────────────────────────────────────────
 create table if not exists public.social_links (
-  platform   text primary key,
+  id         uuid primary key default uuid_generate_v4(),
+  platform   text not null unique,
+  label      text,
   url        text not null,
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

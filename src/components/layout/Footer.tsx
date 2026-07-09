@@ -10,6 +10,7 @@ type SiteContentRow = {
 
 type SocialLinkRow = {
   platform: string
+  label: string | null
   url: string
 }
 
@@ -99,6 +100,8 @@ const SOCIAL_META: Record<string, { label: string; color: string; d: string }> =
   },
 }
 
+const GENERIC_LINK_ICON_D = 'M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3zM8.603 16.5a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 10-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3z'
+
 function getContentValue(content: Record<string, string>, key: string) {
   return content[key]?.trim() || CONTENT_DEFAULTS[key] || ''
 }
@@ -155,19 +158,25 @@ export default async function Footer() {
 
   const [{ data: contentRows }, { data: socialRows }] = await Promise.all([
     supabase.from('site_content').select('key,value'),
-    supabase.from('social_links').select('platform,url'),
+    supabase.from('social_links').select('platform,label,url').order('sort_order'),
   ])
 
   const content = {
     ...CONTENT_DEFAULTS,
     ...Object.fromEntries(((contentRows ?? []) as SiteContentRow[]).map(row => [row.key, row.value])),
   }
-  const socialMap = Object.fromEntries(((socialRows ?? []) as SocialLinkRow[]).map(row => [row.platform, row.url]))
   const quickLinks = editableLinks(content, QUICK_LINKS)
   const serviceLinks = editableLinks(content, SERVICE_LINKS)
-  const socialLinks = Object.entries(SOCIAL_META)
-    .map(([platform, meta]) => ({ ...meta, href: normalizeHref(socialMap[platform]) }))
-    .filter(link => link.href)
+  const socialLinks = ((socialRows ?? []) as SocialLinkRow[])
+    .map(row => {
+      const href = normalizeHref(row.url)
+      if (!href) return null
+      const meta = SOCIAL_META[row.platform]
+      return meta
+        ? { label: meta.label, color: meta.color, d: meta.d, viewBox: '0 0 24 24', href }
+        : { label: row.label || 'Link', color: '#ffffff', d: GENERIC_LINK_ICON_D, viewBox: '0 0 20 20', href }
+    })
+    .filter((link): link is NonNullable<typeof link> => link !== null)
 
   const phoneVal = getContentValue(content, 'contact_phone')
   const emailVal = getContentValue(content, 'contact_email')
@@ -195,9 +204,9 @@ export default async function Footer() {
           </p>
           {socialLinks.length > 0 && (
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              {socialLinks.map(({ label, href, color, d }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} title={label} className="footer-social-link">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill={color} style={{ flexShrink: 0 }}>
+              {socialLinks.map(({ label, href, color, d, viewBox }) => (
+                <a key={href} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} title={label} className="footer-social-link">
+                  <svg width="16" height="16" viewBox={viewBox} fill={color} style={{ flexShrink: 0 }}>
                     <path d={d} />
                   </svg>
                 </a>

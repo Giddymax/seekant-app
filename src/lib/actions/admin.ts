@@ -132,6 +132,34 @@ export async function saveSocialLinks(links: Record<string, string>) {
   return { success: true }
 }
 
+export async function upsertSocialLink(fd: FormData) {
+  const supabase = await createClient()
+  const id = fd.get('id') as string | null
+  const label = (fd.get('label') as string) || null
+  const rawPlatform = fd.get('platform') as string
+  const platform = rawPlatform || `custom-${slugify(label ?? '')}-${Date.now().toString(36)}`
+  const url = normalizeExternalUrl(fd.get('url') as string)
+  if (!url) return { error: 'Enter a valid URL.' }
+
+  const payload = { platform, label, url }
+  const { error } = id
+    ? await supabase.from('social_links').update(payload).eq('id', id)
+    : await supabase.from('social_links').insert(payload)
+  if (error) return { error: error.message }
+  revalidatePath('/', 'layout')
+  revalidatePath('/admin/content')
+  return { success: true }
+}
+
+export async function deleteSocialLink(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('social_links').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/', 'layout')
+  revalidatePath('/admin/content')
+  return { success: true }
+}
+
 // ── HERO SLIDES ───────────────────────────────────────────
 export async function upsertHeroSlide(fd: FormData) {
   const supabase = await createClient()
