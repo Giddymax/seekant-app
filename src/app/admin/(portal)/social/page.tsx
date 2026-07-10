@@ -35,8 +35,12 @@ export default function SocialPage() {
   }
 
   const handleDelete = (key: string) => {
-    setLinks(l => ({ ...l, [key]: '' }))
-    toast.info(`${PLATFORMS.find(p => p.key === key)?.label} link cleared — save to apply.`)
+    startTransition(async () => {
+      const result = await saveSocialLinks({ [key]: '' })
+      if (result?.error) { toast.error(result.error); return }
+      setLinks(l => ({ ...l, [key]: '' }))
+      toast.success(`${PLATFORMS.find(p => p.key === key)?.label} link deleted.`)
+    })
   }
 
   const inp: React.CSSProperties = {
@@ -85,18 +89,20 @@ export default function SocialPage() {
               <button
                 type="button"
                 onClick={() => handleDelete(key)}
-                title={`Remove ${label} link`}
-                disabled={!links[key]}
+                title={`Delete ${label} link`}
+                disabled={!links[key] || isPending}
+                className="admin-action-btn"
                 style={{
-                  width: 34, height: 34, flexShrink: 0,
-                  background: links[key] ? 'rgba(255,60,60,.1)' : 'rgba(255,255,255,.04)',
-                  border: `1px solid ${links[key] ? 'rgba(255,60,60,.25)' : 'rgba(255,255,255,.08)'}`,
-                  color: links[key] ? 'rgba(255,100,100,.8)' : 'rgba(255,255,255,.2)',
-                  cursor: links[key] ? 'pointer' : 'default',
-                  fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0, padding: '9px 14px', fontSize: 10, fontWeight: 700,
+                  letterSpacing: '0.04em', fontFamily: 'inherit',
+                  background: links[key] ? 'rgba(239,68,68,.1)' : 'rgba(255,255,255,.04)',
+                  border: 'none',
+                  color: links[key] ? '#ef4444' : 'rgba(255,255,255,.2)',
+                  cursor: links[key] && !isPending ? 'pointer' : 'default',
+                  opacity: isPending ? 0.6 : 1,
                 }}
               >
-                ×
+                Delete
               </button>
             </div>
           </div>
@@ -104,7 +110,7 @@ export default function SocialPage() {
       </div>
 
       <p style={{ fontSize: 11, color: 'rgba(255,255,255,.22)', marginTop: 12 }}>
-        Click × to clear a link, then Save to remove it from the footer. Icons with no URL are hidden automatically.
+        Click Delete to remove a link and hide its footer icon immediately. Typing a new URL still requires Save Links.
       </p>
     </div>
   )
