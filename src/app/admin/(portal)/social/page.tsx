@@ -17,6 +17,7 @@ const PLATFORMS = [
 
 export default function SocialPage() {
   const [links, setLinks] = useState<Record<string, string>>({})
+  const [backup, setBackup] = useState<Record<string, string>>({})
   const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
@@ -35,11 +36,25 @@ export default function SocialPage() {
   }
 
   const handleDelete = (key: string) => {
+    const previous = links[key] ?? ''
     startTransition(async () => {
       const result = await saveSocialLinks({ [key]: '' })
       if (result?.error) { toast.error(result.error); return }
       setLinks(l => ({ ...l, [key]: '' }))
+      if (previous) setBackup(b => ({ ...b, [key]: previous }))
       toast.success(`${PLATFORMS.find(p => p.key === key)?.label} link deleted.`)
+    })
+  }
+
+  const handleRestore = (key: string) => {
+    const previous = backup[key]
+    if (!previous) return
+    startTransition(async () => {
+      const result = await saveSocialLinks({ [key]: previous })
+      if (result?.error) { toast.error(result.error); return }
+      setLinks(l => ({ ...l, [key]: previous }))
+      setBackup(b => { const next = { ...b }; delete next[key]; return next })
+      toast.success(`${PLATFORMS.find(p => p.key === key)?.label} link restored.`)
     })
   }
 
@@ -86,31 +101,52 @@ export default function SocialPage() {
                   Open ↗
                 </a>
               )}
-              <button
-                type="button"
-                onClick={() => handleDelete(key)}
-                title={`Delete ${label} link`}
-                disabled={!links[key] || isPending}
-                className="admin-action-btn"
-                style={{
-                  flexShrink: 0, padding: '9px 14px', fontSize: 10, fontWeight: 700,
-                  letterSpacing: '0.04em', fontFamily: 'inherit',
-                  background: links[key] ? 'rgba(239,68,68,.1)' : 'rgba(255,255,255,.04)',
-                  border: 'none',
-                  color: links[key] ? '#ef4444' : 'rgba(255,255,255,.2)',
-                  cursor: links[key] && !isPending ? 'pointer' : 'default',
-                  opacity: isPending ? 0.6 : 1,
-                }}
-              >
-                Delete
-              </button>
+              {links[key] || !backup[key] ? (
+                <button
+                  type="button"
+                  onClick={() => handleDelete(key)}
+                  title={`Delete ${label} link`}
+                  disabled={!links[key] || isPending}
+                  className="admin-action-btn"
+                  style={{
+                    flexShrink: 0, padding: '9px 14px', fontSize: 10, fontWeight: 700,
+                    letterSpacing: '0.04em', fontFamily: 'inherit',
+                    background: links[key] ? 'rgba(239,68,68,.1)' : 'rgba(255,255,255,.04)',
+                    border: 'none',
+                    color: links[key] ? '#ef4444' : 'rgba(255,255,255,.2)',
+                    cursor: links[key] && !isPending ? 'pointer' : 'default',
+                    opacity: isPending ? 0.6 : 1,
+                  }}
+                >
+                  Delete
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleRestore(key)}
+                  title={`Restore ${label} link`}
+                  disabled={isPending}
+                  className="admin-action-btn"
+                  style={{
+                    flexShrink: 0, padding: '9px 14px', fontSize: 10, fontWeight: 700,
+                    letterSpacing: '0.04em', fontFamily: 'inherit',
+                    background: 'rgba(34,197,94,.1)',
+                    border: 'none',
+                    color: '#22c55e',
+                    cursor: isPending ? 'default' : 'pointer',
+                    opacity: isPending ? 0.6 : 1,
+                  }}
+                >
+                  Restore
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
 
       <p style={{ fontSize: 11, color: 'rgba(255,255,255,.22)', marginTop: 12 }}>
-        Click Delete to remove a link and hide its footer icon immediately. Typing a new URL still requires Save Links.
+        Click Delete to remove a link and hide its footer icon immediately. A Restore button appears until you leave this page, letting you undo the delete. Typing a new URL still requires Save Links.
       </p>
     </div>
   )
