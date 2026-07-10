@@ -84,7 +84,8 @@ export default function SocialLinksManager() {
       .from('social_links')
       .select('id,platform,label,url')
       .order('sort_order')
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) toast.error(`Could not load social links: ${error.message}`)
         if (data) setLinks(data as SocialLink[])
         setLoading(false)
       })
