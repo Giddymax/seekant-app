@@ -237,7 +237,7 @@ Run through this after the site is live:
 - [ ] Visit the live URL and confirm the homepage loads correctly
 - [ ] Visit `/admin/login` and log in successfully
 - [ ] Go to **Site Content** and fill in your real business address, phone, and email
-- [ ] Go to **Social Links** and add your real social media URLs
+- [ ] Go to **Site Content → Footer Social Icons** and add your real social media URLs
 - [ ] Go to **Hero Slides** and upload your own images (replace placeholder content)
 - [ ] Go to **Gallery** and upload real photos of your work
 - [ ] Go to **Services** and review/edit the 18 default services
@@ -259,13 +259,12 @@ Once logged in at `/admin`, here is what each page does:
 | Sales | Staff + Admin | View all past sales and update status |
 | Inventory | Staff + Admin | Manage products used in the POS |
 | Analytics | **Admin only** | Revenue charts, quote breakdowns, top products |
-| Site Content | **Admin only** | Edit all text on the website (About, Contact, FAQ, Why Choose Us) |
+| Site Content | **Admin only** | Edit all text on the website (About, Contact, FAQ, Why Choose Us) and manage footer social media links |
 | Hero Slides | **Admin only** | Manage homepage carousel slides |
 | Gallery | **Admin only** | Upload and manage photos shown on Gallery and Works pages |
 | Services | **Admin only** | Manage the list of services shown on the website |
 | Blog | **Admin only** | Write and publish blog articles |
 | Quote Requests | Staff + Admin | View and respond to customer quote submissions |
-| Social Links | **Admin only** | Update Facebook, WhatsApp, Instagram, and other URLs |
 | Theme | **Admin only** | Adjust brand colours |
 | Staff Accounts | **Admin only** | Create and manage staff login accounts |
 

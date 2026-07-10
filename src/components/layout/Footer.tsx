@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import NewsletterBar from '@/components/home/NewsletterBar'
 import { createClient } from '@/lib/supabase/server'
@@ -192,8 +193,7 @@ export default async function Footer() {
       <div className="footer-grid" style={{ maxWidth: 1280, margin: '0 auto' }}>
         <div>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 18, textDecoration: 'none' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Seekant Multimedia" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
+            <Image src="/logo.png" alt="Seekant Multimedia" width={40} height={40} style={{ borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 }} />
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.15 }}>
               {getContentValue(content, 'footer_brand_name')}
               <small style={{ display: 'block', fontSize: 10, fontWeight: 400, color: '#fff', letterSpacing: '0.12em' }}>{getContentValue(content, 'footer_brand_subtitle')}</small>

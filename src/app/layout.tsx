@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Toaster } from '@/components/ui/sonner'
 import ThemeProvider from '@/components/ThemeProvider'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 export const viewport: Viewport = {
@@ -11,6 +12,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Seekant Multimedia – Design. Print. Brand.',
   description:
     'Professional printing, branding, and design services in Asuom, Eastern Region, Ghana. Business cards, banners, jerseys, and more.',

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
@@ -85,9 +86,8 @@ export default function Navbar({ navItems }: { navItems?: { label: string; href:
         >
           {/* Logo */}
           <Link href="/" onClick={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
-            <div style={{ width: 42, height: 42, borderRadius: '50%', overflow: 'hidden', background: '#fff', flexShrink: 0 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Seekant Multimedia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ width: 42, height: 42, borderRadius: '50%', overflow: 'hidden', background: '#fff', flexShrink: 0, position: 'relative' }}>
+              <Image src="/logo.png" alt="Seekant Multimedia" fill sizes="42px" style={{ objectFit: 'cover' }} />
             </div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', lineHeight: 1.25 }}>
               SEEKANT MULTIMEDIA

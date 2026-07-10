@@ -172,7 +172,9 @@ export default function ContentPage() {
           </div>
         ))}
 
-        <SocialLinksManager />
+        <div id="social-links">
+          <SocialLinksManager />
+        </div>
       </div>
     </div>
   )

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
-import { upsertSocialLink, deleteSocialLink } from '@/lib/actions/admin'
+import { upsertSocialLink, deleteSocialLink, reorderSocialLinks } from '@/lib/actions/admin'
 import { createClient } from '@/lib/supabase/client'
 
 type SocialLink = {
@@ -139,13 +139,43 @@ export default function SocialLinksManager() {
     })
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (link: SocialLink) => {
     startTransition(async () => {
-      const result = await deleteSocialLink(id)
+      const result = await deleteSocialLink(link.id)
       if (result?.error) { toast.error(result.error); return }
-      toast.success('Social link deleted.')
-      setLinks(ls => ls.filter(l => l.id !== id))
+      setLinks(ls => ls.filter(l => l.id !== link.id))
       closeModal()
+      toast.success('Social link deleted.', {
+        duration: 6000,
+        action: { label: 'Undo', onClick: () => restoreLink(link) },
+      })
+    })
+  }
+
+  const restoreLink = (link: SocialLink) => {
+    startTransition(async () => {
+      const fd = new FormData()
+      fd.append('platform', link.platform)
+      fd.append('label', link.label ?? '')
+      fd.append('url', link.url)
+      const result = await upsertSocialLink(fd)
+      if (result?.error) { toast.error(result.error); return }
+      const supabase = createClient()
+      const { data } = await supabase.from('social_links').select('id,platform,label,url').order('sort_order')
+      if (data) setLinks(data as SocialLink[])
+      toast.success('Social link restored.')
+    })
+  }
+
+  const handleMove = (index: number, direction: -1 | 1) => {
+    const target = index + direction
+    if (target < 0 || target >= links.length) return
+    const reordered = [...links]
+    ;[reordered[index], reordered[target]] = [reordered[target], reordered[index]]
+    setLinks(reordered)
+    startTransition(async () => {
+      const result = await reorderSocialLinks(reordered.map(l => l.id))
+      if (result?.error) { toast.error(result.error); setLinks(links); return }
     })
   }
 
@@ -165,11 +195,27 @@ export default function SocialLinksManager() {
         {loading && <p style={{ fontSize: 12, color: 'rgba(255,255,255,.35)' }}>Loading…</p>}
         {!loading && !links.length && <p style={{ fontSize: 12, color: 'rgba(255,255,255,.35)' }}>No social links yet — click &ldquo;+ Add Social Link&rdquo; to add one.</p>}
 
-        {links.map(link => {
+        {links.map((link, index) => {
           const meta = iconFor(link.platform)
           const displayLabel = SOCIAL_META[link.platform]?.label ?? link.label ?? 'Link'
           return (
             <div key={link.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,.05)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
+                <button
+                  type="button"
+                  onClick={() => handleMove(index, -1)}
+                  disabled={index === 0 || isPending}
+                  title="Move up"
+                  style={{ width: 20, height: 16, background: 'rgba(255,255,255,.06)', border: 'none', color: index === 0 ? 'rgba(255,255,255,.15)' : 'rgba(255,255,255,.6)', cursor: index === 0 ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9 }}
+                >▲</button>
+                <button
+                  type="button"
+                  onClick={() => handleMove(index, 1)}
+                  disabled={index === links.length - 1 || isPending}
+                  title="Move down"
+                  style={{ width: 20, height: 16, background: 'rgba(255,255,255,.06)', border: 'none', color: index === links.length - 1 ? 'rgba(255,255,255,.15)' : 'rgba(255,255,255,.6)', cursor: index === links.length - 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9 }}
+                >▼</button>
+              </div>
               <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,.07)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <svg width="14" height="14" viewBox={meta.viewBox ?? '0 0 24 24'} fill={meta.color}>
                   <path d={meta.d} />
@@ -260,10 +306,10 @@ export default function SocialLinksManager() {
               <div style={{ background: '#111320', padding: '12px 16px', marginBottom: 24 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{SOCIAL_META[modal.link.platform]?.label ?? modal.link.label}</p>
               </div>
-              <p style={{ fontSize: 11, color: 'rgba(255,100,100,.7)', marginBottom: 24 }}>This action cannot be undone.</p>
+              <p style={{ fontSize: 11, color: 'rgba(255,100,100,.7)', marginBottom: 24 }}>You can undo this from the confirmation toast right after deleting.</p>
               <div style={{ display: 'flex', gap: 12 }}>
                 <button
-                  onClick={() => handleDelete(modal.link.id)}
+                  onClick={() => handleDelete(modal.link)}
                   disabled={isPending}
                   style={{ fontSize: 11, padding: '11px 22px', background: '#ef4444', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', opacity: isPending ? 0.7 : 1 }}
                 >

@@ -118,20 +118,6 @@ function normalizeExternalUrl(url: string) {
   }
 }
 
-export async function saveSocialLinks(links: Record<string, string>) {
-  const supabase = await createClient()
-  const entries = Object.entries(links)
-    .map(([platform, url]) => ({ platform, url: normalizeExternalUrl(url) }))
-  if (!entries.length) return { success: true }
-  const { error } = await supabase
-    .from('social_links')
-    .upsert(entries, { onConflict: 'platform' })
-  if (error) return { error: error.message }
-  revalidatePath('/', 'layout')
-  revalidatePath('/admin/social')
-  return { success: true }
-}
-
 export async function upsertSocialLink(fd: FormData) {
   const supabase = await createClient()
   const id = fd.get('id') as string | null
@@ -154,6 +140,18 @@ export async function upsertSocialLink(fd: FormData) {
 export async function deleteSocialLink(id: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('social_links').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/', 'layout')
+  revalidatePath('/admin/content')
+  return { success: true }
+}
+
+export async function reorderSocialLinks(orderedIds: string[]) {
+  const supabase = await createClient()
+  const results = await Promise.all(
+    orderedIds.map((id, index) => supabase.from('social_links').update({ sort_order: index }).eq('id', id))
+  )
+  const error = results.find(r => r.error)?.error
   if (error) return { error: error.message }
   revalidatePath('/', 'layout')
   revalidatePath('/admin/content')
