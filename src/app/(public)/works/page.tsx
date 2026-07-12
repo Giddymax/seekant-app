@@ -4,15 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Our Works – Seekant Multimedia' }
 
-const FALLBACK = [
-  { id: '1', title: 'Full Brand Identity — Asante Group',  cat: 'Branding',   img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&h=460&fit=crop&auto=format&q=80' },
-  { id: '2', title: 'Custom Jerseys — FC Accra Stars',     cat: 'Apparel',    img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=700&h=460&fit=crop&auto=format&q=80' },
-  { id: '3', title: 'Vehicle Branding — GreenTech Fleet',  cat: 'Signage',    img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=700&h=460&fit=crop&auto=format&q=80' },
-  { id: '4', title: 'Wedding Stationery Suite',            cat: 'Print',      img: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=700&h=460&fit=crop&auto=format&q=80' },
-  { id: '5', title: 'Annual Report — MidCorp Ltd.',        cat: 'Publishing', img: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=700&h=460&fit=crop&auto=format&q=80' },
-  { id: '6', title: 'Trade Fair Banners — Accra Expo',     cat: 'Signage',    img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=700&h=460&fit=crop&auto=format&q=80' },
-]
-
 export default async function WorksPage() {
   const supabase = await createClient()
   const [{ data }, { data: contentRows }] = await Promise.all([
@@ -25,9 +16,7 @@ export default async function WorksPage() {
   const heroTitle = c.page_header_works_title || 'Our Works'
   const heroSubtitle = c.page_header_works_subtitle || 'A selection of projects we\'re proud of — from logos to large format.'
 
-  const works = data?.length
-    ? data.map(item => ({ id: item.id, title: item.label ?? '', cat: item.category ?? '', img: item.image_url }))
-    : FALLBACK
+  const works = (data ?? []).map(item => ({ id: item.id, title: item.label ?? '', cat: item.category ?? '', img: item.image_url }))
 
   return (
     <>
@@ -45,6 +34,11 @@ export default async function WorksPage() {
 
       <section style={{ padding: '64px 0 88px', background: '#f7f8fa' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
+          {!works.length && (
+            <p style={{ textAlign: 'center', color: 'rgba(21,33,44,.45)', fontSize: 14, padding: '48px 0' }}>
+              No projects uploaded yet — check back soon.
+            </p>
+          )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
             {works.map(w => (
               <div key={w.id} className="card-shadow" style={{ background: '#fff', overflow: 'hidden' }}>
