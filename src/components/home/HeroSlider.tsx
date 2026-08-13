@@ -14,6 +14,8 @@ type Slide = {
   btn2_label: string
   btn2_href: string
   image_url: string
+  media_type?: 'image' | 'video'
+  video_url?: string | null
 }
 
 const FALLBACK_SLIDES: Slide[] = [
@@ -47,6 +49,7 @@ const FALLBACK_SLIDES: Slide[] = [
 ]
 
 function safeSlide(s: Slide): Slide {
+  const isVideo = s.media_type === 'video' && !!s.video_url
   return {
     ...s,
     tag:        s.tag        || '',
@@ -56,7 +59,10 @@ function safeSlide(s: Slide): Slide {
     btn1_href:  s.btn1_href  || '/',
     btn2_label: s.btn2_label || 'Contact Us',
     btn2_href:  s.btn2_href  || '/contacts',
-    image_url:  s.image_url  || FALLBACK_SLIDES[0].image_url,
+    // A video slide can go posterless; an image slide always needs a source image.
+    image_url:  s.image_url  || (isVideo ? '' : FALLBACK_SLIDES[0].image_url),
+    media_type: isVideo ? 'video' : 'image',
+    video_url:  isVideo ? s.video_url : null,
   }
 }
 
@@ -67,6 +73,20 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
   const [paused, setPaused] = useState(false)
   const [hydrated, setHydrated] = useState(false)
   const touchStartX = useRef<number | null>(null)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  // Only the active slide's video should actually be playing.
+  useEffect(() => {
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return
+      if (i === cur) {
+        video.currentTime = 0
+        video.play().catch(() => {})
+      } else {
+        video.pause()
+      }
+    })
+  }, [cur])
 
   const next = useCallback(() => setCur(c => (c + 1) % data.length), [data.length])
   const prev = useCallback(() => setCur(c => (c - 1 + data.length) % data.length), [data.length])
@@ -121,14 +141,28 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           pointerEvents: i === cur ? 'auto' : 'none',
           '--slide-index': i,
         } as React.CSSProperties}>
-          <Image
-            src={slide.image_url}
-            alt={slide.heading}
-            fill
-            priority={i === 0}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-            sizes="100vw"
-          />
+          {slide.media_type === 'video' && slide.video_url ? (
+            <video
+              ref={el => { videoRefs.current[i] = el }}
+              src={slide.video_url}
+              poster={slide.image_url || undefined}
+              muted
+              loop
+              playsInline
+              autoPlay={i === cur}
+              preload={i === cur ? 'auto' : 'metadata'}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+            />
+          ) : (
+            <Image
+              src={slide.image_url}
+              alt={slide.heading}
+              fill
+              priority={i === 0}
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              sizes="100vw"
+            />
+          )}
           {/* Overlay */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,

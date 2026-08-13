@@ -171,6 +171,8 @@ export async function upsertHeroSlide(fd: FormData) {
     btn2_label: fd.get('btn2_label') as string || null,
     btn2_href: fd.get('btn2_href') as string || null,
     image_url: fd.get('image_url') as string || null,
+    media_type: (fd.get('media_type') as string) === 'video' ? 'video' : 'image',
+    video_url: fd.get('video_url') as string || null,
     sort_order: Number(fd.get('sort_order') ?? 0),
     active: fd.get('active') === 'true',
   }

@@ -9,16 +9,22 @@ type Props = {
   value?: string | null
   onUpload: (url: string) => void
   label?: string
+  /** File picker's accept filter. Defaults to images only. */
+  accept?: string
+  /** Switches the preview element and copy between image and video. */
+  kind?: 'image' | 'video'
+  /** Max upload size in MB. Defaults to 5 (videos typically want more). */
+  maxSizeMB?: number
 }
 
-export default function ImageUploader({ bucket, value, onUpload, label = 'Image' }: Props) {
+export default function ImageUploader({ bucket, value, onUpload, label = 'Image', accept = 'image/*', kind = 'image', maxSizeMB = 5 }: Props) {
   const [uploading, setUploading] = useState(false)
   const ref = useRef<HTMLInputElement>(null)
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 5 * 1024 * 1024) { toast.error('Image must be under 5 MB'); return }
+    if (file.size > maxSizeMB * 1024 * 1024) { toast.error(`${kind === 'video' ? 'Video' : 'Image'} must be under ${maxSizeMB} MB`); return }
 
     setUploading(true)
     const supabase = createBrowserClient(
@@ -54,8 +60,10 @@ export default function ImageUploader({ bucket, value, onUpload, label = 'Image'
 
       {/* Current preview */}
       {value && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={value} alt="preview" style={{ width: '100%', maxHeight: 120, objectFit: 'cover', marginBottom: 8, opacity: 0.85 }} />
+        kind === 'video'
+          ? <video src={value} controls muted style={{ width: '100%', maxHeight: 160, objectFit: 'cover', marginBottom: 8, opacity: 0.85 }} />
+          // eslint-disable-next-line @next/next/no-img-element
+          : <img src={value} alt="preview" style={{ width: '100%', maxHeight: 120, objectFit: 'cover', marginBottom: 8, opacity: 0.85 }} />
       )}
 
       {/* Upload zone */}
@@ -71,14 +79,14 @@ export default function ImageUploader({ bucket, value, onUpload, label = 'Image'
         onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,.15)' }}
       >
         <p style={{ fontSize: 11, color: uploading ? '#d42020' : 'rgba(255,255,255,.4)', margin: 0 }}>
-          {uploading ? 'Uploading…' : value ? 'Click to replace image' : 'Click to upload image (max 5 MB)'}
+          {uploading ? 'Uploading…' : value ? `Click to replace ${kind}` : `Click to upload ${kind} (max ${maxSizeMB} MB)`}
         </p>
       </div>
       <input
         ref={ref}
         type="file"
         title={`Upload ${label}`}
-        accept="image/*"
+        accept={accept}
         onChange={handleFile}
         style={{ display: 'none' }}
       />

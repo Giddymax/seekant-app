@@ -94,6 +94,9 @@ create table if not exists public.hero_slides (
   btn2_label  text,
   btn2_href   text,
   image_url   text,
+  media_type  text not null default 'image'
+                check (media_type in ('image', 'video')),
+  video_url   text,
   sort_order  integer not null default 0,
   active      boolean not null default true,
   created_at  timestamptz not null default now(),
@@ -536,6 +539,7 @@ create policy "Admins manage all quotes"
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values
   ('hero-images',    'hero-images',    true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
+  ('hero-videos',    'hero-videos',    true,  52428800, array['video/mp4','video/webm','video/quicktime']),
   ('service-images', 'service-images', true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
   ('blog-covers',    'blog-covers',    true,  5242880,  array['image/jpeg','image/png','image/webp','image/gif']),
   ('gallery-images', 'gallery-images', true,  10485760, array['image/jpeg','image/png','image/webp','image/gif']),
@@ -555,6 +559,18 @@ create policy "Public read hero images"
 create policy "Auth users delete hero images"
   on storage.objects for delete to authenticated
   using (bucket_id = 'hero-images');
+
+create policy "Auth users upload hero videos"
+  on storage.objects for insert to authenticated
+  with check (bucket_id = 'hero-videos');
+
+create policy "Public read hero videos"
+  on storage.objects for select
+  using (bucket_id = 'hero-videos');
+
+create policy "Auth users delete hero videos"
+  on storage.objects for delete to authenticated
+  using (bucket_id = 'hero-videos');
 
 create policy "Auth users upload service images"
   on storage.objects for insert to authenticated

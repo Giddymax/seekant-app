@@ -15,6 +15,8 @@ type Slide = {
   btn2_label: string | null
   btn2_href: string | null
   image_url: string | null
+  media_type: 'image' | 'video'
+  video_url: string | null
   sort_order: number
   active: boolean
 }
@@ -23,7 +25,8 @@ const BLANK: Omit<Slide, 'id'> = {
   heading: '', subtext: '', tag: '',
   btn1_label: 'Get a Quote', btn1_href: '/quote',
   btn2_label: '', btn2_href: '',
-  image_url: '', sort_order: 0, active: true,
+  image_url: '', media_type: 'image', video_url: '',
+  sort_order: 0, active: true,
 }
 
 const inp = { width: '100%', padding: '10px 14px', background: '#111320', border: '1.5px solid rgba(255,255,255,.08)', color: '#fff', fontSize: 12, fontFamily: 'Poppins,sans-serif', outline: 'none' }
@@ -71,12 +74,17 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
         {slides.map(s => (
           <div key={s.id} className="admin-hero-row" style={{ background: '#181b2e', padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
-            {s.image_url && (
+            {s.image_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={s.image_url} alt="" style={{ width: 80, height: 52, objectFit: 'cover', flexShrink: 0 }} />
-            )}
+            ) : s.media_type === 'video' && s.video_url ? (
+              <video src={s.video_url} muted style={{ width: 80, height: 52, objectFit: 'cover', flexShrink: 0 }} />
+            ) : null}
             <div style={{ flex: 1 }}>
-              {s.tag && <div style={{ fontSize: 9, fontWeight: 700, color: '#d42020', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{s.tag}</div>}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                {s.tag && <div style={{ fontSize: 9, fontWeight: 700, color: '#d42020', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{s.tag}</div>}
+                {s.media_type === 'video' && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.6)' }}>▶ Video</span>}
+              </div>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{s.heading}</div>
               {s.subtext && <div style={{ fontSize: 11, color: 'rgba(255,255,255,.4)' }}>{s.subtext.slice(0, 80)}…</div>}
             </div>
@@ -107,12 +115,52 @@ export default function HeroSlideManager({ initialSlides }: { initialSlides: Sli
                 <div>{lbl('Button 2 Label')}<input title="Button 2 Label" value={editing.btn2_label ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_label: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
                 <div>{lbl('Button 2 Link')}<input title="Button 2 Link" value={editing.btn2_href ?? ''} onChange={e => setEditing(p => ({ ...p, btn2_href: e.target.value }))} placeholder="Optional" style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
               </div>
-              <ImageUploader
-                bucket="hero-images"
-                value={editing.image_url}
-                onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
-                label="Slide Image"
-              />
+              <div>
+                {lbl('Slide Media')}
+                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                  {(['image', 'video'] as const).map(t => (
+                    <button
+                      type="button"
+                      key={t}
+                      onClick={() => setEditing(p => ({ ...p, media_type: t }))}
+                      style={{
+                        flex: 1, padding: '8px 12px', fontSize: 11, fontWeight: 700, textTransform: 'capitalize',
+                        fontFamily: 'Poppins,sans-serif', cursor: 'pointer', border: '1.5px solid',
+                        borderColor: (editing.media_type ?? 'image') === t ? '#d42020' : 'rgba(255,255,255,.08)',
+                        background: (editing.media_type ?? 'image') === t ? 'rgba(212,32,32,.12)' : 'transparent',
+                        color: (editing.media_type ?? 'image') === t ? '#fff' : 'rgba(255,255,255,.5)',
+                      }}
+                    >{t}</button>
+                  ))}
+                </div>
+              </div>
+
+              {(editing.media_type ?? 'image') === 'video' ? (
+                <>
+                  <ImageUploader
+                    bucket="hero-videos"
+                    value={editing.video_url}
+                    onUpload={url => setEditing(p => ({ ...p, video_url: url }))}
+                    label="Slide Video"
+                    accept="video/*"
+                    kind="video"
+                    maxSizeMB={50}
+                  />
+                  <ImageUploader
+                    bucket="hero-images"
+                    value={editing.image_url}
+                    onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
+                    label="Poster Image (optional — shown while the video loads)"
+                  />
+                </>
+              ) : (
+                <ImageUploader
+                  bucket="hero-images"
+                  value={editing.image_url}
+                  onUpload={url => setEditing(p => ({ ...p, image_url: url }))}
+                  label="Slide Image"
+                />
+              )}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>{lbl('Sort Order')}<input title="Sort Order" type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p, sort_order: Number(e.target.value) }))} style={inp} onFocus={e => (e.target.style.borderColor = '#d42020')} onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,.08)')} /></div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
