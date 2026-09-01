@@ -15,11 +15,15 @@ export type PrintMode = 'thermal' | 'pdf'
 const BASE_CSS = `
 *{box-sizing:border-box}
 @page{size:80mm auto;margin:0}
+html,body{height:auto}
 body{font-family:'Courier New',monospace;margin:0;padding:3mm 3mm;width:80mm;background:#fff;color:#000}
 img{display:block;margin:0 auto 4px}
 div{word-break:break-word}
 table{width:100%;border-collapse:collapse}
 td{vertical-align:top;padding:1px 0}
+/* Keep the whole receipt as a single page/cut — never split across a page
+   boundary, which some printer drivers otherwise turn into a second sheet. */
+body,.pos-receipt,.thermal-receipt{break-inside:avoid;page-break-inside:avoid}
 `
 
 const MODE_CSS: Record<PrintMode, string> = {
