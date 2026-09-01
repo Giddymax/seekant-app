@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { createSale, type CartItem } from '@/lib/actions/sales'
 import { formatCurrency } from '@/lib/utils'
+import { printReceipt } from '@/lib/print'
 
 type Product = {
   id: number
@@ -307,8 +308,8 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
   const dblRule: CSSProperties = { borderTop: '3px double #000', margin: '4px 0' }
   const itemGrid: CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'minmax(0,1fr) 38px 100px',
-    columnGap: '10px',
+    gridTemplateColumns: 'minmax(0,1fr) 24px 58px 64px',
+    columnGap: '6px',
     width: '100%',
     overflow: 'hidden',
   }
@@ -342,18 +343,17 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
         <div style={{ ...itemGrid, fontWeight: 'bold' }}>
           <span>ITEM</span>
           <span style={{ textAlign: 'center' }}>QTY</span>
+          <span style={amountCell}>PRICE</span>
           <span style={amountCell}>TOTAL</span>
         </div>
         <div style={lineRule} />
 
         {snap.cart.map(i => (
-          <div key={i.product_id} style={{ marginTop: '4px' }}>
-            <div style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontWeight: 'bold' }}>{i.name}</div>
-            <div style={itemGrid}>
-              <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: '#333', fontSize: '11px' }}>{formatCurrency(i.unit_price)}/unit</span>
-              <span style={{ textAlign: 'center' }}>{i.quantity}</span>
-              <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
-            </div>
+          <div key={i.product_id} style={itemGrid}>
+            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontWeight: 'bold' }}>{i.name}</span>
+            <span style={{ textAlign: 'center' }}>{i.quantity}</span>
+            <span style={amountCell}>{formatCurrency(i.unit_price)}</span>
+            <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
           </div>
         ))}
 
@@ -382,12 +382,10 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
             <span style={amountCell}>{formatCurrency(snap.amountPaid - snap.total)}</span>
           </div>
         )}
-        {snap.amountPaid > 0 && snap.amountPaid < snap.total && (
-          <div style={{ ...summaryRow, fontWeight: 'bold' }}>
-            <span>BALANCE DUE</span>
-            <span style={amountCell}>{formatCurrency(snap.total - snap.amountPaid)}</span>
-          </div>
-        )}
+        <div style={{ ...summaryRow, fontWeight: 'bold' }}>
+          <span>BALANCE</span>
+          <span style={amountCell}>{formatCurrency(Math.max(0, snap.total - snap.amountPaid))}</span>
+        </div>
         <div style={dblRule} />
         {snap.total > 0 && snap.amountPaid >= snap.total && (
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '13px', letterSpacing: '0.06em', marginTop: '8px', paddingTop: '6px', borderTop: '3px solid #000' }}>PAID IN FULL</div>
@@ -419,16 +417,8 @@ export default function PosClient({ products, staffName, contactPhone }: { produ
   const receiptPreviewRef = useRef<HTMLDivElement>(null)
 
   function openPrintWindow(mode: 'thermal' | 'pdf') {
-    const content = receiptPreviewRef.current?.innerHTML || ''
-    const base = window.location.origin
-    const win = window.open('', '_blank', 'width=500,height=750')
-    if (!win) { toast.error('Enable popups to print'); return }
-    const thermalCSS = `@page{size:80mm auto;margin:2mm}body{font-family:'Courier New',monospace;font-size:10px;line-height:1.4;margin:0;padding:4px;width:72mm;background:#fff;color:#000}img{max-width:80px;display:block;margin:0 auto 4px}div{word-break:break-word}`
-    const pdfCSS = `@page{size:A4;margin:18mm 20mm}body{font-family:'Courier New',monospace;font-size:12px;line-height:1.6;margin:0 auto;padding:0;max-width:400px;background:#fff;color:#000}img{max-width:110px;display:block;margin:0 auto 8px}`
-    win.document.write(`<html><head><title>Receipt</title><base href="${base}/"><style>*{box-sizing:border-box}${mode === 'thermal' ? thermalCSS : pdfCSS}table{width:100%;border-collapse:collapse}td{vertical-align:top;padding:1px 0}</style></head><body>${content}</body></html>`)
-    win.document.close()
-    win.focus()
-    setTimeout(() => { win.print(); win.close() }, 400)
+    const result = printReceipt(mode, receiptPreviewRef.current, `Receipt — ${receiptSnap?.ref ?? ''}`)
+    if (!result.ok) toast.error(result.error)
   }
 
   const addToCart = (p: Product) => {

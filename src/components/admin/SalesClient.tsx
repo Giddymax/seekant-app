@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { updateSaleStatus, updateSale, getSaleItems, addPayment, deleteSale } from '@/lib/actions/sales'
 import { formatCurrency } from '@/lib/utils'
+import { printReceipt } from '@/lib/print'
 
 type Sale = {
   id: string
@@ -63,8 +64,8 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
   const doubleLine: CSSProperties = { borderTop: '3px double #000', margin: '6px 0' }
   const itemGrid: CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'minmax(0,1fr) 38px 100px',
-    columnGap: '10px',
+    gridTemplateColumns: 'minmax(0,1fr) 24px 58px 64px',
+    columnGap: '6px',
     width: '100%',
     overflow: 'hidden',
   }
@@ -99,6 +100,7 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
         <div style={{ ...itemGrid, fontWeight: 'bold' }}>
           <span>ITEM</span>
           <span style={{ textAlign: 'center' }}>QTY</span>
+          <span style={amountCell}>PRICE</span>
           <span style={amountCell}>TOTAL</span>
         </div>
         <div style={singleLine} />
@@ -107,6 +109,7 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
           <div key={i} style={itemGrid}>
             <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{item.product_name}</span>
             <span style={{ textAlign: 'center' }}>{item.quantity}</span>
+            <span style={amountCell}>{formatCurrency(item.unit_price)}</span>
             <span style={amountCell}>{formatCurrency(item.line_total)}</span>
           </div>
         ))}
@@ -132,12 +135,10 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
           <span>PAID</span>
           <span style={amountCell}>{formatCurrency(sale.amount_paid ?? sale.total)}</span>
         </div>
-        {balance > 0 && (
-          <div style={{ ...summaryRow, fontWeight: 'bold' }}>
-            <span>BALANCE DUE</span>
-            <span style={amountCell}>{formatCurrency(balance)}</span>
-          </div>
-        )}
+        <div style={{ ...summaryRow, fontWeight: 'bold' }}>
+          <span>BALANCE</span>
+          <span style={amountCell}>{formatCurrency(balance)}</span>
+        </div>
         <div style={doubleLine} />
       </div>
 
@@ -363,16 +364,8 @@ export default function SalesClient({
   const receiptPreviewRef = useRef<HTMLDivElement>(null)
 
   function openPrintWindow(mode: 'thermal' | 'pdf') {
-    const content = receiptPreviewRef.current?.innerHTML || ''
-    const base = window.location.origin
-    const win = window.open('', '_blank', 'width=500,height=750')
-    if (!win) { toast.error('Enable popups to print'); return }
-    const thermalCSS = `@page{size:80mm auto;margin:2mm}body{font-family:'Courier New',monospace;font-size:10px;line-height:1.4;margin:0;padding:4px;width:72mm;background:#fff;color:#000}img{max-width:80px;display:block;margin:0 auto 4px}div{word-break:break-word}`
-    const pdfCSS = `@page{size:A4;margin:18mm 20mm}body{font-family:'Courier New',monospace;font-size:12px;line-height:1.6;margin:0 auto;padding:0;max-width:400px;background:#fff;color:#000}img{max-width:110px;display:block;margin:0 auto 8px}`
-    win.document.write(`<html><head><title>Receipt — ${previewReceipt?.sale.sale_ref || ''}</title><base href="${base}/"><style>*{box-sizing:border-box}${mode === 'thermal' ? thermalCSS : pdfCSS}table{width:100%;border-collapse:collapse}td{vertical-align:top;padding:1px 0}</style></head><body>${content}</body></html>`)
-    win.document.close()
-    win.focus()
-    setTimeout(() => { win.print(); win.close() }, 400)
+    const result = printReceipt(mode, receiptPreviewRef.current, `Receipt — ${previewReceipt?.sale.sale_ref ?? ''}`)
+    if (!result.ok) toast.error(result.error)
   }
 
   const isAdmin = role === 'admin'
