@@ -25,6 +25,11 @@ export function formatCurrency(amount: number | string | null | undefined) {
   return `GH₵ ${toNumber(amount).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
+/** Whole-number amount for the printed receipt — no decimal places. */
+export function formatReceiptAmount(amount: number | string | null | undefined) {
+  return `GH₵${Math.round(toNumber(amount)).toLocaleString('en-GH')}`
+}
+
 export function formatDate(date: string | Date) {
   return new Date(date).toLocaleDateString('en-GH', {
     day: 'numeric', month: 'long', year: 'numeric',

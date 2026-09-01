@@ -3,7 +3,7 @@
 import { useState, useTransition, useRef, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { updateSaleStatus, updateSale, getSaleItems, addPayment, deleteSale } from '@/lib/actions/sales'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatReceiptAmount } from '@/lib/utils'
 import { printReceipt } from '@/lib/print'
 
 type Sale = {
@@ -107,10 +107,10 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
 
         {items.map((item, i) => (
           <div key={i} style={itemGrid}>
-            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{item.product_name}</span>
+            <span style={{ minWidth: 0, overflowWrap: 'break-word' }}>{item.product_name}</span>
             <span style={{ textAlign: 'center' }}>{item.quantity}</span>
-            <span style={amountCell}>{formatCurrency(item.unit_price)}</span>
-            <span style={amountCell}>{formatCurrency(item.line_total)}</span>
+            <span style={amountCell}>{formatReceiptAmount(item.unit_price)}</span>
+            <span style={amountCell}>{formatReceiptAmount(item.line_total)}</span>
           </div>
         ))}
         {items.length === 0 && <div style={{ color: '#999' }}>(no line items on record)</div>}
@@ -118,33 +118,33 @@ function ThermalReceipt({ data, contactPhone, staffName }: { data: ReceiptData; 
 
         <div style={summaryRow}>
           <span>SUBTOTAL</span>
-          <span style={amountCell}>{formatCurrency(subtotal)}</span>
+          <span style={amountCell}>{formatReceiptAmount(subtotal)}</span>
         </div>
         {discount > 0 && (
           <div style={summaryRow}>
             <span>DISCOUNT</span>
-            <span style={amountCell}>-{formatCurrency(discount)}</span>
+            <span style={amountCell}>-{formatReceiptAmount(discount)}</span>
           </div>
         )}
         <div style={singleLine} />
         <div style={{ ...summaryRow, fontWeight: 'bold', fontSize: '13px' }}>
           <span>TOTAL</span>
-          <span style={amountCell}>{formatCurrency(sale.total)}</span>
+          <span style={amountCell}>{formatReceiptAmount(sale.total)}</span>
         </div>
         <div style={summaryRow}>
           <span>PAID</span>
-          <span style={amountCell}>{formatCurrency(sale.amount_paid ?? sale.total)}</span>
+          <span style={amountCell}>{formatReceiptAmount(sale.amount_paid ?? sale.total)}</span>
         </div>
         <div style={{ ...summaryRow, fontWeight: 'bold' }}>
           <span>BALANCE</span>
-          <span style={amountCell}>{formatCurrency(balance)}</span>
+          <span style={amountCell}>{formatReceiptAmount(balance)}</span>
         </div>
         <div style={doubleLine} />
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '6px', overflowWrap: 'anywhere' }}>
         {balance > 0
-          ? <div style={{ fontWeight: 'bold' }}>BALANCE DUE: {formatCurrency(balance)}</div>
+          ? <div style={{ fontWeight: 'bold' }}>BALANCE DUE: {formatReceiptAmount(balance)}</div>
           : <div>Thank you for your patronage!</div>
         }
         <div style={{ marginTop: '8px', fontSize: '10px' }}>*** CUSTOMER COPY ***</div>

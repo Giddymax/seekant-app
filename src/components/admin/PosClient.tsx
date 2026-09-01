@@ -3,7 +3,7 @@
 import { useState, useTransition, useRef, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { createSale, type CartItem } from '@/lib/actions/sales'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatReceiptAmount } from '@/lib/utils'
 import { printReceipt } from '@/lib/print'
 
 type Product = {
@@ -350,41 +350,41 @@ function PosReceipt({ snap }: { snap: ReceiptSnapshot }) {
 
         {snap.cart.map(i => (
           <div key={i.product_id} style={itemGrid}>
-            <span style={{ minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontWeight: 'bold' }}>{i.name}</span>
+            <span style={{ minWidth: 0, overflowWrap: 'break-word', fontWeight: 'bold' }}>{i.name}</span>
             <span style={{ textAlign: 'center' }}>{i.quantity}</span>
-            <span style={amountCell}>{formatCurrency(i.unit_price)}</span>
-            <span style={amountCell}>{formatCurrency(i.unit_price * i.quantity)}</span>
+            <span style={amountCell}>{formatReceiptAmount(i.unit_price)}</span>
+            <span style={amountCell}>{formatReceiptAmount(i.unit_price * i.quantity)}</span>
           </div>
         ))}
 
         <div style={lineRule} />
         <div style={summaryRow}>
           <span>SUBTOTAL</span>
-          <span style={amountCell}>{formatCurrency(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
+          <span style={amountCell}>{formatReceiptAmount(snap.cart.reduce((s, i) => s + i.unit_price * i.quantity, 0))}</span>
         </div>
         {snap.discount > 0 && (
-          <div style={summaryRow}><span>DISCOUNT</span><span style={amountCell}>-{formatCurrency(snap.discount)}</span></div>
+          <div style={summaryRow}><span>DISCOUNT</span><span style={amountCell}>-{formatReceiptAmount(snap.discount)}</span></div>
         )}
         <div style={lineRule} />
         <div style={{ ...summaryRow, fontWeight: 'bold', fontSize: '13px' }}>
           <span>TOTAL</span>
-          <span style={amountCell}>{formatCurrency(snap.total)}</span>
+          <span style={amountCell}>{formatReceiptAmount(snap.total)}</span>
         </div>
         {snap.amountPaid > 0 && (
           <div style={summaryRow}>
             <span>PAID</span>
-            <span style={amountCell}>{formatCurrency(snap.amountPaid)}</span>
+            <span style={amountCell}>{formatReceiptAmount(snap.amountPaid)}</span>
           </div>
         )}
         {snap.amountPaid > snap.total && (
           <div style={{ ...summaryRow, fontWeight: 'bold' }}>
             <span>CHANGE</span>
-            <span style={amountCell}>{formatCurrency(snap.amountPaid - snap.total)}</span>
+            <span style={amountCell}>{formatReceiptAmount(snap.amountPaid - snap.total)}</span>
           </div>
         )}
         <div style={{ ...summaryRow, fontWeight: 'bold' }}>
           <span>BALANCE</span>
-          <span style={amountCell}>{formatCurrency(Math.max(0, snap.total - snap.amountPaid))}</span>
+          <span style={amountCell}>{formatReceiptAmount(Math.max(0, snap.total - snap.amountPaid))}</span>
         </div>
         <div style={dblRule} />
         {snap.total > 0 && snap.amountPaid >= snap.total && (
